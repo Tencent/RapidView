@@ -1,0 +1,60 @@
+<relativelayout width="match_parent" height="match_parent" backgroundcolor="ffabcdef">
+
+	<!-- 控件功能展示区域，这里给放到一个relativelayout里面，并留出底部tab的位置-->
+	<relativelayout id="xml_container" width="match_parent" height="match_parent" marginbottom="50" backgroundcolor="ffaabbcc">
+		
+		<!-- scrollView只能有一个子控件，一般放linearlayout进去，然后里面的孩子控件我们用include的方法处理 -->
+		<scrollview width="match_parent" height="wrap_content">
+			<linearlayout width="match_parent" height="wrap_content" orientation="vertical">
+
+				<!-- 每一个item的逻辑都差不多，点击展开，再点击收起，只是里面的落地view不一样，因此为每一个item写一份逻辑是不值得的。这里利用
+                     了include的environment语法，实现一个通用的逻辑。environment是环境变量，类似于C++的宏，在执行时会粗暴的替换[]中的内容。
+                     在environment的属性value中提供若干需要的字段和即将被替换的内容 -->
+				<include layout="flexible_container.xml" environment="name:task,title:task使用示例,container:task_container,layout:task_stub.xml"/>
+				<include layout="flexible_container.xml" environment="name:action,title:action的使用示例,container:action_container,layout:action_stub.xml" />
+				<include layout="flexible_container.xml" environment="name:filter,title:filter的使用示例,container:filter_container,layout:filter_stub.xml" />
+				<include layout="flexible_container.xml" environment="name:special_tag,title:include/merge/viewstub的使用示例,container:special_tag_container,layout:special_tag_stub.xml" />
+			</linearlayout>
+		</scrollview>
+	</relativelayout>
+
+	<!-- Lua相关能力展示区，和上面控件区域位置重合-->
+	<relativelayout id="lua_container" width="match_parent" height="match_parent" marginbottom="50" visibility="gone" backgroundcolor="ffbbccaa">
+		<scrollview width="match_parent" height="wrap_content">
+			<linearlayout width="match_parent" height="wrap_content" orientation="vertical">
+				<include layout="flexible_container.xml" environment="name:lua_call,title:Lua的调用,container:lua_call_container,layout:lua_call_stub.xml"/>
+				<include layout="flexible_container.xml" environment="name:lua_bridge,title:使用LuaJavaBridge接口,container:lua_bridge_container,layout:lua_bridge_stub.xml"/>
+			</linearlayout>
+		</scrollview>
+	</relativelayout>
+
+	<!-- 按钮TAB区域，常驻下面-->
+	<linearlayout width="match_parent" height="48" orientation="horizontal" alignparentbottom="true">
+
+		<!-- 左边按钮，控制宽度50%，也可以通过linearlayout的weight来控制，这里写的随意一点咯，注意这个控件点击的时候会触发名为：ctrl_btn_click的task执行 -->
+		<relativelayout width="50%" height="match_parent" click="xml_btn_click">
+			<textview width="wrap_content" height="wrap_content" text="XML示例" centerinparent="true" textsize="17"/>
+			<imageview height="match_parent" width="1" backgroundcolor="ffdddddd" alignparentright="true"/>
+		</relativelayout>
+
+		<!-- 右边按钮，同上 -->
+		<relativelayout width="50%" height="match_parent" click="lua_btn_click">
+			<textview width="wrap_content" height="wrap_content" text="Lua示例" centerinparent="true" textsize="17"/>
+			<imageview height="match_parent" width="1" backgroundcolor="ffdddddd" alignparentleft="true"/>
+		</relativelayout>
+
+		<!-- 左边按钮点击时执行，我们执行两个task，把控件那块显示出来，API那块隐藏起来-->
+		<task id="xml_btn_click">
+			<attributeaction cid="lua_container" key="visibility" value="gone" />
+			<attributeaction cid="xml_container" key="visibility" value="visible"/>
+		</task>
+
+		<task id="lua_btn_click">
+			<attributeaction cid="lua_container" key="visibility" value="visible" />
+			<attributeaction cid="xml_container" key="visibility" value="gone" />
+		</task>
+	</linearlayout>
+
+	<!-- 装饰用的 -->
+	<imageview height="2" width="match_parent" marginbottom="48" alignparentbottom="true" backgroundcolor="ffdddddd"/>
+</relativelayout>

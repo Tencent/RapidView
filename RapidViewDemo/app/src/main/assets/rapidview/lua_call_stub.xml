@@ -1,0 +1,20 @@
+<relativelayout id="lua_call_container" width="match_parent" height="100" backgroundcolor="ffabcdef">
+	<textview id="lua_call_content" width="wrap_content" height="wrap_content" centervertical="true" marginleft="12" text="原始内容"/>
+	<button id="lua_call_btn_1" width="52" height="24" marginright="30" text="按钮一" click="lua_call_click_1" centervertical="true" alignparentright="true"  padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+	<button id="lua_call_btn_2"width="52" height="24" marginright="30" leftof="lua_call_btn_1" text="按钮二" click="lua_call_click_2" centervertical="true" padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+
+	<task id="lua_call_click_1">
+		<luaaction function="main"/>
+	</task>
+
+	<!-- 参数最多出现三个，可选-->
+	<task id="lua_call_click_2">
+		<luaaction function="second" param1="点击了按钮2" param2="这里是一个toast"/>
+	</task>
+	
+	<!-- load相当于加载一个lua文件，function相当于执行一个函数。这两个属性可以合并使用，但是反复load会导致之前保存的局部变量消失。例如这个例子中我们只load了一次lua文件，
+         局部变量得到了保存，因此不停按按钮的时候会出现计数效果。 -->
+	<task hook="loadfinish">
+		<luaaction load="lua_call_demo.lua"/>
+	</task>
+</relativelayout>

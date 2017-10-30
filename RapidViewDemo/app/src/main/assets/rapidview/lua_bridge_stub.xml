@@ -1,0 +1,13 @@
+<relativelayout id="lua_bridge_container" width="match_parent" height="200" backgroundcolor="ffabcdef">
+	<imageview id="lua_bridge_image" width="150" height="150" centervertical="true" marginleft="12" />
+	<button id="lua_bridge_btn_1" width="52" height="24" marginright="30" text="按钮一" click="lua_bridge_click_1" centervertical="true" alignparentright="true"  padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+	<button id="lua_bridge_btn_2"width="52" height="24" marginright="30" leftof="lua_bridge_btn_1" text="按钮二" click="lua_bridge_click_2" centervertical="true" padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+
+	<task id="lua_bridge_click_1">
+		<luaaction load="lua_bridge_demo.lua" function="main"/>
+	</task>
+
+	<task id="lua_bridge_click_2">
+		<luaaction load="lua_bridge_demo.lua" function="second"/>
+	</task>
+</relativelayout>

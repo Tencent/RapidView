@@ -1,0 +1,133 @@
+package com.tencent.rapidview.utils;
+
+import android.content.Context;
+
+import com.tencent.rapidview.framework.RapidConfig;
+import com.tencent.rapidview.framework.RapidPool;
+
+import org.w3c.dom.Document;
+
+import java.io.ByteArrayInputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+/**
+ * @Class RapidXmlLoader
+ * @Desc RapidView界面数据加载,用于做外部或服务器数据替换
+ *
+ * @author arlozhang
+ * @date 2015.09.22
+ */
+public class RapidXmlLoader {
+
+    private Map<String, Document> mDocumentCacheMap = new ConcurrentHashMap<String, Document>();
+
+    private static RapidXmlLoader mSelf;
+
+    private RapidXmlLoader(){}
+
+    public static RapidXmlLoader self() {
+
+        if (mSelf == null) {
+            mSelf = new RapidXmlLoader();
+        }
+
+        return mSelf;
+    }
+
+    private synchronized Document stringToDocument(String strXml) {
+        Document document = null;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        factory.setNamespaceAware(true);
+
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            document = builder.parse(new ByteArrayInputStream(strXml.getBytes()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            XLog.d(RapidConfig.RAPID_ERROR_TAG, "解析XML异常，XML名：" + strXml);
+        }
+
+        return document;
+    }
+
+    public Document getDocument(Context context, String name, String rapidID, boolean limitLevel) {
+        Document doc = null;
+        byte[] bytesXml = null;
+
+        if( RapidConfig.DEBUG_MODE &&
+            FileUtil.isFileExists(FileUtil.getRapidDebugDir() + name) ){
+            bytesXml = RapidFileLoader.getInstance().getBytes(name, RapidFileLoader.PATH.enum_debug_path);
+
+            try {
+                doc = stringToDocument(new String(bytesXml, "UTF-8"));
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                doc = null;
+            }
+
+            return doc;
+        }
+
+        if( !RapidStringUtils.isEmpty(rapidID) && !name.contains("../") ){
+
+            bytesXml = RapidFileLoader.getInstance().getBytes(rapidID + "/" + name, RapidFileLoader.PATH.enum_sandbox_path);
+            if( bytesXml == null && limitLevel ) {
+                return doc;
+            }
+
+            try{
+                doc = stringToDocument(new String(bytesXml, "UTF-8"));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                doc = null;
+            }
+
+            if( doc != null ){
+                return doc;
+            }
+        }
+
+        if( limitLevel ){
+            return doc;
+        }
+
+        doc = mDocumentCacheMap.get(name);
+        if( doc != null ) {
+            return doc;
+        }
+
+        bytesXml = RapidPool.getInstance().getFile(name, true);
+
+        if( bytesXml == null ) {
+            bytesXml = RapidAssetsLoader.getInstance().get(context, name);
+        }
+
+        if( bytesXml == null ){
+            return doc;
+        }
+
+        try {
+            doc = stringToDocument(new String(bytesXml, "UTF-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            doc = null;
+        }
+
+        if( doc != null ){
+            mDocumentCacheMap.put(name, doc);
+        }
+
+        return doc;
+    }
+
+    public void deleteDocument(String name){
+        mDocumentCacheMap.remove(name);
+    }
+}
