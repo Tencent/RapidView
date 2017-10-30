@@ -1269,6 +1269,8 @@ RapidView需要4个目录：文件保存目录、配置保存目录、DEBUG目�
 
 * 过滤RAPID_ENGINE_BENCHMARK可查看性能情况
 
+### Rapid Studio
+点击[下载链接](http://cms.gtimg.com/android_cms/gzopen/8302bfa6dff45c03d0f5ba57ffdde469.zip)下载Rapid Studio工具包
 
 ### 其它
 >如果有其它问题，可以扫描下方二维码，加入QQ群咨询
