@@ -723,13 +723,13 @@ __startoffsetframeanimation__ | long
 
 __adjustviewbounds__ | boolean
 
-__maxheight__ | int/0~100%/0~100%x/0~100%y
+__maxheight__ | int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
-__minheight__ | int/0~100%/0~100%x/0~100%y
+__minheight__ | int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
-__maxwidth__ | int/0~100%/0~100%x/0~100%y
+__maxwidth__ | int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
-__minwidth__ | int/0~100%/0~100%x/0~100%y
+__minwidth__ | int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
 ___
 ### LinearLayout extends ViewGroup [标签：linearlayout]
@@ -867,13 +867,13 @@ __textscalex__ | float
 
 __freezestext__ | boolean
 
-__maxheight__ | int/0~100%/0~100%x/0~100%y
+__maxheight__ | int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
-__minheight__ | int/0~100%/0~100%x/0~100%y
+__minheight__ | int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
-__maxwidth__ | int/0~100%/0~100%x/0~100%y
+__maxwidth__ | int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
-__minwidth__ | int/0~100%/0~100%x/0~100%y
+__minwidth__ | int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
 __autolink__ | [xx,xx,xx,xx]
 (xx:phone/web/email/map/all)
@@ -913,9 +913,9 @@ __layout__ | xml名
 ___
 ### ViewGroupParams extends null
 
-__height__ | fill_parent/match_parent/wrap_content/int/0~100%/0~100%x/0~100%y
+__height__ | fill_parent/match_parent/wrap_content/int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
-__width__ | fill_parent/match_parent/wrap_content/int/0~100%/0~100%x/0~100%y
+__width__ | fill_parent/match_parent/wrap_content/int/0 ~ 100%/0 ~ 100%x/0 ~ 100%y
 
 ___
 ### MarginParams extends ViewGroupParams
