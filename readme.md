@@ -1253,10 +1253,10 @@ RapidView需要4个目录：文件保存目录、配置保存目录、DEBUG目�
 
 >RapidView提供了一些简单的开发和调试方法，在这个部分做以简单介绍。
 
-###开发说明
+### 开发说明
 >RapidView开发建议通过Rapid Studio小工具进行。Rapid Studio开发前需要新建一个文件夹，使用Rapid Studio打开该文件夹，新建脚本（xml或lua）。调试时需要连接手机并保持ADB连接，并将RapidConfig.java 中的DEBUG_MODE改为true编译并安装，发布时需要改回false。
 
-###调试说明
+### 调试说明
 >RapidView调试主要通过Log进行
 
 * 过滤RAPID_ENGINE关键字可打印全部Log
