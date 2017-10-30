@@ -71,8 +71,8 @@ RapidConfig.java
 ```
     /**DEBUG_MODE
      * 调试模式是否开启，一般发布时需要关闭。开启调试模式后，可以在rapiddebug目录中配置调试文件。调试文件
-     * 实时，并以最高优先级生效。强烈推荐使用RapdiView皮肤引擎专用调试工具RapidStudio Studio调试界面，调* 试时需要安装开启调试模式的包。**/
-
+     * 实时，并以最高优先级生效。强烈推荐使用RapdiView皮肤引擎专用调试工具RapidStudio Studio调试界面，调
+     * 试时需要安装开启调试模式的包。**/
     public final static boolean DEBUG_MODE = true;
 ```
 
