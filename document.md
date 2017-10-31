@@ -81,7 +81,7 @@ RapidConfig.java
 
 ![](http://cms.gtimg.com/android_cms/gzskin/6352e38da357e28ee27cdfc3aad4cdcb.png)
 
-修改XML中的任意可见参数，如backgroundcolor，重新加载当前页面，查看效果。
+修改XML中的任意可见参数，如backgroundcolor，按ctrl+s保存，观察到log中提示“[100%]xxx”，表明文件被push到手机当中，重新加载当前activity（返回重新进入），查看效果。
 
 ## 概念介绍
 
