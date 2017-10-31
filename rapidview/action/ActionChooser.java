@@ -15,7 +15,7 @@ package com.tencent.rapidview.action;
 
 import org.w3c.dom.Element;
 
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
