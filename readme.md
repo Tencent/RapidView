@@ -92,6 +92,9 @@ RapidConfig.java
 
 修改XML中的任意可见参数，如backgroundcolor，按ctrl+s保存，观察到log中提示“[100%]xxx”，表明文件被push到手机当中，重新加载当前activity（返回重新进入），查看效果。
 
+### Rapid Studio
+点击[下载链接](http://cms.gtimg.com/android_cms/gzopen/8302bfa6dff45c03d0f5ba57ffdde469.zip)下载Rapid Studio工具包
+
 ## 许可协议（License）
 
 >RapidView使用 MIT 许可协议， 详见[License](https://github.com/Tencent/RapidView/blob/master/License.txt)文件。
