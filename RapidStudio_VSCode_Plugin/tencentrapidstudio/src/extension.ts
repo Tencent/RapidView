@@ -19,7 +19,7 @@ export function activate(context: ExtensionContext) {
         // Display a message box to the user
         window.showInformationMessage("Hello Rapid Studio");
         let adbUtils = new ADBUtils();
-        adbUtils.sendADBCommand("echo hello rapid studio");
+
 
     });
 
@@ -59,10 +59,17 @@ function refreshFile(){
         }
     }
     
-    console.log(doc.fileName);
     let adbUtils = new ADBUtils();
-    adbUtils.pushFile(doc.fileName,debug_dir);
-    XLog.success("Refresh file successfully:" + doc.fileName);
+    adbUtils.pushFile(doc.fileName,debug_dir,{
+            onFinish:(err,stdout,stderr)=>{
+                if(err){
+                    XLog.error("Refresh file failed: " + doc.fileName);
+                }else{
+                    XLog.success("Refresh file successfully: " + doc.fileName);
+                }
+               
+            }
+        });   
     return true;
 }
 
@@ -121,25 +128,58 @@ class XLog{
 
 let debug_dir = "/sdcard/tencent/tassistant/photondebug";
 class ADBUtils {
-    public sendADBCommand(cmdStr : String) {
+    
+    public sendADBCommand(cmdStr : String, callback : ADBCallback) {
         // Create as needed
         let exec = require('child_process').exec;
         exec(cmdStr, function(err,stdout,stderr){
+            console.log(stdout);
             if(err) {
-                console.log('Adb runtime error: '+stderr);
-            } else {
-                console.log(stdout);
+                console.log(stderr);
             }
+            callback.onFinish(err,stdout,stderr);
         });
     }
 
-    public pushFile(filePath : String, targetDir : String) {
+    public pushFile(filePath : String, targetDir : String,callback : ADBCallback) {
         // Get the command string need to execute
         let util = require('util');
         let command = util.format("adb push %s %s",filePath,targetDir); 
-        this.sendADBCommand(command);
+        this.sendADBCommand(command,callback);
+    }
+
+    public pushFiles(files : String[],targetDir : String, callback : ADBCallback){
+        let file = files.pop();
+        if(!file){
+            return;
+        }
+        let util = require('util');
+        let command = util.format("adb push %s %s",file,targetDir);
+        let exec = require('child_process').exec;
+        let _adbUtils = this;
+        exec(command, function(err,stdout,stderr){
+            if(err) {
+                console.log('Adb runtime error: '+stderr);
+                callback.onFinish(err,stdout,stderr);
+            } else {
+                console.log(stdout);
+                if(files.length != 0){
+                    // Continue to push file
+                    _adbUtils.pushFiles(files,targetDir,callback);
+                }else{
+                    // All files are pushed successfully
+                    callback.onFinish(err,stdout,stderr);
+                }
+            }
+            
+        });
     }
 }
+
+export interface ADBCallback{
+    onFinish(err,stdout,stderr);
+}
+
 
 import {CompletionItemProvider,CompletionItem,CompletionItemKind,Position,CancellationToken} from 'vscode';
 class RapidXMlCompletionItemProvider implements CompletionItemProvider {
