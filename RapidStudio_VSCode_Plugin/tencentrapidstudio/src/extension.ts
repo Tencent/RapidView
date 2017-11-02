@@ -1,7 +1,7 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument} from 'vscode';
+import {window,languages, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument} from 'vscode';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: ExtensionContext) {
@@ -33,6 +33,11 @@ export function activate(context: ExtensionContext) {
         window.showInformationMessage("Refreshing Project");
     })
 
+    // Add the auto completion
+    let completionProvideer = languages.registerCompletionItemProvider('lua',new RapidXMlCompletionItemProvider(),'.','\"');
+    context.subscriptions.push(completionProvideer);
+
+
     context.subscriptions.push(disposable);
     context.subscriptions.push(refreshFileTask);
     context.subscriptions.push(refreshProjectTask);
@@ -50,6 +55,20 @@ class ADBUtils {
                 }
             });
         }
+}
+
+import {CompletionItemProvider,CompletionItem,CompletionItemKind,Position,CancellationToken} from 'vscode';
+class RapidXMlCompletionItemProvider implements CompletionItemProvider {
+    private _completionItems: CompletionItem[];
+    public provideCompletionItems(
+        document: TextDocument, position: Position, token: CancellationToken):
+        CompletionItem[] {
+            this._completionItems = new Array<CompletionItem>();
+            this._completionItems.push(new CompletionItem("rapidview",CompletionItemKind.Field));
+            return this._completionItems;
+    }
+
+    
 }
 
 
