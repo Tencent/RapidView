@@ -17,10 +17,27 @@
     "contributes": {
         "commands": [
             {
+                "command": "extension.refreshFile",
+                "title": "Refresh File"
+            },
+            {
+                "command": "extension.refreshProject",
+                "title": "Refresh Project"
+            },
+            {
                 "command": "extension.sayHello",
                 "title": "Hello World"
             }
-        ]
+        ],
+        "menus": {
+            "editor/title": [ { 
+                   "command": "extension.refreshFile",
+                   "group": "navigation"
+            },{
+                "command": "extension.refreshProject",
+                "group": "navigation"
+            }]
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
