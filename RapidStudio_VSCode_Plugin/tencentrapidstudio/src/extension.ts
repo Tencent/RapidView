@@ -67,8 +67,6 @@ class RapidXMlCompletionItemProvider implements CompletionItemProvider {
             this._completionItems.push(new CompletionItem("rapidview",CompletionItemKind.Field));
             return this._completionItems;
     }
-
-    
 }
 
 

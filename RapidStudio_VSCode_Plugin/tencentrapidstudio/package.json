@@ -11,7 +11,9 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.sayHello",
+        "onCommand:extension.refreshFile",
+        "onCommand:extension.refreshProject"
     ],
     "main": "./out/extension",
     "contributes": {
