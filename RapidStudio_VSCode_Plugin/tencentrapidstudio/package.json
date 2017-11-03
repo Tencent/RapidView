@@ -12,19 +12,19 @@
     ],
     "activationEvents": [
         "onCommand:extension.sayHello",
-        "onCommand:extension.refreshFile",
-        "onCommand:extension.refreshProject"
+        "onCommand:extension.syncFile",
+        "onCommand:extension.syncProject"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "extension.refreshFile",
-                "title": "Refresh File"
+                "command": "extension.syncFile",
+                "title": "Sync File"
             },
             {
-                "command": "extension.refreshProject",
-                "title": "Refresh Project"
+                "command": "extension.syncProject",
+                "title": "Sync Project"
             },
             {
                 "command": "extension.sayHello",
@@ -34,11 +34,11 @@
         "menus": {
             "editor/title": [
                 {
-                    "command": "extension.refreshFile",
+                    "command": "extension.syncFile",
                     "group": "navigation"
                 },
                 {
-                    "command": "extension.refreshProject",
+                    "command": "extension.syncProject",
                     "group": "navigation"
                 }
             ]

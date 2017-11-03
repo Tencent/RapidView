@@ -23,18 +23,18 @@ export function activate(context: ExtensionContext) {
 
     });
 
-    let refreshFileTask = commands.registerCommand('extension.refreshFile', () => {
+    let refreshFileTask = commands.registerCommand('extension.syncFile', () => {
         // The code you place here will be executed every time your command is executed
-        window.showInformationMessage("Refreshing File");
+        window.showInformationMessage("Sync File");
        
-        refreshFile();
+        syncFile();
 
     });
 
-    let refreshProjectTask = commands.registerCommand('extension.refreshProject',()=>{
-        window.showInformationMessage("Refreshing Project");
+    let refreshProjectTask = commands.registerCommand('extension.syncProject',()=>{
+        window.showInformationMessage("Sync Project");
 
-        refreshFiles();
+        syncProject();
     })
 
     // Add the auto completion
@@ -47,62 +47,75 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(refreshProjectTask);
 }
 
-function refreshFile(){
+function syncFile(){
     // Get the current text editor
     let editor = window.activeTextEditor;
     if(!editor){
-        return false;
+        XLog.error("Did not find the target file to sync.");
+        return;
+    }
+
+    // Start the task
+    XLog.success("Start syncing files..." );
+
+
+    function pushFile(){
+        let adbUtils = new ADBUtils();
+        adbUtils.pushFile(doc.fileName,debug_dir,{
+            onFinish:(err,stdout,stderr)=>{
+                if(err){
+                    XLog.error("Sync file failed: " + doc.fileName);
+                }else{
+                    XLog.success("Sync file successfully: " + doc.fileName);
+                }
+                
+            }
+        });  
     }
 
     let doc = editor.document;
     if(doc.languageId === "xml" ){
         checkXMLValid(doc,{
         onSuccess: (err, result) => {
-            let adbUtils = new ADBUtils();
-            adbUtils.pushFile(doc.fileName,debug_dir,{
-                onFinish:(err,stdout,stderr)=>{
-                    if(err){
-                        XLog.error("Refresh file failed: " + doc.fileName);
-                    }else{
-                        XLog.success("Refresh file successfully: " + doc.fileName);
-                    }
-                    
-                }
-            });  
+            pushFile();
         },  onFail: (err, result) => {
             XLog.error("The task is interrupted because the xml is illegal.");
         }});
+    }else{
+        pushFile();
     }
 }
 
-function refreshFiles(){
+function syncProject(){
     // Get the current text editor
     let editor = window.activeTextEditor;
     if(!editor){
-        return false;
+        XLog.error("Did not find the target project to sync.");
+        return;
     }
 
+    // Start the task
+    XLog.success("Start syncing project..." );
 
     let currentFilePath = editor.document.fileName;
     
     let path = require('path');  
     let folderPath = path.dirname(currentFilePath); 
-    XLog.debug("Project folder: " + folderPath);
+    XLog.success("The target project folder: " + folderPath);
     const fs = require('fs');
     fs.readdir(folderPath, (err, files) => {
         let filePaths = new Array();
         files.forEach(file => {
             let filePath = folderPath + path.sep + file;
-            XLog.debug(filePath);
             filePaths.push(filePath);
         });
         let adbUtils = new ADBUtils();
         adbUtils.pushFiles(filePaths,debug_dir,{
             onFinish:(err,stdout,stderr)=>{
                 if(err){
-                    XLog.error("Refresh Project failed: " + folderPath);
+                    XLog.error("Sync file failed: " + folderPath);
                 }else{
-                    XLog.success("Refresh Project successfully: " + folderPath);
+                    XLog.success("Sync file successfully: " + folderPath);
                 }
             }
         });
