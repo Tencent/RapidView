@@ -110,7 +110,7 @@ export interface ADBCallback{
 
 
 export class XMLUtils{
-    public static checkXMLValid(text: String, callback : XMLParseCallback){
+    public static checkXMLValid(text: String, callback : XMLValidCheckCallback){
         let xml2js = require('xml2js');
         xml2js.parseString(text, function (err, result) {
             if(err){
@@ -123,7 +123,7 @@ export class XMLUtils{
     } 
 }
 
-export interface XMLParseCallback{
+export interface XMLValidCheckCallback{
     onSuccess(err,result);
     onFail(err,result);
 }

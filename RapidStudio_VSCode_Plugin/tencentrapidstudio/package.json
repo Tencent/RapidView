@@ -13,7 +13,8 @@
     "activationEvents": [
         "onCommand:extension.sayHello",
         "onCommand:extension.syncFile",
-        "onCommand:extension.syncProject"
+        "onCommand:extension.syncProject",
+        "workspaceContains:rapid_workspace.json"        
     ],
     "main": "./out/extension",
     "contributes": {

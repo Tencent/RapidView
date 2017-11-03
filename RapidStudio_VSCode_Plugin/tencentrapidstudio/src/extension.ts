@@ -7,6 +7,7 @@ import {window,languages, commands, Disposable, ExtensionContext, StatusBarAlign
 
 // Import tool module
 import {XLog,ADBCallback,ADBUtils,XMLUtils} from "./tool";
+import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider} from "./completion";
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -41,9 +42,11 @@ export function activate(context: ExtensionContext) {
     })
 
     // Add the auto completion
-    let completionProvideer = languages.registerCompletionItemProvider('lua',new RapidXMlCompletionItemProvider(),'.','\"');
-    context.subscriptions.push(completionProvideer);
+    let xmlCompletionProvideer = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
+    let luaCompletionProvideer = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),'.','\"');
 
+    context.subscriptions.push(xmlCompletionProvideer);
+    context.subscriptions.push(luaCompletionProvideer);
 
     context.subscriptions.push(disposable);
     context.subscriptions.push(refreshFileTask);
@@ -129,18 +132,6 @@ function syncProject(){
 }
 
 let debug_dir = "/sdcard/tencent/tassistant/photondebug/";
-
-import {CompletionItemProvider,CompletionItem,CompletionItemKind,Position,CancellationToken} from 'vscode';
-class RapidXMlCompletionItemProvider implements CompletionItemProvider {
-    private _completionItems: CompletionItem[];
-    public provideCompletionItems(
-        document: TextDocument, position: Position, token: CancellationToken): 
-        CompletionItem[] {
-            this._completionItems = new Array<CompletionItem>();
-            this._completionItems.push(new CompletionItem("rapidview",CompletionItemKind.Field));
-            return this._completionItems;
-    }
-}
 
 
 // this method is called when your extension is deactivated
