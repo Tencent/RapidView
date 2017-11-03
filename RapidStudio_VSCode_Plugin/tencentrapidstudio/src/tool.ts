@@ -6,8 +6,7 @@ export class XLog{
     Underscore = "\x1b[4m"
     Blink = "\x1b[5m"
     Reverse = "\x1b[7m"
-    Hidden = "\x1b[8m"
-    
+    Hidden = "\x1b[8m" 
     FgBlack = "\x1b[30m"
     FgRed = "\x1b[31m"
     FgGreen = "\x1b[32m"
@@ -16,7 +15,7 @@ export class XLog{
     FgMagenta = "\x1b[35m"
     FgCyan = "\x1b[36m"
     FgWhite = "\x1b[37m"
-    
+
     BgBlack = "\x1b[40m"
     BgRed = "\x1b[41m"
     BgGreen = "\x1b[42m"
@@ -27,30 +26,32 @@ export class XLog{
     BgWhite = "\x1b[47m"
     
     public static debug(log : String){
-        let util = require('util');
-        console.log(util.format("[RapidStudio] %s",log));
+        this.info(log);
     }
     
     public static error(log : String){
-        let util = require('util');
-        log.split("\n",100).forEach(logLine => {
-            console.log(util.format('\x1b[40m\x1b[31m%s\x1b[0m',util.format("[RapidStudio] %s",logLine)));
-        });
-        // console.log(util.format('\x1b[40m\x1b[31m%s\x1b[0m',util.format("[RapidStudio] %s",log)));
+        this.colorLog(log,"\x1b[40m","\x1b[31m");
     }
     
     public static info(log : String){
         let util = require('util');
-        console.log(util.format("[RapidStudio] %s",log));
+        let time = TimeUtils.getTime();
+        log.split("\n",100).forEach(logLine => {
+            console.log(util.format("[RapidStudio %s] %s",time,logLine));
+        });
+       
     }
 
     public static success(log : String){
-        let util = require('util');
-        console.log(util.format('\x1b[40m\x1b[32m%s\x1b[0m',util.format("[RapidStudio] %s",log)));
+        this.colorLog(log,"\x1b[40m","\x1b[32m");
     }
 
-    private static colorLog(log : String){
-
+    private static colorLog(log : String, gColor : String, fColor : String){
+        let util = require('util');
+        let time = TimeUtils.getTime();
+        log.split("\n",100).forEach(logLine => {
+            console.log(util.format('%s%s[RapidStudio %s] %s\x1b[0m',gColor,fColor,time,logLine));
+        });
     }
 }
 
@@ -126,4 +127,11 @@ export class XMLUtils{
 export interface XMLValidCheckCallback{
     onSuccess(err,result);
     onFail(err,result);
+}
+
+
+export class TimeUtils{
+    public static getTime():String{
+        return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').split(' ')[1];   
+    }
 }

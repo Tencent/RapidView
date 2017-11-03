@@ -130,9 +130,9 @@ function syncProject(){
         adbUtils.pushFiles(filePaths,debug_dir,{
             onFinish:(err,stdout,stderr)=>{
                 if(err){
-                    XLog.error("Sync file failed: " + folderPath);
+                    XLog.error("Sync Project failed: " + folderPath);
                 }else{
-                    XLog.success("Sync file successfully: " + folderPath);
+                    XLog.success("Sync Project successfully: " + folderPath);
                 }
             }
         });
