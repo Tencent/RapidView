@@ -26,12 +26,15 @@ export function activate(context: ExtensionContext) {
     let refreshFileTask = commands.registerCommand('extension.refreshFile', () => {
         // The code you place here will be executed every time your command is executed
         window.showInformationMessage("Refreshing File");
+       
         refreshFile();
 
     });
 
     let refreshProjectTask = commands.registerCommand('extension.refreshProject',()=>{
         window.showInformationMessage("Refreshing Project");
+
+        refreshFiles();
     })
 
     // Add the auto completion
@@ -70,6 +73,42 @@ function refreshFile(){
                
             }
         });   
+    return true;
+}
+
+function refreshFiles(){
+    // Get the current text editor
+    let editor = window.activeTextEditor;
+    if(!editor){
+        return false;
+    }
+
+
+    let currentFilePath = editor.document.fileName;
+    
+    let path = require('path');  
+    let folderPath = path.dirname(currentFilePath); 
+    XLog.debug("Project folder: " + folderPath);
+    const fs = require('fs');
+    fs.readdir(folderPath, (err, files) => {
+        let filePaths = new Array();
+        files.forEach(file => {
+            let filePath = folderPath + path.sep + file;
+            XLog.debug(filePath);
+            filePaths.push(filePath);
+        });
+        let adbUtils = new ADBUtils();
+        adbUtils.pushFiles(filePaths,debug_dir,{
+            onFinish:(err,stdout,stderr)=>{
+                if(err){
+                    XLog.error("Refresh Project failed: " + folderPath);
+                }else{
+                    XLog.success("Refresh Project successfully: " + folderPath);
+                }
+               
+            }
+        });
+    })
     return true;
 }
 
@@ -126,7 +165,7 @@ class XLog{
 }
 
 
-let debug_dir = "/sdcard/tencent/tassistant/photondebug";
+let debug_dir = "/sdcard/tencent/tassistant/photondebug/";
 class ADBUtils {
     
     public sendADBCommand(cmdStr : String, callback : ADBCallback) {
@@ -155,14 +194,15 @@ class ADBUtils {
         }
         let util = require('util');
         let command = util.format("adb push %s %s",file,targetDir);
+        XLog.debug(command);
         let exec = require('child_process').exec;
         let _adbUtils = this;
         exec(command, function(err,stdout,stderr){
+            console.log(stdout);
             if(err) {
-                console.log('Adb runtime error: '+stderr);
+                console.log(stderr);
                 callback.onFinish(err,stdout,stderr);
-            } else {
-                console.log(stdout);
+            }else {
                 if(files.length != 0){
                     // Continue to push file
                     _adbUtils.pushFiles(files,targetDir,callback);
@@ -171,7 +211,6 @@ class ADBUtils {
                     callback.onFinish(err,stdout,stderr);
                 }
             }
-            
         });
     }
 }
@@ -185,7 +224,7 @@ import {CompletionItemProvider,CompletionItem,CompletionItemKind,Position,Cancel
 class RapidXMlCompletionItemProvider implements CompletionItemProvider {
     private _completionItems: CompletionItem[];
     public provideCompletionItems(
-        document: TextDocument, position: Position, token: CancellationToken):
+        document: TextDocument, position: Position, token: CancellationToken): 
         CompletionItem[] {
             this._completionItems = new Array<CompletionItem>();
             this._completionItems.push(new CompletionItem("rapidview",CompletionItemKind.Field));
