@@ -14,6 +14,7 @@
         "onCommand:extension.sayHello",
         "onCommand:extension.syncFile",
         "onCommand:extension.syncProject",
+        "onCommand:extension.newProject",
         "workspaceContains:rapid_workspace.json"        
     ],
     "main": "./out/extension",
@@ -29,7 +30,12 @@
             },
             {
                 "command": "extension.sayHello",
-                "title": "Hello World"
+                "title": "Rapid start",
+                "category": "RapidStudio"
+            },
+            {
+                "command": "extension.newProject",
+                "title": "New Rapid Workspace"
             }
         ],
         "menus": {
@@ -40,6 +46,12 @@
                 },
                 {
                     "command": "extension.syncProject",
+                    "group": "navigation"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "command": "extension.newProject",
                     "group": "navigation"
                 }
             ]

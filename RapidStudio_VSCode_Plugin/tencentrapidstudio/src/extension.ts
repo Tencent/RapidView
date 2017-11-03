@@ -1,7 +1,7 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import {window,languages, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument} from 'vscode';
+import {window,workspace,languages, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument} from 'vscode';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
@@ -41,6 +41,11 @@ export function activate(context: ExtensionContext) {
         syncProject();
     })
 
+    let newProjectTask = commands.registerCommand('extension.newProject',()=>{
+        window.showInformationMessage("createNewProject");
+        createNewProject();
+    })
+
     // Add the auto completion
     let xmlCompletionProvideer = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
     let luaCompletionProvideer = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),'.','\"');
@@ -51,6 +56,7 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(disposable);
     context.subscriptions.push(refreshFileTask);
     context.subscriptions.push(refreshProjectTask);
+    context.subscriptions.push(newProjectTask);
 }
 
 function syncFile(){
@@ -129,6 +135,20 @@ function syncProject(){
         });
     })
     return true;
+}
+
+function createNewProject(){
+    const rootPath = workspace.rootPath;
+    XLog.debug(rootPath);
+    let path = require("path");
+    let fs = require("fs");
+    let workspace_file = rootPath + path.sep + "rapid_workspace.json";
+    console.log(workspace_file);
+    fs.writeFile(workspace_file, 'Just now, we have created this file', function (err) {
+        if (err) throw err;
+        console.log('It\'s saved! in same location.');
+    });
+    
 }
 
 let debug_dir = "/sdcard/tencent/tassistant/photondebug/";
