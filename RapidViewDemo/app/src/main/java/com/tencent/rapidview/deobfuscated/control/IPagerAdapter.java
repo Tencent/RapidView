@@ -19,13 +19,13 @@ import com.tencent.rapidview.deobfuscated.IRapidView;
 import org.luaj.vm2.LuaTable;
 
 /**
- * @Class IPhotonPagerAdapter
+ * @Class IPagerAdapter
  * @Desc pageradapter不混淆接口
  *
  * @author arlozhang
  * @date 2017.07.07
  */
-public interface IPhotonPagerAdapter {
+public interface IPagerAdapter {
 
     void addView(IRapidView view);
 

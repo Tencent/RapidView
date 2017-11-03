@@ -20,12 +20,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.tencent.rapidview.RapidLoader;
 import com.tencent.rapidview.data.Var;
+import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.deobfuscated.IRapidParser;
 import com.tencent.rapidview.deobfuscated.IRapidView;
+import com.tencent.rapidview.framework.RapidObject;
+import com.tencent.rapidview.param.ParamsChooser;
+import com.tencent.rapidview.param.RelativeLayoutParams;
 import com.tencent.rapidview.parser.RapidParserObject;
 import com.tencent.rapidview.runtime.RuntimeView;
+import com.tencent.rapidview.utils.HandlerUtils;
 import com.tencent.rapidview.utils.RapidStringUtils;
+
+import org.luaj.vm2.LuaTable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,18 +68,31 @@ public class RuntimeInnerActivity extends Activity {
         super.onCreate(saveInstanceState);
 
         initView();
-        loadView();
+
+        if( RapidStringUtils.isEmpty(mRapidID) ){
+            loadView();
+        }
+        else{
+            loadRuntimeView();
+        }
     }
 
     private void initParams(){
         Intent intent = getIntent();
 
         try{
-            mRapidID = intent.getStringExtra("rid");
+            if( intent.hasExtra("rid") ){
+                mRapidID = intent.getStringExtra("rid");
+            }
 
-            mXmlName = intent.getStringExtra("xml");
+            if( intent.hasExtra("xml") ){
+                mXmlName = intent.getStringExtra("xml");
+            }
 
-            mLimitLevel = Integer.parseInt(intent.getStringExtra("limitlevel"));
+            if( intent.hasExtra("limitlevel") ){
+                mLimitLevel = Integer.parseInt(intent.getStringExtra("limitlevel"));
+            }
+
 
             if( intent.hasExtra("params") ){
                 mParams = intent.getStringExtra("params");
@@ -97,7 +118,7 @@ public class RuntimeInnerActivity extends Activity {
         setContentView(mContainer, params);
     }
 
-    private void loadView(){
+    private void loadRuntimeView(){
         mView = new RuntimeView(this);
 
         if( mParams.compareTo("") != 0 ){
@@ -127,6 +148,27 @@ public class RuntimeInnerActivity extends Activity {
         mContainer.addView(mView, params);
     }
 
+    private void loadView(){
+        IRapidView         loadView = null;
+        Map<String, Var>   map      = null;
+
+        if( mXmlName.length() > 4 && mXmlName.substring(mXmlName.length() - 4, mXmlName.length()).compareToIgnoreCase(".xml") == 0 ){
+            RapidObject object = new RapidObject();
+
+            object.initialize(null, this, mRapidID, null, false, mXmlName, null);
+
+            loadView = object.load(HandlerUtils.getMainHandler(),
+                    this,
+                    RelativeLayoutParams.class,
+                    map,
+                    null);
+        }
+        else{
+            loadView = RapidLoader.load(mXmlName, HandlerUtils.getMainHandler(), this, RelativeLayoutParams.class, map, null);
+        }
+
+        mContainer.addView(loadView.getView(), loadView.getParser().getParams().getLayoutParams());
+    }
     @Override
     protected void onPause() {
         super.onPause();

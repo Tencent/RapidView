@@ -29,6 +29,13 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.tencent.rapidview.control.RuntimeInnerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|navigation|keyboard"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait" >
+        </activity>
+
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />

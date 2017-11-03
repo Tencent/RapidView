@@ -1,0 +1,4 @@
+<relativelayout id="task_container" width="match_parent" height="100" backgroundcolor="fffedcba">
+	<imageview id="i1" width="10%" height="10%x" backgroundcolor="data@color_1$00000000" centervertical="true" marginleft="12" />
+	<imageview width="20%" height="20%x" backgroundcolor="data@color_2$00000000" centervertical="true" rightof="i1" marginleft="50"/>
+</relativelayout>

@@ -1,0 +1,4 @@
+<relativelayout id="task_container" width="match_parent" height="100" backgroundcolor="ffaabbcc">
+		<button id="b1" width="52" height="24" marginright="30" text="data@btn_text_1"  centervertical="true" padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" marginleft="10" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+		<button width="52" height="24" marginright="30" text="data@btn_text_2" centervertical="true" padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" rightof="b1" marginleft="10" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+</relativelayout>

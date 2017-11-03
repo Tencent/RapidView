@@ -1,0 +1,37 @@
+<relativelayout width="match_parent" height="match_parent">	
+	<relativelayout id="nav_bar" width="match_parent"  height="56" backgroundcolor="ff5b5b5b">
+		<textview width="wrap_content" height="wrap_content" centervertical="true" textsize="17" text="新闻专区" textstyle="bold" marginleft="12" />
+	</relativelayout>
+
+	<linearlayout id="tab_main_container" width="match_parent" height="44" orientation="vertical" below="nav_bar">
+
+		<horizontalscrollview id="tab_scroll_container" width="match_parent" height="match_parent" horizontalscrollbarenabled="false">
+			<relativelayout width="wrap_content" height="match_parent">
+				<linearlayout id="tab_container" width="wrap_content" height="42" orientation="horizontal" />
+				<imageview id="slide_block" width="0" height="2" backgroundcolor="ff1d82ff" below="tab_container"/>
+			</relativelayout>
+		</horizontalscrollview>
+
+	</linearlayout>
+
+	<viewpager id="view_pager" width="match_parent" height="match_parent" below="tab_main_container" backgroundcolor="fff4f4f4"/>
+
+	<task hook="loadfinish">
+		<luaaction load="tab_page_main_loader.lua" function="load"/>
+	</task>
+
+	<relativelayout id="loading_container" width="match_parent" height="match_parent" backgroundcolor="ffffffff" visibility="data@loading_show$visible">
+		<textview width="wrap_content" height="wrap_content" text="加载中……" centerinparent="true"/>
+	</relativelayout>
+
+	<relativelayout id="error_container" width="match_parent" height="match_parent" backgroundcolor="ffffffff" visibility="data@error_page_show$gone">
+		<textview id="error_text" width="wrap_content" height="wrap_content" text="页面加载失败，请点击按钮重试" centerinparent="true" textsize="17"/>
+		<button id="retry_req" width="90" height="32" text="点击重试" padding="0,0,0,0" textsize="14" textcolor="ff1d82ff" centerhorizontal="true" below="error_text" margintop="35" gradientdrawable="cornerradius:4,color:ffffffff,alpha:255,strokewidth:3,strokecolor:ff1d82ff" click="click_retry"/>
+
+		<task id="click_retry">
+			<attributeaction id="loading_container" key="visibility" value="visible"/>
+			<attributeaction id="error_container" key="visibility" value="gone"/>
+			<luaaction load="game_topic_loader.lua" function="load"/>
+		</task>
+	</relativelayout>
+</relativelayout>

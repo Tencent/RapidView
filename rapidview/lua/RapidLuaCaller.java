@@ -64,12 +64,12 @@ public class RapidLuaCaller {
             }
             else if( args.length == 2 ){
                 ret = function.call( args[0] instanceof LuaValue ? (LuaValue) args[0] : CoerceJavaToLua.coerce(args[0]),
-                               args[1] instanceof LuaValue ? (LuaValue) args[1] : CoerceJavaToLua.coerce(args[1]) );
+                                     args[1] instanceof LuaValue ? (LuaValue) args[1] : CoerceJavaToLua.coerce(args[1]) );
             }
             else{
                 ret = function.call( args[0] instanceof LuaValue ? (LuaValue) args[0] : CoerceJavaToLua.coerce(args[0]),
-                               args[1] instanceof LuaValue ? (LuaValue) args[1] : CoerceJavaToLua.coerce(args[1]),
-                               args[2] instanceof LuaValue ? (LuaValue) args[2] : CoerceJavaToLua.coerce(args[2]) );
+                                     args[1] instanceof LuaValue ? (LuaValue) args[1] : CoerceJavaToLua.coerce(args[1]),
+                                     args[2] instanceof LuaValue ? (LuaValue) args[2] : CoerceJavaToLua.coerce(args[2]) );
             }
         }
         catch (Exception e){

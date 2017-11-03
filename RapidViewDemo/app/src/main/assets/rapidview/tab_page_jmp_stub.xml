@@ -1,0 +1,9 @@
+<relativelayout id="tab_page_jmp_container" width="match_parent" height="100" backgroundcolor="ffabcdef">
+	<textview width="wrap_content" height="wrap_content" centervertical="true" marginleft="12" text="点击按钮跳转到DEMO页面"/>
+
+	<button width="62" height="24" marginright="30" text="点击跳转" click="tab_page_jmp_click" centervertical="true" alignparentright="true"  padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+
+	<task id="tab_page_jmp_click">
+		<luaaction load="tab_page_jmp.lua" function="jmp"/>
+	</task>
+</relativelayout>

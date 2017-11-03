@@ -24,6 +24,7 @@ import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaNetwork;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaNetworkState;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaSystem;
+import com.tencent.rapidview.lua.interfaceimpl.LuaJavaTestEngine;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaUIImpl;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaBase64;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaCreate;
@@ -161,6 +162,15 @@ public class RapidLuaJavaBridge implements ILuaJavaInterface {
         LuaJavaRequest request = new LuaJavaRequest(mRapidID, mRapidView, url, data, header, method, succeedListener, failedListener);
 
         return request.request();
+    }
+
+    @Override
+    public boolean request(int cmdID, LuaTable data, LuaFunction listener){
+        LuaJavaTestEngine engine = new LuaJavaTestEngine(mRapidID, mRapidView);
+
+        engine.request(cmdID, data, listener);
+
+        return true;
     }
 
     @Override
