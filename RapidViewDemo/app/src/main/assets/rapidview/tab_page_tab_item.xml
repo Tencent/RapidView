@@ -1,0 +1,6 @@
+<relativelayout width="data@item_width$wrap_content" height="42" click="tab_click">
+	<textview width="wrap_content" height="wrap_content" centerinparent="true" text="data@tab_name" textcolor="data@text_color$ff000000"/>
+	<task id="tab_click">
+		<outeraction key="click" value="data@tab_index"/>
+	</task>
+</relativelayout>

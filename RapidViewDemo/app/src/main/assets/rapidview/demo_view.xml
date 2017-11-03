@@ -10,10 +10,11 @@
 				<!-- 每一个item的逻辑都差不多，点击展开，再点击收起，只是里面的落地view不一样，因此为每一个item写一份逻辑是不值得的。这里利用
                      了include的environment语法，实现一个通用的逻辑。environment是环境变量，类似于C++的宏，在执行时会粗暴的替换[]中的内容。
                      在environment的属性value中提供若干需要的字段和即将被替换的内容 -->
-				<include layout="flexible_container.xml" environment="name:task,title:task使用示例,container:task_container,layout:task_stub.xml"/>
+				<include layout="flexible_container.xml" environment="name:task,title:task使用示例111,container:task_container,layout:task_stub.xml"/>
 				<include layout="flexible_container.xml" environment="name:action,title:action的使用示例,container:action_container,layout:action_stub.xml" />
 				<include layout="flexible_container.xml" environment="name:filter,title:filter的使用示例,container:filter_container,layout:filter_stub.xml" />
 				<include layout="flexible_container.xml" environment="name:special_tag,title:include/merge/viewstub的使用示例,container:special_tag_container,layout:special_tag_stub.xml" />
+				<include layout="flexible_container.xml" environment="name:tab_page_jmp,title:新闻资讯类软件分TAB页面示例,container:tab_page_jmp_container,layout:tab_page_jmp_stub.xml" />
 			</linearlayout>
 		</scrollview>
 	</relativelayout>

@@ -1,0 +1,30 @@
+<relativelayout width="match_parent" height="match_parent">
+	<recyclerview id="recycler_view" width="match_parent" height="match_parent"  layoutmanager="linearlayoutmanager" />
+
+	<task hook="datachange" value="onPageSelected">
+		<luaaction function="onPageSelect" param1="data@onPageSelected"/>
+	</task>
+
+	<task hook="loadfinish">
+		<luaaction load="tab_page_common_tab_loader.lua" function="init"/>
+	</task>
+
+	<task hook="datachange" value="has_next">
+		<luaaction function="initNextPage" param1="data@has_next"/>
+	</task>
+
+	<relativelayout id="loading_container" width="match_parent" height="match_parent" backgroundcolor="ffffffff" visibility="data@loading_show$visible">
+		<textview width="wrap_content" height="wrap_content" text="加载中……" centerinparent="true"/>
+	</relativelayout>
+
+	<relativelayout id="error_container" width="match_parent" height="match_parent" backgroundcolor="ffffffff" visibility="data@error_page_show$gone">
+		<textview id="error_text" width="wrap_content" height="wrap_content" text="页面加载失败，请点击按钮重试" centerinparent="true" textsize="17"/>
+		<button id="retry_req" width="90" height="32" text="点击重试" padding="0,0,0,0" textsize="14" textcolor="ff1d82ff" centerhorizontal="true" below="error_text" margintop="35" gradientdrawable="cornerradius:4,color:ffffffff,alpha:255,strokewidth:3,strokecolor:ff1d82ff" click="click_retry"/>
+
+		<task id="click_retry">
+			<attributeaction id="loading_container" key="visibility" value="visible"/>
+			<attributeaction id="error_container" key="visibility" value="gone"/>
+			<luaaction load="tab_page_common_tab_loader.lua" function="load"/>
+		</task>
+	</relativelayout>
+</relativelayout>

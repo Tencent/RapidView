@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tencent.rapidview.deobfuscated.IRapidView;
-import com.tencent.rapidview.deobfuscated.control.IPhotonPagerAdapter;
+import com.tencent.rapidview.deobfuscated.control.IPagerAdapter;
 
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
@@ -37,7 +37,7 @@ import java.util.List;
  * @date 2017.07.03
  */
 
-public class RapidPagerAdapter extends PagerAdapter implements IPhotonPagerAdapter {
+public class RapidPagerAdapter extends PagerAdapter implements IPagerAdapter {
 
     private List<IRapidView> mListView = new ArrayList<IRapidView>();
 

@@ -43,6 +43,15 @@ public interface ILuaJavaNetwork {
     boolean request(String url, IBytes data, LuaTable header, String method, LuaFunction succeedListener, LuaFunction failedListener);
     boolean request(String url, LuaTable data, LuaTable header, String method, LuaFunction succeedListener, LuaFunction failedListener);
 
+    /**
+     * 发起一个测试的网络请求
+     *
+     * @param cmdID    请求id
+     * @param data     请求数据
+     * @param listener 回调函数(boolean succeed, List<String> viewList, List<Map<String, Var>>, dataList)
+     * @return
+     */
+    boolean request(int cmdID, LuaTable data, LuaFunction listener);
 
     boolean isNetworkActive();
     boolean isWap();

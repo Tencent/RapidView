@@ -1,0 +1,3 @@
+<relativelayout width="match_parent" height="100">
+	<textview width="wrap_content" height="wrap_content" text="加载中……" centerinparent="true" marginleft="12"/>
+</relativelayout>
