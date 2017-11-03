@@ -56,24 +56,23 @@ function refreshFile(){
 
     let doc = editor.document;
     if(doc.languageId === "xml" ){
-        if(isXMLValid(doc)) {
-            console.log("The task is interrupted because the xml is illegal.")
-            return false;
-        }
-    }
-    
-    let adbUtils = new ADBUtils();
-    adbUtils.pushFile(doc.fileName,debug_dir,{
-            onFinish:(err,stdout,stderr)=>{
-                if(err){
-                    XLog.error("Refresh file failed: " + doc.fileName);
-                }else{
-                    XLog.success("Refresh file successfully: " + doc.fileName);
+        checkXMLValid(doc,{
+        onSuccess: (err, result) => {
+            let adbUtils = new ADBUtils();
+            adbUtils.pushFile(doc.fileName,debug_dir,{
+                onFinish:(err,stdout,stderr)=>{
+                    if(err){
+                        XLog.error("Refresh file failed: " + doc.fileName);
+                    }else{
+                        XLog.success("Refresh file successfully: " + doc.fileName);
+                    }
+                    
                 }
-               
-            }
-        });   
-    return true;
+            });  
+        },  onFail: (err, result) => {
+            XLog.error("The task is interrupted because the xml is illegal.");
+        }});
+    }
 }
 
 function refreshFiles(){
@@ -105,15 +104,28 @@ function refreshFiles(){
                 }else{
                     XLog.success("Refresh Project successfully: " + folderPath);
                 }
-               
             }
         });
     })
     return true;
 }
 
-function isXMLValid(doc : TextDocument){
-    return true;
+export interface XMLParseCallback{
+    onSuccess(err,result);
+    onFail(err,result);
+}
+function checkXMLValid(doc : TextDocument, callback : XMLParseCallback){
+    let text = doc.getText();
+    let xml2js = require('xml2js');
+    xml2js.parseString(text, function (err, result) {
+        if(err){
+            XLog.error("Invalid xml file: " + doc.fileName);
+            XLog.error(err.message);
+            callback.onFail(err, result);
+        }else{
+            callback.onSuccess(err, result);
+        }
+    });
 }
 
 
@@ -143,6 +155,7 @@ class XLog{
     BgMagenta = "\x1b[45m"
     BgCyan = "\x1b[46m"
     BgWhite = "\x1b[47m"
+    
     public static debug(log : String){
         let util = require('util');
         console.log(util.format("[RapidStudio] %s",log));
@@ -150,7 +163,10 @@ class XLog{
     
     public static error(log : String){
         let util = require('util');
-        console.log(util.format('\x1b[40m\x1b[31m%s\x1b[0m',util.format("[RapidStudio] %s",log)));
+        log.split("\n",100).forEach(logLine => {
+            console.log(util.format('\x1b[40m\x1b[31m%s\x1b[0m',util.format("[RapidStudio] %s",logLine)));
+        });
+        // console.log(util.format('\x1b[40m\x1b[31m%s\x1b[0m',util.format("[RapidStudio] %s",log)));
     }
     
     public static info(log : String){
@@ -161,6 +177,10 @@ class XLog{
     public static success(log : String){
         let util = require('util');
         console.log(util.format('\x1b[40m\x1b[32m%s\x1b[0m',util.format("[RapidStudio] %s",log)));
+    }
+
+    private static colorLog(log : String){
+
     }
 }
 
