@@ -70,8 +70,8 @@ function syncFile(){
     // Start the task
     XLog.success("Start syncing files..." );
     let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
-    XLog.success("Target folder: " + debug_dir);
-    
+    XLog.info("Target folder: " + debug_dir);
+
     function pushFile(){
         let adbUtils = new ADBUtils();
         
@@ -117,7 +117,7 @@ function syncProject(){
     
     let path = require('path');  
     let folderPath = path.dirname(currentFilePath); 
-    XLog.success("The target project folder: " + folderPath);
+    XLog.info("The target project folder: " + folderPath);
     const fs = require('fs');
     fs.readdir(folderPath, (err, files) => {
         let filePaths = new Array();
@@ -127,7 +127,6 @@ function syncProject(){
         });
         let adbUtils = new ADBUtils();
         let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
-        XLog.success("Target folder: " + debug_dir);
         adbUtils.pushFiles(filePaths,debug_dir,{
             onFinish:(err,stdout,stderr)=>{
                 if(err){
