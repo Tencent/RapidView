@@ -69,10 +69,12 @@ function syncFile(){
 
     // Start the task
     XLog.success("Start syncing files..." );
-
-
+    let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
+    XLog.success("Target folder: " + debug_dir);
+    
     function pushFile(){
         let adbUtils = new ADBUtils();
+        
         adbUtils.pushFile(doc.fileName,debug_dir,{
             onFinish:(err,stdout,stderr)=>{
                 if(err){
@@ -124,6 +126,8 @@ function syncProject(){
             filePaths.push(filePath);
         });
         let adbUtils = new ADBUtils();
+        let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
+        XLog.success("Target folder: " + debug_dir);
         adbUtils.pushFiles(filePaths,debug_dir,{
             onFinish:(err,stdout,stderr)=>{
                 if(err){
@@ -144,14 +148,12 @@ function createNewProject(){
     let fs = require("fs");
     let workspace_file = rootPath + path.sep + "rapid_workspace.json";
     console.log(workspace_file);
-    fs.writeFile(workspace_file, 'Just now, we have created this file', function (err) {
+    fs.writeFile(workspace_file, 'Hello Rapid!', function (err) {
         if (err) throw err;
-        console.log('It\'s saved! in same location.');
     });
-    
 }
 
-let debug_dir = "/sdcard/tencent/tassistant/photondebug/";
+// let debug_dir = "/sdcard/tencent/tassistant/photondebug/";
 
 
 // this method is called when your extension is deactivated

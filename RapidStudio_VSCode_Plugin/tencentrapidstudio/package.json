@@ -55,6 +55,17 @@
                     "group": "navigation"
                 }
             ]
+        },
+        "configuration": {
+            "type": "object",
+            "title": "RapidStudio Configuration",
+            "properties": {
+                "rapidstudio.folder": {
+                    "type": "string",
+                    "default": "/sdcard/",
+                    "description": "The mobile device sdcard directory which rapid files will be placed on."
+                }
+            }
         }
     },
     "scripts": {
