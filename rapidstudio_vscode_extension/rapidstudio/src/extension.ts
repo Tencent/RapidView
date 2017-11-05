@@ -37,22 +37,37 @@ export function activate(context: ExtensionContext) {
     let refreshFileTask = commands.registerCommand('extension.syncFile', () => {
         // The code you place here will be executed every time your command is executed
         window.showInformationMessage("Sync File");
-        syncFile();
-
+        try {
+            syncFile(); 
+        } catch (error) {
+            XLog.error(error);
+        }
     });
 
     let refreshProjectTask = commands.registerCommand('extension.syncProject',()=>{
         window.showInformationMessage("Sync Project");
-
-        syncProject();
+        try {
+            syncProject();
+        } catch (error) {
+            XLog.error(error);
+        }
     })
 
     let createNewProjectTask = commands.registerCommand('extension.newProject',()=>{
-        createNewProject();
+        try {
+            createNewProject();
+        } catch (error) {
+            XLog.error(error);
+        }
+        
     })
 
     let createNewViewTask = commands.registerCommand('extension.newView',()=>{
-        createNewView();
+        try{
+            createNewView();
+        }catch (error) {
+            XLog.error(error);
+        }
     })
 
     // Add the auto completion
@@ -158,24 +173,93 @@ function createNewProject(){
     let path = require("path");
     let fs = require("fs");
     let workspace_file = rootPath + path.sep + "rapid_workspace.json";
-    console.log(workspace_file);
     fs.writeFile(workspace_file, 'Hello Rapid!', function (err) {
-        if (err) throw err;
+        if (err) {
+            XLog.success("Create rapid workspace successfully.");
+            throw err;
+        }
+        XLog.success("Create rapid workspace successfully.");
     });
 }
 
 
 function createNewView(){
-    let options: InputBoxOptions = {
-        prompt: "Label: ",
-        placeHolder: "(placeholder)"
+    let viewName = "view_name";
+    let mainFileName = "view_main_file_name";
+    let newViewOptions: InputBoxOptions = {
+        prompt: "Enter the name of view you want to create",
+        placeHolder: "The name of new view"
     }
-    
-    window.showInputBox(options).then(value => {
-        if (!value) return;
-        console.log(value);
-        // show the next dialog, etc.
+    function inputMainFileName(argViewName){
+        viewName = argViewName;
+        let mainFileOptions: InputBoxOptions = {
+            prompt: "Enter the mainfile name",
+            placeHolder: "Main file name"
+        }
+        window.showInformationMessage("Hello Rapid Studio");
+        window.showInputBox(mainFileOptions).then(mainFileNameInput => {
+            if (!mainFileNameInput) return;
+            let parts = mainFileNameInput.split(".");
+            let ext = parts[parts.length - 1];
+            if(ext != "xml"){
+                window.showErrorMessage("Main file type must be xml.")
+                return;
+            }
+            addNewViewToFile(viewName,mainFileNameInput);
+        });
+    }
+    window.showInputBox(newViewOptions).then(viewNameInput => {
+        if (!viewNameInput) return;
+        // Then show the main file name input dialog
+        inputMainFileName(viewNameInput);
     });
+}
+
+function addNewViewToFile(view : String, mainFile : String){
+    const rootPath = workspace.rootPath;
+    XLog.debug(rootPath);
+    let path = require("path");
+    let fs = require("fs");
+    function createViewMappingFile(callback){
+        
+    }
+    let viewMappingFile = rootPath + path.sep + workspace.getConfiguration("rapidstudio").get<String>('viewMappingFile');
+    fs.exists(viewMappingFile, function(isExist){
+        if(!isExist){
+            // Create and add the view mapping
+            var viewMap = {
+                "view_config":[]
+            };
+            viewMap["view_config"].push({
+                "name" : view,
+                "mainfile" : mainFile
+            });
+            fs.writeFile(viewMappingFile,JSON.stringify(viewMap), function (err) {
+                if (err) {
+                    throw err;
+                }
+                XLog.success("Create and add rapidview successfully.");
+            });
+        }else{
+            // Only add the view mapping
+            fs.readFile(viewMappingFile, 'utf8', function (err, data) {
+                if (err) throw err;
+                let viewMap = JSON.parse(data);
+                viewMap['view_config'].push({
+                    "name" : view,
+                    "mainfile" : mainFile
+                });
+                fs.writeFile(viewMappingFile, JSON.stringify(viewMap), function (err) {
+                    if (err) {
+                        throw err;
+                    }
+                    XLog.success("Create rapid view successfully.");
+                });
+            });
+        }
+
+    }) ;
+    
 }
 
 // this method is called when your extension is deactivated

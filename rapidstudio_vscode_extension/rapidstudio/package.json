@@ -74,6 +74,11 @@
                     "type": "string",
                     "default": "/sdcard/",
                     "description": "The mobile device sdcard directory which rapid files will be placed on."
+                },
+                "rapidstudio.viewMappingFile": {
+                    "type": "string",
+                    "default": "photon_debug_config.json",
+                    "description": "The file used to store view mappings."
                 }
             }
         },

@@ -34,7 +34,7 @@ export class XLog{
 
     
     public static debug(log : String){
-        this.info(log);
+        this.typeLog(log,"DEBUG");
     }
     
     public static error(log : String){
@@ -62,6 +62,8 @@ export class XLog{
         });
     }
 }
+
+
 
 
 export class ADBUtils {
