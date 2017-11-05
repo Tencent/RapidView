@@ -31,6 +31,7 @@ export class XLog{
     public static registerOutputPanel(outputPanel : OutputChannel){
         this._outputPanel = outputPanel;
     }
+
     
     public static debug(log : String){
         this.info(log);
@@ -53,6 +54,7 @@ export class XLog{
         if(!this._outputPanel){
             return;
         }
+        this._outputPanel.show();
         let util = require('util');
         let time = TimeUtils.getTime();
         log.split("\n",100).forEach(logLine => {
