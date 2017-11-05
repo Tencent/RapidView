@@ -1,4 +1,6 @@
 
+import {OutputChannel} from 'vscode';
+
 export class XLog{
     Reset = "\x1b[0m"
     Bright = "\x1b[1m"
@@ -24,6 +26,11 @@ export class XLog{
     BgMagenta = "\x1b[45m"
     BgCyan = "\x1b[46m"
     BgWhite = "\x1b[47m"
+    private static _outputPanel;
+
+    public static registerOutputPanel(outputPanel : OutputChannel){
+        this._outputPanel = outputPanel;
+    }
     
     public static debug(log : String){
         this.info(log);
@@ -34,10 +41,13 @@ export class XLog{
     }
     
     public static info(log : String){
+        if(!this._outputPanel){
+            return;
+        }
         let util = require('util');
         let time = TimeUtils.getTime();
         log.split("\n",100).forEach(logLine => {
-            console.log(util.format("[RapidStudio %s] %s",time,logLine));
+            this._outputPanel.append(util.format("[RapidStudio %s] %s\n",time,logLine));
         });
        
     }
@@ -47,10 +57,13 @@ export class XLog{
     }
 
     private static colorLog(log : String, gColor : String, fColor : String){
+        if(!this._outputPanel){
+            return;
+        }
         let util = require('util');
         let time = TimeUtils.getTime();
         log.split("\n",100).forEach(logLine => {
-            console.log(util.format('%s%s[RapidStudio %s] %s\x1b[0m',gColor,fColor,time,logLine));
+            this._outputPanel.append(util.format('%s%s[RapidStudio %s] %s\x1b[0m\n',gColor,fColor,time,logLine));
         });
     }
 }

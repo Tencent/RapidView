@@ -14,6 +14,13 @@ export function activate(context: ExtensionContext) {
     // This line of code will only be executed once when your extension is activated
     console.log('Congratulations, your extension "tencentrapidstudio" is now active!');
 
+    let outputPanel = window.createOutputChannel('RAPID STUDIO');
+    outputPanel.show();
+    XLog.registerOutputPanel(outputPanel);
+    
+    
+    
+
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
@@ -30,7 +37,6 @@ export function activate(context: ExtensionContext) {
     let refreshFileTask = commands.registerCommand('extension.syncFile', () => {
         // The code you place here will be executed every time your command is executed
         window.showInformationMessage("Sync File");
-       
         syncFile();
 
     });
