@@ -155,8 +155,6 @@ function createNewProject(){
     });
 }
 
-// let debug_dir = "/sdcard/tencent/tassistant/photondebug/";
-
 
 // this method is called when your extension is deactivated
 export function deactivate() {
