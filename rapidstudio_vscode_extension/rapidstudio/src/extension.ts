@@ -177,6 +177,7 @@ function createNewProject(){
             XLog.success("Create rapid workspace successfully.");
             throw err;
         }
+        MessageToastUtils.showInformationMessage("Create  rapid workspace successfully.");
         XLog.success("Create rapid workspace successfully.");
     });
 }

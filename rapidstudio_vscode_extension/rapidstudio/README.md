@@ -3,8 +3,16 @@
 This extension can help you quickly develop the RapidView project.
 
 ## Features
+### Create new rapid workspace and view
+
+Items in explorer right-click menu:
+
+* `New Rapid Workspace `: Initial a rapid workspace in current root directory. This operation creates a file named rapid_workspace.json.
+* `New Rapid View `:Create a view, and bind a main file for it.
 
 ### Quick debug
+
+Buttions in the navigation bar in the upper right corner of the window:
 
 * `Sync File `: Quickly sync single file to sdcard
 * `Sync Project `: Quickly sync all files under the project to sdcard
@@ -46,14 +54,13 @@ For example:
 
 ## Known Issues
 
-This version does not currently support custom views and completions.
+This version does not currently support custom automatic completions for xml attributes and lua functions.
 
 ## Release Notes
 
-### 0.0.1
+### 1.0.0
 
 The version released for testing.
-
 
 
 ## For more information
