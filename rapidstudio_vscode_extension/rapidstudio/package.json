@@ -67,7 +67,33 @@
                     "description": "The mobile device sdcard directory which rapid files will be placed on."
                 }
             }
-        }
+        },
+        "languages": [
+            {
+                "id": "Log",
+                "aliases": [
+                    "log"
+                ],
+                "extensions": [
+                    ".log"
+                ],
+                "configuration": "./log.configuration.json",
+                "mimetypes": [
+                    "log",
+                    "text/log",
+                    "text/x-log",
+                    "text/x-code-output",
+                    "x-code-output"
+                ]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "Log",
+                "scopeName": "code.log",
+                "path": "./src/syntaxes/log.tmLanguage"
+            }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",

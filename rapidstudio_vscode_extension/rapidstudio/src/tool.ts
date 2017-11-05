@@ -47,7 +47,7 @@ export class XLog{
         let util = require('util');
         let time = TimeUtils.getTime();
         log.split("\n",100).forEach(logLine => {
-            this._outputPanel.append(util.format("[RapidStudio %s] %s\n",time,logLine));
+            this._outputPanel.appendLine(util.format("[RapidStudio %s] %s",time,logLine));
         });
        
     }
@@ -63,7 +63,7 @@ export class XLog{
         let util = require('util');
         let time = TimeUtils.getTime();
         log.split("\n",100).forEach(logLine => {
-            this._outputPanel.append(util.format('%s%s[RapidStudio %s] %s\x1b[0m\n',gColor,fColor,time,logLine));
+            this._outputPanel.appendLine(util.format('%s%s[RapidStudio %s] %s\x1b[0m',gColor,fColor,time,logLine));
         });
     }
 }

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>scopeName</key>
+        <string>code.log</string>
+        <key>fileTypes</key>
+        <array>
+            <string>log</string>
+        </array>
+        <key>name</key>
+        <string>Log file</string>
+        <key>patterns</key>
+        <array>
+            <dict>
+                <!-- Quoted strings with " -->
+                <key>match</key>
+                <string>"(.*?)"</string>
+                <key>name</key>
+                <string>string.quoted</string>
+            </dict>
+            <dict>
+                <!-- Quoted strings with ' -->
+                <key>match</key>
+                <string>'(.*?)'</string>
+                <key>name</key>
+                <string>string.quoted</string>
+            </dict>
+            <!-- <dict>
+                brackets
+                <key>match</key>
+                <string><(.*?)></string>
+                <key>name</key>
+                <string>string.quoted</string>
+            </dict> -->
+            <dict>
+                <!-- GUID -->
+                <key>match</key>
+                <string>\b(?i:([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}))\b</string>
+                <key>name</key>
+                <string>support.class</string>
+            </dict>
+            <dict>
+                <!-- email address -->
+                <key>match</key>
+                <string>\S+@\S+\.\S+</string>
+                <key>name</key>
+                <string>markup.bold</string>
+            </dict>
+            <dict>
+                <!-- Exception (with custom naming and namespacing) -->
+                <key>match</key>
+                <string>\b(?i:((\.)*[a-z]|[0-9])*(Exception|Error|Failure|Fail))\b</string>
+                <key>name</key>
+                <string>invalid</string>
+            </dict>
+            <dict>
+                <!-- Date MM/DD/(YY)YY -->
+                <key>match</key>
+                <string>\b(((0|1)?[0-9][1-2]?)|(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sept(ember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?))[/|\-|\.| ]([0-2]?[0-9]|[3][0-1])[/|\-|\.| ]((19|20)?[0-9]{2})\b</string>
+                <key>name</key>
+                <string>constant.numeric</string>
+            </dict>
+            <dict>
+                <!-- Date (YY)YY/DD/MM -->
+                <key>match</key>
+                <string>\b((19|20)?[0-9]{2}[/|\-|\.| ](((0|1)?[0-9][1-2]?)|(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sept(ember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?))[/|\-|\.| ]([0-2]?[0-9]|[3][0-1]))\b</string>
+                <key>name</key>
+                <string>constant.numeric</string>
+            </dict>
+            <dict>
+                <!-- Date DD/MM/(YY)YY -->
+                <key>match</key>
+                <string>\b([0-2]?[0-9]|[3][0-1])[/|\-|\.| ](((0|1)?[0-9][1-2]?)|(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sept(ember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?))[/|\-|\.| ]((19|20)?[0-9]{2})\b</string>
+                <key>name</key>
+                <string>constant.numeric</string>
+            </dict>
+            <dict>
+                <!-- Time HH:MM(:SS)? AM? timezone? -->
+                <key>match</key>
+                <string>\b([0|1]?[0-9]|2[0-3])\:[0-5][0-9](\:[0-5][0-9])?( ?(?i:(a|p)m?))?( ?[+-]?[0-9]*)?\b</string>
+                <key>name</key>
+                <string>constant.numeric</string>
+            </dict>
+            <dict>
+                <!-- Numeric (decimal) -->
+                <key>match</key>
+                <string>\b\d+\.?\d*?\b</string>
+                <key>name</key>
+                <string>constant.numeric</string>
+            </dict>
+            <dict>
+                <!-- Numeric (hex) -->
+                <key>match</key>
+                <string>\b(?i:(0?x)?[0-9a-f][0-9a-f]+)\b</string>
+                <key>name</key>
+                <string>constant.numeric</string>
+            </dict>
+            <dict>
+                <!-- Namespace -->
+                <key>match</key>
+                <string>\b(?i:(([a-z]|[0-9]|[_|-])*(\.([a-z]|[0-9]|[_|-])*)+))\b</string>
+                <key>name</key>
+                <string>support.type</string>
+            </dict>
+            <dict>
+                <key>match</key>
+                <string>\b(?i:(Down|Error|Failure|Fail|Fatal|false))(\:|\b)</string>
+                <key>name</key>
+                <string>invalid.illegal</string>
+            </dict>
+            <dict>
+                <key>match</key>
+                <string>\b(?i:(hint|info|information|true|log))(\:|\b)</string>
+                <key>name</key>
+                <string>keyword</string>
+            </dict>
+            <dict>
+                <key>match</key>
+                <string>\b(?i:(warning|warn|test|debug|null|undefined|NaN))(\:|\b)</string>
+                <key>name</key>
+                <string>invalid.deprecated</string>
+            </dict>
+            <dict>
+                <key>match</key>
+                <string>\b(?i:(local))(\:|\b)</string>
+                <key>name</key>
+                <string>support.function</string>
+            </dict>
+            <dict>
+                <key>match</key>
+                <string>\b(?i:(server|running|remote))(\:|\b)</string>
+                <key>name</key>
+                <string>comment.line</string>
+            </dict>
+            <dict>
+                <!-- Generic URI/URL -->
+                <key>match</key>
+                <string>\b(?i:([a-z]|[0-9])+\:((\/\/)|((\/\/)?(\S)))+)</string>
+                <key>name</key>
+                <string>storage</string>
+            </dict>
+            <dict>
+                <!-- output from (npm install) log -->
+                <key>match</key>
+                <string>(-)+>|├(─)+|└(─)+</string>
+                <key>name</key>
+                <string>comment.line</string>
+            </dict>
+        </array>
+        <key>uuid</key>
+        <string>ab259404-3072-4cd4-a943-7cbbd32e373f</string>
+    </dict>
+</plist>
