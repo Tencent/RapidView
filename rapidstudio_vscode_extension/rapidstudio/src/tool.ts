@@ -73,9 +73,9 @@ export class ADBUtils {
         // Create as needed
         let exec = require('child_process').exec;
         exec(cmdStr, function(err,stdout,stderr){
-            console.log(stdout);
+            XLog.info(stdout);
             if(err) {
-                console.log(stderr);
+                XLog.error(stderr);
             }
             callback.onFinish(err,stdout,stderr);
         });
@@ -99,9 +99,9 @@ export class ADBUtils {
         let exec = require('child_process').exec;
         let _adbUtils = this;
         exec(command, function(err,stdout,stderr){
-            console.log(stdout);
+            XLog.info(stdout);
             if(err) {
-                console.log(stderr);
+                XLog.error(stderr);
                 callback.onFinish(err,stdout,stderr);
             }else {
                 if(files.length != 0){

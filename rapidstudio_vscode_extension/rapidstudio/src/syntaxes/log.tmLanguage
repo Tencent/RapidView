@@ -146,8 +146,7 @@
                 <string>(-)+>|├(─)+|└(─)+</string>
                 <key>name</key>
                 <string>comment.line</string>
-            </dict
-            >
+            </dict>
             <dict>
                  <!-- output from rapid studio success log -->
                 <key>match</key>
