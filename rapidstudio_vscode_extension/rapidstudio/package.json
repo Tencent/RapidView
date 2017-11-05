@@ -16,6 +16,7 @@
         "onCommand:extension.syncFile",
         "onCommand:extension.syncProject",
         "onCommand:extension.newProject",
+        "onCommand:extension.newView",
         "workspaceContains:rapid_workspace.json"
     ],
     "main": "./out/extension",
@@ -37,6 +38,10 @@
             {
                 "command": "extension.newProject",
                 "title": "New Rapid Workspace"
+            },
+            {
+                "command": "extension.newView",
+                "title": "New Rapid View"
             }
         ],
         "menus": {
@@ -53,7 +58,11 @@
             "explorer/context": [
                 {
                     "command": "extension.newProject",
-                    "group": "navigation"
+                    "group": "rapidstudio"
+                },
+                {
+                    "command": "extension.newView",
+                    "group": "rapidstudio"
                 }
             ]
         },

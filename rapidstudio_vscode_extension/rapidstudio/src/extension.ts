@@ -1,7 +1,8 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import {window,workspace,languages, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument} from 'vscode';
+import {window,workspace,languages, commands, Disposable, 
+    ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument,InputBoxOptions} from 'vscode';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
@@ -46,9 +47,12 @@ export function activate(context: ExtensionContext) {
         syncProject();
     })
 
-    let newProjectTask = commands.registerCommand('extension.newProject',()=>{
-        window.showInformationMessage("createNewProject");
+    let createNewProjectTask = commands.registerCommand('extension.newProject',()=>{
         createNewProject();
+    })
+
+    let createNewViewTask = commands.registerCommand('extension.newView',()=>{
+        createNewView();
     })
 
     // Add the auto completion
@@ -64,7 +68,7 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(disposable);
     context.subscriptions.push(refreshFileTask);
     context.subscriptions.push(refreshProjectTask);
-    context.subscriptions.push(newProjectTask);
+    context.subscriptions.push(createNewProjectTask);
 }
 
 function syncFile(){
@@ -160,6 +164,19 @@ function createNewProject(){
     });
 }
 
+
+function createNewView(){
+    let options: InputBoxOptions = {
+        prompt: "Label: ",
+        placeHolder: "(placeholder)"
+    }
+    
+    window.showInputBox(options).then(value => {
+        if (!value) return;
+        console.log(value);
+        // show the next dialog, etc.
+    });
+}
 
 // this method is called when your extension is deactivated
 export function deactivate() {
