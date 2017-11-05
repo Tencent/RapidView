@@ -66,6 +66,10 @@ The version released for testing.
 
 Add explorer menu to add new rapid view. 
 
+### 1.0.2
+
+Improve log output.
+
 ## For more information
 
 ### For Contributors
