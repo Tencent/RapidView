@@ -15,7 +15,7 @@
         "onCommand:extension.syncFile",
         "onCommand:extension.syncProject",
         "onCommand:extension.newProject",
-        "workspaceContains:rapid_workspace.json"        
+        "workspaceContains:rapid_workspace.json"
     ],
     "main": "./out/extension",
     "contributes": {
