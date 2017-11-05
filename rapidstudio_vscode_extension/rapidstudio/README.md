@@ -47,7 +47,7 @@ For example:
 ```
 {
     "rapidstudio.folder": "/sdcard/rapid_debug/",
-    "rapidstudio.folder": "rapid_debug_config.json"
+    "rapidstudio.viewMappingFile": "rapid_debug_config.json"
 }
 ```
 
