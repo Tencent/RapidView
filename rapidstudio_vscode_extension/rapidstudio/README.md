@@ -7,15 +7,15 @@ This extension can help you quickly develop the RapidView project.
 
 Items in explorer right-click menu:
 
-* `New Rapid Workspace `: Initial a rapid workspace in current root directory. This operation creates a file named rapid_workspace.json.
-* `New Rapid View `:Create a view, and bind a main file for it.
+* `New Rapid Workspace ` : Initial a rapid workspace in current root directory. This operation creates a file named rapid_workspace.json.
+* `New Rapid View ` : Create a view, and bind a main file for it.
 
 ### Quick debug
 
 Buttions in the navigation bar in the upper right corner of the window:
 
-* `Sync File `: Quickly sync single file to sdcard
-* `Sync Project `: Quickly sync all files under the project to sdcard
+* `Sync File ` : Quickly sync single file to sdcard
+* `Sync Project ` : Quickly sync all files under the project to sdcard
 
 ### Automatic completion 
 
