@@ -58,9 +58,10 @@ export class XLog{
         let util = require('util');
         let time = TimeUtils.getTime();
         if(!log || !log.split) return;
-        log.split("\n",100).forEach(logLine => {
-            this._outputPanel.appendLine(util.format('[RapidStudio %s][%s] %s',time,type,logLine));
-        });
+        // log.split("\n",100).forEach(logLine => {
+        //     this._outputPanel.appendLine(util.format('[RapidStudio %s][%s] %s',time,type,logLine));
+        // });
+        this._outputPanel.appendLine(util.format('[RapidStudio %s][%s] %s',time,type,log));
     }
 }
 
