@@ -1,5 +1,5 @@
 
-import {OutputChannel} from 'vscode';
+import {OutputChannel,window} from 'vscode';
 
 export class XLog{
     Reset = "\x1b[0m"
@@ -57,6 +57,7 @@ export class XLog{
         this._outputPanel.show();
         let util = require('util');
         let time = TimeUtils.getTime();
+        if(!log || !log.split) return;
         log.split("\n",100).forEach(logLine => {
             this._outputPanel.appendLine(util.format('[RapidStudio %s][%s] %s',time,type,logLine));
         });
@@ -143,5 +144,16 @@ export interface XMLValidCheckCallback{
 export class TimeUtils{
     public static getTime():String{
         return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').split(' ')[1];   
+    }
+}
+
+
+export class MessageToastUtils{
+    public static showInformationMessage(message : string){
+        window.showInformationMessage(message);
+    }
+
+    public static showErrorMessage(message : string){
+        window.showErrorMessage(message);
     }
 }

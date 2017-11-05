@@ -7,7 +7,7 @@ import {window,workspace,languages, commands, Disposable,
 // your extension is activated the very first time the command is executed
 
 // Import tool module
-import {XLog,ADBCallback,ADBUtils,XMLUtils} from "./tool";
+import {XLog,ADBCallback,ADBUtils,XMLUtils,MessageToastUtils} from "./tool";
 import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider} from "./completion";
 export function activate(context: ExtensionContext) {
 
@@ -30,8 +30,6 @@ export function activate(context: ExtensionContext) {
         // Display a message box to the user
         window.showInformationMessage("Hello Rapid Studio");
         let adbUtils = new ADBUtils();
-
-
     });
 
     let refreshFileTask = commands.registerCommand('extension.syncFile', () => {
@@ -66,6 +64,7 @@ export function activate(context: ExtensionContext) {
         try{
             createNewView();
         }catch (error) {
+            MessageToastUtils.showErrorMessage("Faile to add view");
             XLog.error(error);
         }
     })
@@ -196,7 +195,6 @@ function createNewView(){
             prompt: "Enter the mainfile name",
             placeHolder: "Main file name"
         }
-        window.showInformationMessage("Hello Rapid Studio");
         window.showInputBox(mainFileOptions).then(mainFileNameInput => {
             if (!mainFileNameInput) return;
             let parts = mainFileNameInput.split(".");
@@ -223,9 +221,11 @@ function addNewViewToFile(view : String, mainFile : String){
     function createViewMappingFile(callback){
         
     }
+    // Get the name of mapping file from configuration
     let viewMappingFile = rootPath + path.sep + workspace.getConfiguration("rapidstudio").get<String>('viewMappingFile');
     fs.exists(viewMappingFile, function(isExist){
         if(!isExist){
+
             // Create and add the view mapping
             var viewMap = {
                 "view_config":[]
@@ -236,25 +236,45 @@ function addNewViewToFile(view : String, mainFile : String){
             });
             fs.writeFile(viewMappingFile,JSON.stringify(viewMap), function (err) {
                 if (err) {
-                    throw err;
+                   throw err;
                 }
+                MessageToastUtils.showInformationMessage("Create and add rapidview successfully.");
                 XLog.success("Create and add rapidview successfully.");
             });
+
         }else{
+
             // Only add the view mapping
             fs.readFile(viewMappingFile, 'utf8', function (err, data) {
-                if (err) throw err;
-                let viewMap = JSON.parse(data);
-                viewMap['view_config'].push({
-                    "name" : view,
-                    "mainfile" : mainFile
-                });
+                if (err) {
+                    throw err;
+                }
+
+                // Catch json exception
+                let viewMap = {};
+                try{
+                    viewMap = JSON.parse(data);
+                    if(!viewMap['view_config']){
+                        viewMap['view_config'] = [];
+                    }
+                    viewMap['view_config'].push({
+                        "name" : view,
+                        "mainfile" : mainFile
+                    });
+                }catch(error){
+                    XLog.error("The view mapping file " + viewMappingFile + " is not standard JSON format, it may have been damaged");
+                    return;
+                }
+
+                // Overwrite the view mapping file
                 fs.writeFile(viewMappingFile, JSON.stringify(viewMap), function (err) {
                     if (err) {
                         throw err;
                     }
+                    MessageToastUtils.showInformationMessage("Create and add rapidview successfully.");
                     XLog.success("Create rapid view successfully.");
                 });
+                
             });
         }
 
