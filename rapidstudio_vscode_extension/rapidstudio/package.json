@@ -4,6 +4,7 @@
     "description": "Visual Studio Code Extension for Tencent Rapidview",
     "version": "1.0.0",
     "publisher": "realhe",
+    "icon": "media/icon.png",
     "engines": {
         "vscode": "^1.17.0"
     },
