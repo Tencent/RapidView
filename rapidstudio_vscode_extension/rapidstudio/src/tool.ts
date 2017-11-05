@@ -37,33 +37,26 @@ export class XLog{
     }
     
     public static error(log : String){
-        this.colorLog(log,"\x1b[40m","\x1b[31m");
+        this.typeLog(log,"ERROR");
     }
     
     public static info(log : String){
-        if(!this._outputPanel){
-            return;
-        }
-        let util = require('util');
-        let time = TimeUtils.getTime();
-        log.split("\n",100).forEach(logLine => {
-            this._outputPanel.appendLine(util.format("[RapidStudio %s] %s",time,logLine));
-        });
+        this.typeLog(log,"INFO");
        
     }
 
     public static success(log : String){
-        this.colorLog(log,"\x1b[40m","\x1b[32m");
+        this.typeLog(log,"SUCCESS");
     }
 
-    private static colorLog(log : String, gColor : String, fColor : String){
+    private static typeLog(log : String, type : String){
         if(!this._outputPanel){
             return;
         }
         let util = require('util');
         let time = TimeUtils.getTime();
         log.split("\n",100).forEach(logLine => {
-            this._outputPanel.appendLine(util.format('%s%s[RapidStudio %s] %s\x1b[0m',gColor,fColor,time,logLine));
+            this._outputPanel.appendLine(util.format('[RapidStudio %s][%s] %s',time,type,logLine));
         });
     }
 }

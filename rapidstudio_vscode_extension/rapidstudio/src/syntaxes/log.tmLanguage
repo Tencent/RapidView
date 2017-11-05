@@ -146,6 +146,28 @@
                 <string>(-)+>|├(─)+|└(─)+</string>
                 <key>name</key>
                 <string>comment.line</string>
+            </dict
+            >
+            <dict>
+                 <!-- output from rapid studio success log -->
+                <key>match</key>
+                <string>\[RapidStudio.*\]\[(SUCCESS|VALID)\]</string>
+                <key>name</key>
+                <string>comment.line</string>
+            </dict>
+            <dict>
+                 <!-- output from rapid studio error log -->
+                <key>match</key>
+                <string>\[RapidStudio.*\]\[(ERROR|EXCEPTION)\]</string>
+                <key>name</key>
+                <string>invalid.illegal</string>
+            </dict>
+             <dict>
+                 <!-- output from rapid studio error log -->
+                <key>match</key>
+                <string>\[RapidStudio.*\]\[(INFO|DEBUG)\]</string>
+                <key>name</key>
+                <string>keyword</string>
             </dict>
         </array>
         <key>uuid</key>
