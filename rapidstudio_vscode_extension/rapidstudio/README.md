@@ -33,11 +33,13 @@ Visual Studio Code Version: 1.17.0+
 Configure your project in .vscode/settings.json:
 
 * `rapidstudio.folder` : The mobile device sdcard directory which rapid files will be placed on.
+* `rapidstudio.viewMappingFile` : The name of file that stores the mapping between views and files.
 
 For example:
 ```
 {
-    "rapidstudio.folder": "/sdcard/rapid_debug/"
+    "rapidstudio.folder": "/sdcard/rapid_debug/",
+    "rapidstudio.folder": "rapid_debug_config.json"
 }
 ```
 
