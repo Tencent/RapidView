@@ -34,7 +34,6 @@ export function activate(context: ExtensionContext) {
 
     let refreshFileTask = commands.registerCommand('extension.syncFile', () => {
         // The code you place here will be executed every time your command is executed
-        window.showInformationMessage("Sync File");
         try {
             syncFile(); 
         } catch (error) {
@@ -43,7 +42,6 @@ export function activate(context: ExtensionContext) {
     });
 
     let refreshProjectTask = commands.registerCommand('extension.syncProject',()=>{
-        window.showInformationMessage("Sync Project");
         try {
             syncProject();
         } catch (error) {

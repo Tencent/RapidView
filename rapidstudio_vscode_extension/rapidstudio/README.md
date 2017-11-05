@@ -62,6 +62,9 @@ This version does not currently support custom automatic completions for xml att
 
 The version released for testing.
 
+### 1.0.1
+
+Add explorer menu to add new rapid view. 
 
 ## For more information
 
