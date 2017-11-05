@@ -84,21 +84,14 @@
         },
         "languages": [
             {
-                "id": "Log",
+                "id": "rapid-log",
                 "aliases": [
                     "log"
                 ],
                 "extensions": [
                     ".log"
                 ],
-                "configuration": "./log.configuration.json",
-                "mimetypes": [
-                    "log",
-                    "text/log",
-                    "text/x-log",
-                    "text/x-code-output",
-                    "x-code-output"
-                ]
+                "configuration": "./log.configuration.json"
             }
         ],
         "grammars": [

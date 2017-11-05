@@ -15,7 +15,7 @@ export function activate(context: ExtensionContext) {
     // This line of code will only be executed once when your extension is activated
     console.log('Congratulations, your extension "tencentrapidstudio" is now active!');
 
-    let outputPanel = window.createOutputChannel('RAPID STUDIO');
+    let outputPanel = window.createOutputChannel('rapid-log');
     XLog.registerOutputPanel(outputPanel);
     
     
