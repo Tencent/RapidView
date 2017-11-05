@@ -13,6 +13,17 @@ This extension can help you quickly develop the RapidView project.
 
 xml and lua auto-completion
 
+### Log Output Colorizer
+
+Used the vscode-log-output-colorizer project from IBM-Bluemix:
+
+<https://github.com/IBM-Bluemix/vscode-log-output-colorizer>
+
+Language extension for VSCode that adds syntax colorization for both the output/debug/extensions panel and *.log files.
+
+Note: If you are using other extensions that colorize the output panel, it could override and disable this extension.
+
+
 ## Requirements
 
 Visual Studio Code Version: 1.17.0+
