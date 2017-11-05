@@ -3,24 +3,50 @@ import {CompletionItemProvider,CompletionItem,CompletionItemKind,Position,Cancel
 
 export class RapidXMLCompletionItemProvider implements CompletionItemProvider {
     private _completionItems: CompletionItem[];
+    constructor (){
+        this._completionItems = new Array<CompletionItem>();
+        xmlTags.forEach(tag => {
+            this._completionItems.push(new CompletionItem(tag,CompletionItemKind.Field));
+        });
+    }
     public provideCompletionItems(
         document: TextDocument, position: Position, token: CancellationToken): 
         CompletionItem[] {
-            this._completionItems = new Array<CompletionItem>();
-            xmlTags.forEach(tag => {
-                this._completionItems.push(new CompletionItem(tag,CompletionItemKind.Field));
-            });
             return this._completionItems;
+    }
+}
+
+export class RapidXMLAttrsCompletionItemProvider implements CompletionItemProvider {
+    private _completionItems: CompletionItem[];
+    constructor (){
+        this._completionItems = new Array<CompletionItem>();
+        xmlAttrs.forEach(tag => {
+            this._completionItems.push(new CompletionItem(tag,CompletionItemKind.Field));
+        });
+    }
+    public provideCompletionItems(
+        document: TextDocument, position: Position, token: CancellationToken): 
+        CompletionItem[] {
+            return this._completionItems;
+    }
+
+    public static getTriggerCharacters():String[]{
+        return ['a', 'b', 'd', 'e', 'f', 't', 'u', 'w', 'r', 'i', 'l', 'n', 'o', 'g', 'L', 'c', 's'];
     }
 }
 
 export class RapidLuaCompletionItemProvider implements CompletionItemProvider {
     private _completionItems: CompletionItem[];
+    constructor (){
+        this._completionItems = new Array<CompletionItem>();
+        luaFunctions.forEach(tag => {
+            this._completionItems.push(new CompletionItem(tag,CompletionItemKind.Field));
+        });
+    }
+    
     public provideCompletionItems(
         document: TextDocument, position: Position, token: CancellationToken): 
         CompletionItem[] {
-            this._completionItems = new Array<CompletionItem>();
-            this._completionItems.push(new CompletionItem("rapidview",CompletionItemKind.Field));
             return this._completionItems;
     }
 }
@@ -455,5 +481,67 @@ let xmlAttrs = [
     "unequal",
     "less",
     "lessequal"
+]
+
+let luaFunctions = [
+    "getBytesFromBitmap",
+    "Log",
+    "create",
+    "decode",
+    "encode",
+    "getAnimationCenter",
+    "getEnv",
+    "getGlobals",
+    "getJavaInterface",
+    "isLimitLevel",
+    "getContext",
+    "getPhotonID",
+    "getLayoutParams",
+    "getUiHandler",
+    "addView",
+    "removeView",
+    "update",
+    "bind",
+    "unregister",
+    "get",
+    "removeData",
+    "getObject",
+    "getArrayByte",
+    "isNil",
+    "getString",
+    "getLength",
+    "shareImageToWX",
+    "shareTextToWX",
+    "request",
+    "takePicture",
+    "choosePicture",
+    "getBitmapFromBytes",
+    "createParams",
+    "getID",
+    "getView",
+    "getParser",
+    "load",
+    "initialize",
+    "addView",
+    "setArrayView",
+    "setEnvironment",
+    "getEnv",
+    "add",
+    "run",
+    "notify",
+    "getActionRunner",
+    "getFilterRunner",
+    "setParentView",
+    "getParentView",
+    "setIndexInParent",
+    "getIndexInParent",
+    "getUIHandler",
+    "update",
+    "getParams",
+    "getID",
+    "getChildView",
+    "getBinder",
+    "getListener",
+    "getTaskCenter",
 ]
 

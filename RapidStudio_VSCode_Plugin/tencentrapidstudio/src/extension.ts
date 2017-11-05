@@ -7,7 +7,7 @@ import {window,workspace,languages, commands, Disposable, ExtensionContext, Stat
 
 // Import tool module
 import {XLog,ADBCallback,ADBUtils,XMLUtils} from "./tool";
-import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider} from "./completion";
+import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider} from "./completion";
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -47,11 +47,14 @@ export function activate(context: ExtensionContext) {
     })
 
     // Add the auto completion
-    let xmlCompletionProvideer = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
-    let luaCompletionProvideer = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),'.','\"');
+    let xmlCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
+    let xmlAttrsCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLAttrsCompletionItemProvider(),'\"',' ','m','a');
+    let luaCompletionProvider = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),':');
+   
 
-    context.subscriptions.push(xmlCompletionProvideer);
-    context.subscriptions.push(luaCompletionProvideer);
+    context.subscriptions.push(xmlCompletionProvider);
+    context.subscriptions.push(xmlAttrsCompletionProvider);
+    context.subscriptions.push(luaCompletionProvider);
 
     context.subscriptions.push(disposable);
     context.subscriptions.push(refreshFileTask);
