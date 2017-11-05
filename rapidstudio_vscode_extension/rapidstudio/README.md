@@ -1,16 +1,17 @@
-# rapidstudio README
+# Rapid Studio Visual Studio Code Extension
 
-This is the README for your extension "tencentrapidstudio". After writing up a brief description, we recommend including the following sections.
+This extension can help you quickly develop the RapidView project.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### Quick debug
 
-For example if there is an image subfolder under your extension project workspace:
+* `Sync File `: Quickly sync single file to sdcard
+* `Sync Project `: Quickly sync all files under the project to sdcard
 
-\!\[feature X\]\(images/feature-x.png\)
+### Automatic completion 
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+xml and lua auto-completion
 
 ## Requirements
 
@@ -18,14 +19,17 @@ Visual Studio Code Version: 1.17.0+
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Configure your project in .vscode/settings.json:
+
+* `rapidstudio.folder` : The mobile device sdcard directory which rapid files will be placed on.
 
 For example:
+```
+{
+    "rapidstudio.folder": "/sdcard/rapid_debug/"
+}
+```
 
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
 
 ## Known Issues
 
