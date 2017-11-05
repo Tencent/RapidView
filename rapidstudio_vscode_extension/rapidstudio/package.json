@@ -2,7 +2,7 @@
     "name": "tencentrapidstudio",
     "displayName": "rapidstudio",
     "description": "Visual Studio Code Extension for Tencent Rapidview",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "publisher": "realhe",
     "engines": {
         "vscode": "^1.17.0"
