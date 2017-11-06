@@ -1,0 +1,121 @@
+{
+    "name": "rapidstudio",
+    "displayName": "Rapid Studio",
+    "description": "Visual Studio Code Extension for Tencent Rapidview",
+    "version": "1.0.2",
+    "publisher": "realhe",
+    "icon": "media/icon.png",
+    "engines": {
+        "vscode": "^1.17.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:extension.sayHello",
+        "onCommand:extension.syncFile",
+        "onCommand:extension.syncProject",
+        "onCommand:extension.newProject",
+        "onCommand:extension.newView",
+        "workspaceContains:rapid_workspace.json"
+    ],
+    "main": "./out/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.syncFile",
+                "title": "Sync File"
+            },
+            {
+                "command": "extension.syncProject",
+                "title": "Sync Project"
+            },
+            {
+                "command": "extension.sayHello",
+                "title": "Rapid start",
+                "category": "RapidStudio"
+            },
+            {
+                "command": "extension.newProject",
+                "title": "New Rapid Workspace"
+            },
+            {
+                "command": "extension.newView",
+                "title": "New Rapid View"
+            }
+        ],
+        "menus": {
+            "editor/title": [
+                {
+                    "command": "extension.syncFile",
+                    "group": "navigation"
+                },
+                {
+                    "command": "extension.syncProject",
+                    "group": "navigation"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "command": "extension.newProject",
+                    "group": "rapidstudio"
+                },
+                {
+                    "command": "extension.newView",
+                    "group": "rapidstudio"
+                }
+            ]
+        },
+        "configuration": {
+            "type": "object",
+            "title": "RapidStudio Configuration",
+            "properties": {
+                "rapidstudio.folder": {
+                    "type": "string",
+                    "default": "/sdcard/",
+                    "description": "The mobile device sdcard directory which rapid files will be placed on."
+                },
+                "rapidstudio.viewMappingFile": {
+                    "type": "string",
+                    "default": "photon_debug_config.json",
+                    "description": "The file used to store view mappings."
+                }
+            }
+        },
+        "languages": [
+            {
+                "id": "rapid-log",
+                "aliases": [
+                    "log"
+                ],
+                "extensions": [
+                    ".log"
+                ],
+                "configuration": "./log.configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "Log",
+                "scopeName": "code.log",
+                "path": "./src/syntaxes/log.tmLanguage"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.5.3",
+        "vscode": "^1.1.5",
+        "@types/node": "^7.0.43",
+        "@types/mocha": "^2.2.42"
+    },
+    "dependencies": {
+        "xml2js": "^0.4.19"
+    }
+}
