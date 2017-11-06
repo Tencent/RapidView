@@ -9,6 +9,7 @@
         "vscode": "^1.17.0"
     },
     "categories": [
+        "Languages",
         "Other"
     ],
     "activationEvents": [
@@ -85,19 +86,23 @@
         "languages": [
             {
                 "id": "rapid-log",
-                "aliases": [
-                    "log"
-                ],
                 "extensions": [
                     ".log"
                 ],
-                "configuration": "./log.configuration.json"
+                "configuration": "./log.configuration.json",
+                "mimetypes": [
+                    "log",
+                    "text/log",
+                    "text/x-log",
+                    "text/x-code-output",
+                    "x-code-output"
+                ]
             }
         ],
         "grammars": [
             {
-                "language": "Log",
-                "scopeName": "code.log",
+                "language": "rapid-log",
+                "scopeName": "source.log",
                 "path": "./src/syntaxes/log.tmLanguage"
             }
         ]
@@ -116,6 +121,12 @@
         "@types/mocha": "^2.2.42"
     },
     "dependencies": {
+        "execa": "^0.8.0",
         "xml2js": "^0.4.19"
-    }
+    },
+    "keywords": [
+        "rapid",
+        "rapidstudio",
+        "tencent"
+    ]
 }

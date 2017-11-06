@@ -3,7 +3,7 @@
 <plist version="1.0">
     <dict>
         <key>scopeName</key>
-        <string>code.log</string>
+        <string>source.log</string>
         <key>fileTypes</key>
         <array>
             <string>log</string>
