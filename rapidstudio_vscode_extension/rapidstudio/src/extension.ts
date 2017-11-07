@@ -170,7 +170,7 @@ function createNewProject(){
     let path = require("path");
     let fs = require("fs");
     let workspace_file = rootPath + path.sep + "rapid_workspace.json";
-    fs.writeFile(workspace_file, 'Hello Rapid!', function (err) {
+    fs.writeFile(workspace_file, '', function (err) {
         if (err) {
             XLog.success("Create rapid workspace successfully.");
             throw err;
