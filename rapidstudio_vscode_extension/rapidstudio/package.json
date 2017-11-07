@@ -2,13 +2,14 @@
     "name": "rapidstudio",
     "displayName": "Rapid Studio",
     "description": "Visual Studio Code Extension for Tencent Rapidview",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "publisher": "realhe",
-    "icon": "media/icon.png",
+    "icon": "assets/icon.png",
     "engines": {
         "vscode": "^1.17.0"
     },
     "categories": [
+        "Languages",
         "Other"
     ],
     "activationEvents": [
@@ -79,25 +80,34 @@
                     "type": "string",
                     "default": "photon_debug_config.json",
                     "description": "The file used to store view mappings."
+                },
+                "rapidstudio.adbPath": {
+                    "type": "string",
+                    "default": "adb",
+                    "description": "Android Debug Bridge(adb) install path."
                 }
             }
         },
         "languages": [
             {
                 "id": "rapid-log",
-                "aliases": [
-                    "log"
-                ],
                 "extensions": [
                     ".log"
                 ],
-                "configuration": "./log.configuration.json"
+                "configuration": "./log.configuration.json",
+                "mimetypes": [
+                    "log",
+                    "text/log",
+                    "text/x-log",
+                    "text/x-code-output",
+                    "x-code-output"
+                ]
             }
         ],
         "grammars": [
             {
-                "language": "Log",
-                "scopeName": "code.log",
+                "language": "rapid-log",
+                "scopeName": "source.log",
                 "path": "./src/syntaxes/log.tmLanguage"
             }
         ]
@@ -116,6 +126,12 @@
         "@types/mocha": "^2.2.42"
     },
     "dependencies": {
+        "execa": "^0.8.0",
         "xml2js": "^0.4.19"
-    }
+    },
+    "keywords": [
+        "rapid",
+        "rapidstudio",
+        "tencent"
+    ]
 }
