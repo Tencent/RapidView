@@ -24,7 +24,12 @@ For example:
 
 Check Extension Settings for more information about this.
 
-If you have add adb to path[(How to do this?)](https://stackoverflow.com/questions/17901692/set-up-adb-on-mac-os-x), skip this step.
+If you have added adb to path, skip this step.
+
+How to add path:
+
++ [MacoS](https://stackoverflow.com/questions/17901692/set-up-adb-on-mac-os-x)
++ [WIndows](https://stackoverflow.com/questions/23400030/windows-7-add-path)
 
 ### More Settings
 
