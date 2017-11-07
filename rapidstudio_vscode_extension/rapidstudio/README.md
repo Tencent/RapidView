@@ -2,6 +2,40 @@
 
 This extension can help you quickly develop the RapidView project.
 
+## Useage
+
+### Install from extension market
+
+Search rapidtudio in vscode extension market and install it:
+
+![Install From Extension Market](https://raw.githubusercontent.com/YongdongHe/RapidView/master/rapidstudio_vscode_extension/rapidstudio/resource/install_from_market.png)
+
+
+### Set up Android Debug Bridge(adb)
+
+To use rapid stuido extension, you need to configure adb install path in .vscode/settings.json.
+
+For example:
+```json
+{
+    "rapidstudio.adbPath": "/usr/local/bin/adb"
+}
+```
+
+Check Extension Settings for more information about this.
+
+If you have add adb to path[(How to do this?)](https://stackoverflow.com/questions/17901692/set-up-adb-on-mac-os-x), skip this step.
+
+### More Settings
+
+Check [Extension Settings](#extension-settings) for more information about this.
+
+## Requirements
+
+Visual Studio Code Version: 1.17.0+
+
+Android Debug Bridge(adb)
+
 ## Features
 ### Create new rapid workspace and view
 
@@ -32,22 +66,20 @@ Language extension for VSCode that adds syntax colorization for both the output/
 Note: If you are using other extensions that colorize the output panel, it could override and disable this extension.
 
 
-## Requirements
-
-Visual Studio Code Version: 1.17.0+
-
 ## Extension Settings
 
 Configure your project in .vscode/settings.json:
 
 * `rapidstudio.folder` : The mobile device sdcard directory which rapid files will be placed on.
 * `rapidstudio.viewMappingFile` : The name of file that stores the mapping between views and files.
+* `rapidstudio.adbPath`: Android Debug Bridge(adb) install path.For example: `"/usr/local/bin/adb"`
 
 For example:
-```
+```json
 {
     "rapidstudio.folder": "/sdcard/rapid_debug/",
-    "rapidstudio.viewMappingFile": "rapid_debug_config.json"
+    "rapidstudio.viewMappingFile": "rapid_debug_config.json",
+    "rapidstudio.adbPath": "/usr/local/bin/adb"
 }
 ```
 

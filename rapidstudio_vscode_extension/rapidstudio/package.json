@@ -80,6 +80,11 @@
                     "type": "string",
                     "default": "photon_debug_config.json",
                     "description": "The file used to store view mappings."
+                },
+                "rapidstudio.adbPath": {
+                    "type": "string",
+                    "default": "adb",
+                    "description": "Android Debug Bridge(adb) install path."
                 }
             }
         },

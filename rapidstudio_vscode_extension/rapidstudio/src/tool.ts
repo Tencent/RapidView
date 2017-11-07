@@ -1,5 +1,5 @@
 
-import {OutputChannel,window} from 'vscode';
+import {OutputChannel,window,workspace} from 'vscode';
 
 export class XLog{
     Reset = "\x1b[0m"
@@ -85,7 +85,8 @@ export class ADBUtils {
     public pushFile(filePath : String, targetDir : String,callback : ADBCallback) {
         // Get the command string need to execute
         let util = require('util');
-        let command = util.format("adb push %s %s",filePath,targetDir); 
+        let adbPath =  workspace.getConfiguration("rapidstudio").get<String>('adbPath');
+        let command = util.format("%s push %s %s",adbPath,filePath,targetDir); 
         this.sendADBCommand(command,callback);
     }
 
@@ -95,7 +96,8 @@ export class ADBUtils {
             return;
         }
         let util = require('util');
-        let command = util.format("adb push %s %s",file,targetDir);
+        let adbPath =  workspace.getConfiguration("rapidstudio").get<String>('adbPath');
+        let command = util.format("%s push %s %s",adbPath,file,targetDir);
         XLog.debug(command);
         let exec = require('child_process').exec;
         let _adbUtils = this;
