@@ -107,6 +107,10 @@ Add explorer menu to add new rapid view.
 
 Improve log output.
 
+### 1.0.3
+
+Add adb path configuration that can be modified.
+
 ## For more information
 
 ### For Contributors
