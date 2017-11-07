@@ -58,7 +58,7 @@ Buttions in the navigation bar in the upper right corner of the window:
 
 ### Automatic completion 
 
-xml and lua auto-completion
+XML attributes and Lua function auto-completion support for rapid view. You can also install other lua extension for vscode extension market.
 
 ### Log Output Colorizer
 
