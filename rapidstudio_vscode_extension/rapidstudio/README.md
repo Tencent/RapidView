@@ -2,6 +2,8 @@
 
 This extension can help you quickly develop the RapidView project.
 
+[中文文档请点击这里](https://github.com/YongdongHe/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/resource/README_CHINESE.md)
+
 ## Useage
 
 ### Install from extension market
@@ -15,7 +17,15 @@ Search rapidtudio in vscode extension market and install it:
 
 To use rapid stuido extension, you need to configure adb install path in .vscode/settings.json.
 
-For example:
+Windows Examlple：
+```json
+{
+    "rapidstudio.adbPath": "C:\\Users\\username\\AppData\\Local\\Android\\sdk\\platform-tools\\adb"
+}
+```
+
+
+MacOS Examlple(Install adb with homebrew)：
 ```json
 {
     "rapidstudio.adbPath": "/usr/local/bin/adb"
@@ -46,12 +56,16 @@ Android Debug Bridge(adb)
 
 Items in explorer right-click menu:
 
+![Explorer Menu](https://raw.githubusercontent.com/YongdongHe/RapidView/master/rapidstudio_vscode_extension/rapidstudio/resource/explorer_menu.png)
+
 * `New Rapid Workspace ` : Initial a rapid workspace in current root directory. This operation creates a file named rapid_workspace.json.
 * `New Rapid View ` : Create a view, and bind a main file for it.
 
 ### Quick debug
 
 Buttions in the navigation bar in the upper right corner of the window:
+
+![Title Menu](https://raw.githubusercontent.com/YongdongHe/RapidView/master/rapidstudio_vscode_extension/rapidstudio/resource/title_menu.png)
 
 * `Sync File ` : Quickly sync single file to sdcard
 * `Sync Project ` : Quickly sync all files under the project to sdcard
@@ -74,6 +88,8 @@ Note: If you are using other extensions that colorize the output panel, it could
 ## Extension Settings
 
 Configure your project in .vscode/settings.json:
+
+![VScode Settings](https://raw.githubusercontent.com/YongdongHe/RapidView/master/rapidstudio_vscode_extension/rapidstudio/resource/settings.png)
 
 * `rapidstudio.folder` : The mobile device sdcard directory which rapid files will be placed on.
 * `rapidstudio.viewMappingFile` : The name of file that stores the mapping between views and files.
