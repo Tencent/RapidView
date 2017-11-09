@@ -94,13 +94,15 @@ Configure your project in .vscode/settings.json:
 * `rapidstudio.folder` : The mobile device sdcard directory which rapid files will be placed on.
 * `rapidstudio.viewMappingFile` : The name of file that stores the mapping between views and files.
 * `rapidstudio.adbPath`: Android Debug Bridge(adb) install path.For example: `"/usr/local/bin/adb"`
+* `rapidstudio.autoSync` : When saving, the file is automatically synchronized to SD card. Default set to true.
 
 For example:
 ```json
 {
     "rapidstudio.folder": "/sdcard/rapid_debug/",
     "rapidstudio.viewMappingFile": "rapid_debug_config.json",
-    "rapidstudio.adbPath": "/usr/local/bin/adb"
+    "rapidstudio.adbPath": "/usr/local/bin/adb",
+    "rapidstudio.autoSync": true,
 }
 ```
 
@@ -126,6 +128,10 @@ Improve log output.
 ### 1.0.3
 
 Add adb path configuration that can be modified.
+
+### 1.0.4
+
+Add autoSync configuration.When saving, the file is automatically synchronized to SD card.
 
 ## For more information
 
