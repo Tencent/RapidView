@@ -67,6 +67,20 @@ export function activate(context: ExtensionContext) {
         }
     })
 
+    let saveRapidFileTask = commands.registerCommand('extension.saveRapidFile',()=>{
+        try{
+            let autoSync = workspace.getConfiguration("rapidstudio").get<Boolean>('autoSync');
+            console.log(autoSync);
+            if(autoSync === true){
+                window.activeTextEditor.document.save();
+                syncFile(); 
+            }
+        }catch (error) {
+            MessageToastUtils.showErrorMessage("Faile to save file");
+            XLog.error(error);
+        }
+    })
+
     // Add the auto completion
     let xmlCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
     let xmlAttrsCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLAttrsCompletionItemProvider(),'\"',' ','m','a');

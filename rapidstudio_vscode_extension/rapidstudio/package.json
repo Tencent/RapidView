@@ -18,10 +18,17 @@
         "onCommand:extension.syncProject",
         "onCommand:extension.newProject",
         "onCommand:extension.newView",
+        "onCommand:extension.saveRapidFile",
         "workspaceContains:rapid_workspace.json"
     ],
     "main": "./out/extension",
     "contributes": {
+        "keybindings": [{
+            "command": "extension.saveRapidFile",
+            "key": "ctrl+s",
+            "mac": "cmd+s",
+            "when": "editorTextFocus"
+        }],
         "commands": [
             {
                 "command": "extension.syncFile",
@@ -43,6 +50,10 @@
             {
                 "command": "extension.newView",
                 "title": "New Rapid View"
+            },
+            {
+                "command": "extension.saveRapidFile",
+                "title": "Save rapid file."
             }
         ],
         "menus": {
@@ -85,6 +96,11 @@
                     "type": "string",
                     "default": "adb",
                     "description": "Android Debug Bridge(adb) install path."
+                },
+                "rapidstudio.autoSync": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "When saving, the file is automatically synchronized to SD card."
                 }
             }
         },
