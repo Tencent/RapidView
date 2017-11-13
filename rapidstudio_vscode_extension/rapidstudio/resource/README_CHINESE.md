@@ -90,13 +90,14 @@ MacOS下，取决于安装方式，所在目录会有一定差异，通过homebr
 * `rapidstudio.folder` : Rapid调试文件夹在手机sdcard的位置。RapidView加载时所需的XML\Lua和其他资源文件将被放置在该目录下。默认为``/sdcard/``。
 * `rapidstudio.viewMappingFile` : 保存Rapid视图跟主文件映射关系的文件。默认为``photon_debug_config.json``
 * `rapidstudio.adbPath`: Android Debug Bridge(adb) 完整路径
-
+* `rapidstudio.autoSync`: 是否开启自动同步文件，如果开启的话，保存时（Ctrl + S）将自动同步当前文件
 For example:
 ```json
 {
     "rapidstudio.folder": "/sdcard/rapid_debug/",
     "rapidstudio.viewMappingFile": "rapid_debug_config.json",
-    "rapidstudio.adbPath": "/usr/local/bin/adb"
+    "rapidstudio.adbPath": "/usr/local/bin/adb",
+    "rapidstudio.autoSync": true,
 }
 ```
 
