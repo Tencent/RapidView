@@ -107,6 +107,8 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(refreshFileTask);
     context.subscriptions.push(refreshProjectTask);
     context.subscriptions.push(createNewProjectTask);
+
+    context.subscriptions.push(outputPanel);
 }
 
 function syncFile(){
