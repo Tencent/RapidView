@@ -2,7 +2,8 @@
     "Layout": {
         "prefix": "layout",
         "body": [
-            "<${1:tag} width=\"match_parent\" height=\"wrap_content\"></${1:tag}>"
+            "<${1:tag} width=\"match_parent\" height=\"wrap_content\">",
+            "</${1:tag}>"
         ],
         "description": "Insert layout xml tag."
     },
