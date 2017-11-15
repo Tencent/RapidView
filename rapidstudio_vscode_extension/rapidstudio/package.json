@@ -23,12 +23,14 @@
     ],
     "main": "./out/extension",
     "contributes": {
-        "keybindings": [{
-            "command": "extension.saveRapidFile",
-            "key": "ctrl+s",
-            "mac": "cmd+s",
-            "when": "editorTextFocus"
-        }],
+        "keybindings": [
+            {
+                "command": "extension.saveRapidFile",
+                "key": "ctrl+s",
+                "mac": "cmd+s",
+                "when": "editorTextFocus"
+            }
+        ],
         "commands": [
             {
                 "command": "extension.syncFile",
@@ -110,7 +112,6 @@
                 "extensions": [
                     ".log"
                 ],
-                "configuration": "./log.configuration.json",
                 "mimetypes": [
                     "log",
                     "text/log",

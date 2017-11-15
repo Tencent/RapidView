@@ -1,0 +1,20 @@
+Tencent is pleased to support the open source community by making RapidView available.  
+Copyright (C) 2017 THL A29 Limited, a Tencent company.  All rights reserved.
+If you have downloaded a copy of the RapidView binary from Tencent, please note that the RapidView binary is licensed under the MIT License.
+If you have downloaded a copy of the RapidView source code from Tencent, please note that RapidView source code is licensed under the MIT License, except for the third-party components listed below which are subject to different license terms.  Your integration of RapidView into your own projects may require compliance with the MIT License, as well as the other licenses applicable to the third-party components included within RapidView.
+A copy of the MIT License is included in this file.
+
+Other dependencies and licenses:
+
+Open Source Software Licensed Under the MIT License: 
+The below software in this distribution may have been modified by THL A29 Limited (“Tencent Modifications”). All Tencent Modifications are Copyright (C) 2017 THL A29 Limited.
+----------------------------------------------------------------------------------------
+1. Luaj  3.0.1
+Copyright © 2009-2014 Luaj.org.
+
+
+Terms of the MIT License:
+---------------------------------------------------
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
