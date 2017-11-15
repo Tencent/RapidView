@@ -127,6 +127,12 @@
                 "scopeName": "source.log",
                 "path": "./src/syntaxes/log.tmLanguage"
             }
+        ],
+        "snippets": [
+            {
+                "language": "xml",
+                "path": "./src/snippets/xml.json"
+            }
         ]
     },
     "scripts": {

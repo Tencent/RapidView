@@ -31,7 +31,7 @@ export function activate(context: ExtensionContext) {
     XLog.registerOutputPanel(outputPanel);
     
     
-    
+
 
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand

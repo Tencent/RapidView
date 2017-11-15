@@ -1,0 +1,16 @@
+{
+    "Layout": {
+        "prefix": "layout",
+        "body": [
+            "<${1:tag} width=\"match_parent\" height=\"wrap_content\"></${1:tag}>"
+        ],
+        "description": "Insert layout xml tag."
+    },
+    "View": {
+        "prefix": "view",
+        "body": [
+            "<${1:tag} width=\"match_parent\" height=\"wrap_content\"/>"
+        ],
+        "description": "Insert view xml tag."
+    }
+}
