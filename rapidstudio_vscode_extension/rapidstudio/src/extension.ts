@@ -14,13 +14,13 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import {window,workspace,languages, commands, Disposable, 
-    ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument,InputBoxOptions} from 'vscode';
+    ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument,InputBoxOptions, extensions} from 'vscode';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
 // Import tool module
 import {XLog,ADBCallback,ADBUtils,XMLUtils,MessageToastUtils} from "./tool";
-import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider} from "./completion";
+import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider, RapidCompletionManager} from "./completion";
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -94,14 +94,15 @@ export function activate(context: ExtensionContext) {
     })
 
     // Add the auto completion
-    let xmlCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
-    let xmlAttrsCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLAttrsCompletionItemProvider(),'\"',' ','m','a');
-    let luaCompletionProvider = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),':');
-   
-
-    context.subscriptions.push(xmlCompletionProvider);
-    context.subscriptions.push(xmlAttrsCompletionProvider);
-    context.subscriptions.push(luaCompletionProvider);
+    RapidCompletionManager.initCompletion(()=>{
+        let xmlCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
+        let xmlAttrsCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLAttrsCompletionItemProvider(),'\"',' ','m','a');
+        let luaCompletionProvider = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),':');
+        context.subscriptions.push(xmlCompletionProvider);
+        context.subscriptions.push(xmlAttrsCompletionProvider);
+        context.subscriptions.push(luaCompletionProvider);
+    });
+    
 
     context.subscriptions.push(disposable);
     context.subscriptions.push(refreshFileTask);
@@ -204,14 +205,17 @@ function createNewProject(){
     let path = require("path");
     let fs = require("fs");
     let workspace_file = rootPath + path.sep + "rapid_workspace.json";
-    fs.writeFile(workspace_file, '', function (err) {
-        if (err) {
-            XLog.success("Create rapid workspace successfully.");
-            throw err;
-        }
-        MessageToastUtils.showInformationMessage("Create  rapid workspace successfully.");
-        XLog.success("Create rapid workspace successfully.");
-    });
+    // fs.writeFile(workspace_file, "", function (err) {
+    //     if (err) {
+    //         XLog.success("Create rapid workspace successfully.");
+    //         throw err;
+    //     }
+    //     MessageToastUtils.showInformationMessage("Create  rapid workspace successfully.");
+    //     XLog.success("Create rapid workspace successfully.");
+    // }); 
+    let templateFilePath = extensions.getExtension ("realhe.rapidstudio").extensionPath +  path.sep + "template" + path.sep + "rapid_workspace.json";
+    fs.createReadStream(templateFilePath).pipe(fs.createWriteStream(workspace_file));
+    XLog.success("Create rapid workspace successfully.");
 }
 
 

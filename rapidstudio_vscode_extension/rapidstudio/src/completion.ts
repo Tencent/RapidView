@@ -10,8 +10,53 @@
  License.
  ***************************************************************************************************/
 
-import {CompletionItemProvider,CompletionItem,CompletionItemKind,Position,CancellationToken,TextDocument} from 'vscode';
+import {CompletionItemProvider,CompletionItem,CompletionItemKind,Position,CancellationToken,TextDocument, workspace} from 'vscode';
 import { XLog } from './tool';
+
+
+
+export class RapidCompletionManager{
+    public static initCompletion(onSuccess : Function){
+        const rootPath = workspace.rootPath;
+        let path = require("path");
+        let fs = require("fs");
+        let workspace_file = rootPath + path.sep + "rapid_workspace.json";
+        fs.readFile(workspace_file, 'utf8', function (err, data) {
+            if (err) {
+                XLog.error("An error occurred while setting auto completion: cannot read data from rapid_wroksapce.json.");
+                return;
+            }
+            // Catch json exception
+            let workspaceData = JSON.parse(data);
+            try{
+                
+                if(workspaceData['completion'] && workspaceData['completion']['xml_tags']){
+                    let _xmlTags =  workspaceData['completion']['xml_tags'];
+                    _xmlTags.forEach(_xmlTag => {
+                        xmlTags.push(_xmlTag);
+                    });
+                }
+                if(workspaceData['completion'] && workspaceData['completion']['xml_attrs']){
+                    let _xmlAttrs =  workspaceData['completion']['xml_attrs'];
+                    _xmlAttrs.forEach(_xmlAttr => {
+                        xmlAttrs.push(_xmlAttr);
+                    });
+                }
+                if(workspaceData['completion'] && workspaceData['completion']['lua_funcs']){
+                    let _luaFuncs=  workspaceData['completion']['lua_funcs'];
+                    _luaFuncs.forEach(_luaFunc => {
+                        luaFunctions.push(_luaFunc);
+                    });
+                }
+            }catch(error){
+                console.log(error);
+                XLog.error("An error occurred while setting auto completion, the default setting has been used.");
+                return;
+            }
+            onSuccess();
+        });
+    }
+}
 
 
 export class RapidXMLCompletionItemProvider implements CompletionItemProvider {
