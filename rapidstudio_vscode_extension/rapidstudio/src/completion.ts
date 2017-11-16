@@ -11,6 +11,7 @@
  ***************************************************************************************************/
 
 import {CompletionItemProvider,CompletionItem,CompletionItemKind,Position,CancellationToken,TextDocument} from 'vscode';
+import { XLog } from './tool';
 
 
 export class RapidXMLCompletionItemProvider implements CompletionItemProvider {
@@ -66,36 +67,36 @@ export class RapidLuaCompletionItemProvider implements CompletionItemProvider {
 
 
 let xmlTags = [
-    "relativelayout",
-    "linearlayout",
-    "absolutelayout",
-    "textview",
-    "imageview",
-    "progressbar",
-    "imagebutton",
-    "button",
-    "tximageview",
-    "txappiconview",
-    "txtab",
-    "framelayout",
-    "scrollview",
-    "innerscrollview",
-    "horizontalscrollview",
-    "shaderview",
-    "txwebview",
-    "horizonscrollpicviewer",
-    "expandabletextview",
-    "viewstub",
-    "listview",
-    "detaildownloadbutton",
-    "contentitemdownloadbutton",
-    "txdownloadprogressbar",
-    "bannerview",
-    "videoview",
-    "specialvideoview",
-    "bookingbutton",
-    "gifview",
-    "edittext"
+    "RelativeLayout",
+    "LinearLayout",
+    "AbsoluteLayout",
+    "TextView",
+    "ImageView",
+    "Progressbar",
+    "ImageButton",
+    "Button",
+    "TXImageView",
+    "TXAppiconView",
+    "TXTab",
+    "FrameLayout",
+    "ScrollView",
+    "InnerScrollView",
+    "HorizontalScrollView",
+    "ShaderView",
+    "TXWebView",
+    "HorizonScrollPicViewer",
+    "ExpandableTextView",
+    "ViewStub",
+    "ListView",
+    "DetailDownloadButton",
+    "ContentItemDownloadButton",
+    "TXDownloadProgressBar",
+    "BannerView",
+    "VideoView",
+    "SpecialVideoView",
+    "BookingButton",
+    "GifView",
+    "EditText"
 ]
 
 let xmlAttrs = [
@@ -492,7 +493,9 @@ let xmlAttrs = [
     "equal",
     "unequal",
     "less",
-    "lessequal"
+    "lessequal",
+    "horizontal",
+    "vertical"
 ]
 
 let luaFunctions = [
