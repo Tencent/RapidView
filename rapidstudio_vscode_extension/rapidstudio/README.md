@@ -76,7 +76,7 @@ XML attributes and Lua function auto-completion support for rapid view. You can 
 
 ### Log Output Colorizer
 
-Used the vscode-log-output-colorizer project from IBM-Bluemix:
+Reference to the realization of the previous project from IBM-Bluemix:
 
 <https://github.com/IBM-Bluemix/vscode-log-output-colorizer>
 
