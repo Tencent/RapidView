@@ -2,7 +2,7 @@
     "name": "rapidstudio",
     "displayName": "Rapid Studio",
     "description": "Visual Studio Code Extension for Tencent Rapidview",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "publisher": "realhe",
     "icon": "assets/icon.png",
     "engines": {
@@ -23,12 +23,14 @@
     ],
     "main": "./out/extension",
     "contributes": {
-        "keybindings": [{
-            "command": "extension.saveRapidFile",
-            "key": "ctrl+s",
-            "mac": "cmd+s",
-            "when": "editorTextFocus"
-        }],
+        "keybindings": [
+            {
+                "command": "extension.saveRapidFile",
+                "key": "ctrl+s",
+                "mac": "cmd+s",
+                "when": "editorTextFocus"
+            }
+        ],
         "commands": [
             {
                 "command": "extension.syncFile",
@@ -110,7 +112,6 @@
                 "extensions": [
                     ".log"
                 ],
-                "configuration": "./log.configuration.json",
                 "mimetypes": [
                     "log",
                     "text/log",
@@ -125,6 +126,12 @@
                 "language": "rapid-log",
                 "scopeName": "source.log",
                 "path": "./src/syntaxes/log.tmLanguage"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "xml",
+                "path": "./src/snippets/xml.json"
             }
         ]
     },

@@ -1,14 +1,26 @@
+/***************************************************************************************************
+ Tencent is pleased to support the open source community by making RapidView available.
+ Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.
+ Licensed under the MITLicense (the "License"); you may not use this file except in compliance
+ withthe License. You mayobtain a copy of the License at
+ http://opensource.org/licenses/MIT
+ Unless required by applicable law or agreed to in writing, software distributed under the License is
+ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ implied. See the License for the specific language governing permissions and limitations under the
+ License.
+ ***************************************************************************************************/
+
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import {window,workspace,languages, commands, Disposable, 
-    ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument,InputBoxOptions} from 'vscode';
+    ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument,InputBoxOptions, extensions} from 'vscode';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
 // Import tool module
 import {XLog,ADBCallback,ADBUtils,XMLUtils,MessageToastUtils} from "./tool";
-import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider} from "./completion";
+import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider, RapidCompletionManager} from "./completion";
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -19,7 +31,7 @@ export function activate(context: ExtensionContext) {
     XLog.registerOutputPanel(outputPanel);
     
     
-    
+
 
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
@@ -71,8 +83,8 @@ export function activate(context: ExtensionContext) {
         try{
             let autoSync = workspace.getConfiguration("rapidstudio").get<Boolean>('autoSync');
             console.log(autoSync);
+            window.activeTextEditor.document.save();
             if(autoSync === true){
-                window.activeTextEditor.document.save();
                 syncFile(); 
             }
         }catch (error) {
@@ -82,19 +94,22 @@ export function activate(context: ExtensionContext) {
     })
 
     // Add the auto completion
-    let xmlCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
-    let xmlAttrsCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLAttrsCompletionItemProvider(),'\"',' ','m','a');
-    let luaCompletionProvider = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),':');
-   
-
-    context.subscriptions.push(xmlCompletionProvider);
-    context.subscriptions.push(xmlAttrsCompletionProvider);
-    context.subscriptions.push(luaCompletionProvider);
+    RapidCompletionManager.initCompletion(()=>{
+        let xmlCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
+        let xmlAttrsCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLAttrsCompletionItemProvider(),'\"',' ','m','a');
+        let luaCompletionProvider = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),':');
+        context.subscriptions.push(xmlCompletionProvider);
+        context.subscriptions.push(xmlAttrsCompletionProvider);
+        context.subscriptions.push(luaCompletionProvider);
+    });
+    
 
     context.subscriptions.push(disposable);
     context.subscriptions.push(refreshFileTask);
     context.subscriptions.push(refreshProjectTask);
     context.subscriptions.push(createNewProjectTask);
+
+    context.subscriptions.push(outputPanel);
 }
 
 function syncFile(){
@@ -160,7 +175,13 @@ function syncProject(){
     fs.readdir(folderPath, (err, files) => {
         let filePaths = new Array();
         files.forEach(file => {
+            let isHideFile = (file.indexOf(".") == 0)
             let filePath = folderPath + path.sep + file;
+            if(isHideFile){
+                XLog.info("Skip hide file: " + filePath);
+                return; 
+            }
+            
             filePaths.push(filePath);
         });
         let adbUtils = new ADBUtils();
@@ -184,14 +205,17 @@ function createNewProject(){
     let path = require("path");
     let fs = require("fs");
     let workspace_file = rootPath + path.sep + "rapid_workspace.json";
-    fs.writeFile(workspace_file, '', function (err) {
-        if (err) {
-            XLog.success("Create rapid workspace successfully.");
-            throw err;
-        }
-        MessageToastUtils.showInformationMessage("Create  rapid workspace successfully.");
-        XLog.success("Create rapid workspace successfully.");
-    });
+    // fs.writeFile(workspace_file, "", function (err) {
+    //     if (err) {
+    //         XLog.success("Create rapid workspace successfully.");
+    //         throw err;
+    //     }
+    //     MessageToastUtils.showInformationMessage("Create  rapid workspace successfully.");
+    //     XLog.success("Create rapid workspace successfully.");
+    // }); 
+    let templateFilePath = extensions.getExtension ("realhe.rapidstudio").extensionPath +  path.sep + "template" + path.sep + "rapid_workspace.json";
+    fs.createReadStream(templateFilePath).pipe(fs.createWriteStream(workspace_file));
+    XLog.success("Create rapid workspace successfully.");
 }
 
 
