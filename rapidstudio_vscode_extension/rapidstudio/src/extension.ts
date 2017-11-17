@@ -83,8 +83,8 @@ export function activate(context: ExtensionContext) {
         try{
             let autoSync = workspace.getConfiguration("rapidstudio").get<Boolean>('autoSync');
             console.log(autoSync);
+            window.activeTextEditor.document.save();
             if(autoSync === true){
-                window.activeTextEditor.document.save();
                 syncFile(); 
             }
         }catch (error) {
