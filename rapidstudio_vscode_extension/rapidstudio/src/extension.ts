@@ -21,6 +21,8 @@ import {window,workspace,languages, commands, Disposable,
 // Import tool module
 import {XLog,ADBCallback,ADBUtils,XMLUtils,MessageToastUtils} from "./tool";
 import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider, RapidCompletionManager} from "./completion";
+import {RapidCommand} from "./command/command";
+import { SayHelloCommand } from './command/sayhello';
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -36,13 +38,8 @@ export function activate(context: ExtensionContext) {
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
-    let disposable = commands.registerCommand('extension.sayHello', () => {
-        // The code you place here will be executed every time your command is executed
-        var msg = "Hello Rapid Studio";
-        // Display a message box to the user
-        window.showInformationMessage("Hello Rapid Studio");
-        let adbUtils = new ADBUtils();
-    });
+    let sayhelloCmd = new SayHelloCommand();
+    let disposable = commands.registerCommand(sayhelloCmd.commandName,sayhelloCmd.runnable);
 
     let refreshFileTask = commands.registerCommand('extension.syncFile', () => {
         // The code you place here will be executed every time your command is executed

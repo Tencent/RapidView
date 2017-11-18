@@ -13,7 +13,7 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello",
+        "onCommand:rapidstudio.sayHello",
         "onCommand:extension.syncFile",
         "onCommand:extension.syncProject",
         "onCommand:extension.newProject",
@@ -41,8 +41,8 @@
                 "title": "Sync Project"
             },
             {
-                "command": "extension.sayHello",
-                "title": "Rapid start",
+                "command": "rapidstudio.sayHello",
+                "title": "Hello Rapid Studio",
                 "category": "RapidStudio"
             },
             {
