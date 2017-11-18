@@ -2,16 +2,25 @@
     "Layout": {
         "prefix": "layout",
         "body": [
-            "<${1:tag} width=\"match_parent\" height=\"wrap_content\">",
+            "<${1:tag} width=\"${2:width}\" height=\"${3:height}\">",
             "</${1:tag}>"
         ],
-        "description": "Insert layout xml tag."
+        "description": "Insert layout xml tag. [RapidView]"
     },
     "View": {
         "prefix": "view",
         "body": [
-            "<${1:tag} width=\"match_parent\" height=\"wrap_content\"/>"
+            "<${1:tag} width=\"${2:width}\" height=\"${3:height}\"/>"
         ],
-        "description": "Insert view xml tag."
+        "description": "Insert rapid view xml tag. [RapidView]"
+    },
+    "Task": {
+        "prefix": "task",
+        "body": [
+            "<task id=\"${1:id}\">",
+            "\t<${2:action}/>",
+            "</task>"
+        ],
+        "description": "Insert a rapid task. [RapidView]"
     }
 }
