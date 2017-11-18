@@ -22,7 +22,8 @@ import {window,workspace,languages, commands, Disposable,
 import {XLog,ADBCallback,ADBUtils,XMLUtils,MessageToastUtils} from "./tool";
 import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider, RapidCompletionManager} from "./completion";
 import {RapidCommand} from "./command/command";
-import { SayHelloCommand } from './command/sayhello';
+import {SayHelloCommand } from './command/sayhello';
+import {SyncFileCommand } from './command/sync';
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -39,24 +40,15 @@ export function activate(context: ExtensionContext) {
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
     let sayhelloCmd = new SayHelloCommand();
-    let disposable = commands.registerCommand(sayhelloCmd.commandName,sayhelloCmd.runnable);
-
-    let refreshFileTask = commands.registerCommand('extension.syncFile', () => {
-        // The code you place here will be executed every time your command is executed
-        try {       
-            // Save the file in active editor if it belong to the workspace
-            let filePath = window.activeTextEditor.document.fileName;
-            let workspacePath = workspace.rootPath;
-            if(filePath.indexOf(workspacePath) == -1){
-                XLog.error("Failed to sync because current file is not under the workspace.")
-                return;
-            }
-            syncFile(); 
-        } catch (error) {
-            XLog.error(error);
-        }
+    let disposable = commands.registerCommand(sayhelloCmd.commandName,(...args)=>{
+        sayhelloCmd.execute(args);
     });
 
+
+    let syncFileCmd = new SyncFileCommand();
+    let refreshFileTask = commands.registerCommand(syncFileCmd.commandName,(...args)=>{
+        syncFileCmd.execute(args);
+    });
     let refreshProjectTask = commands.registerCommand('extension.syncProject',()=>{
         try {
             workspace.saveAll();
@@ -90,7 +82,7 @@ export function activate(context: ExtensionContext) {
             console.log(autoSync);
             window.activeTextEditor.document.save();
             if(autoSync === true){
-                syncFile(); 
+                commands.executeCommand(syncFileCmd.commandName);
             }
         }catch (error) {
             MessageToastUtils.showErrorMessage("Faile to save file");
@@ -117,48 +109,6 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(outputPanel);
 }
 
-function syncFile(){
-    // Get the current text editor
-    let editor = window.activeTextEditor;
-    if(!editor){
-        XLog.error("Did not find the target file to sync.");
-        return;
-    }
-
-    // Start the task
-    XLog.success("Start syncing files..." );
-    let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
-    XLog.info("Target folder: " + debug_dir);
-
-    function pushFile(){
-        let adbUtils = new ADBUtils();
-        
-        adbUtils.pushFile(doc.fileName,debug_dir,{
-            onFinish:(err,stdout,stderr)=>{
-                if(err){
-                    XLog.error("Sync file failed: " + doc.fileName);
-                }else{
-                    XLog.success("Sync file successfully: " + doc.fileName);
-                }
-                
-            }
-        });  
-    }
-
-    let doc = editor.document;
-    if(doc.languageId === "xml" ){
-        XMLUtils.checkXMLValid(doc.getText(),{
-        onSuccess: (err, result) => {
-            pushFile();
-        },  onFail: (err, result) => {
-            XLog.error("Invalid xml file: " + doc.fileName);
-            XLog.error(err.message);
-            XLog.error("The task is interrupted because the xml is illegal.");
-        }});
-    }else{
-        pushFile();
-    }
-}
 
 function syncProject(){
     // Get the current text editor

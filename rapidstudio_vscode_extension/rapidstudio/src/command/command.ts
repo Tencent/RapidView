@@ -1,5 +1,5 @@
 export interface RapidCommand{
-    readonly commandName: string;   
-    runnable(...args: any[]):any;
+    readonly commandName: string;
+    execute(...args: any[]):any;
 }
 
