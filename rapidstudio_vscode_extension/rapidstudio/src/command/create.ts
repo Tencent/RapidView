@@ -23,55 +23,54 @@ export class CreateNewProjectCommand implements RapidCommand{
 }
 
 export class CreateNewRapidViewCommand implements RapidCommand{
-    readonly commandName = "rapidstudio.newView";   
+    readonly commandName = "rapidstudio.newView";
+    private viewName = "view_name";
+    private mainFileName = "view_main_file_name.xml";
     public execute(...args: any[]):any{
         this.createNewView();
     }
 
     private createNewView(){
-        let viewName = "view_name";
-        let mainFileName = "view_main_file_name";
+        this.inputViewName(); 
+    }
+
+    private inputViewName(){
         let newViewOptions: InputBoxOptions = {
             prompt: "Enter the name of view you want to create",
             placeHolder: "The name of new view"
         }
     
-        function inputMainFileName(argViewName){
-            viewName = argViewName;
-            let mainFileOptions: InputBoxOptions = {
-                prompt: "Enter the mainfile name",
-                placeHolder: "Main file name"
-            }
-            window.showInputBox(mainFileOptions).then(mainFileNameInput => {
-                if (!mainFileNameInput) return;
-                let parts = mainFileNameInput.split(".");
-                let ext = parts[parts.length - 1];
-                if(ext != "xml"){
-                    window.showErrorMessage("Main file type must be xml.")
-                    return;
-                }
-                this.addNewViewToFile(viewName,mainFileNameInput);
-            });
-        }
-        
-    
         window.showInputBox(newViewOptions).then(viewNameInput => {
             if (!viewNameInput) return;
             // Then show the main file name input dialog
-            inputMainFileName(viewNameInput);
+            this.inputMainFileName(viewNameInput);
         });
-        
     }
 
+    private inputMainFileName(argViewName){
+        this.viewName = argViewName;
+        let mainFileOptions: InputBoxOptions = {
+            prompt: "Enter the mainfile name",
+            placeHolder: "Main file name"
+        }
+        window.showInputBox(mainFileOptions).then(mainFileNameInput => {
+            if (!mainFileNameInput) return;
+            let parts = mainFileNameInput.split(".");
+            let ext = parts[parts.length - 1];
+            if(ext != "xml"){
+                window.showErrorMessage("Main file type must be xml.")
+                return;
+            }
+            this.addNewViewToFile(this.viewName,mainFileNameInput);
+        });
+    }
 
     private addNewViewToFile(view : String, mainFile : String){
         const rootPath = workspace.rootPath;
         XLog.debug(rootPath);
         let path = require("path");
         let fs = require("fs");
-        function createViewMappingFile(callback){
-            
-        }
+
         // Get the name of mapping file from configuration
         let viewMappingFile = rootPath + path.sep + workspace.getConfiguration("rapidstudio").get<String>('viewMappingFile');
         fs.exists(viewMappingFile, function(isExist){
@@ -122,7 +121,7 @@ export class CreateNewRapidViewCommand implements RapidCommand{
                         if (err) {
                             throw err;
                         }
-                        MessageToastUtils.showInformationMessage("Create and add rapidview successfully.");
+                        MessageToastUtils.showInformationMessage("Add rapidview successfully.");
                         XLog.success("Create rapid view successfully.");
                     });
                     
