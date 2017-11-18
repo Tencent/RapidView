@@ -23,7 +23,7 @@ import {XLog,ADBCallback,ADBUtils,XMLUtils,MessageToastUtils} from "./tool";
 import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider, RapidCompletionManager} from "./completion";
 import {RapidCommand} from "./command/command";
 import {SayHelloCommand } from './command/sayhello';
-import {SyncFileCommand } from './command/sync';
+import {SyncFileCommand, SyncProjectCommand } from './command/sync';
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -49,16 +49,13 @@ export function activate(context: ExtensionContext) {
     let refreshFileTask = commands.registerCommand(syncFileCmd.commandName,(...args)=>{
         syncFileCmd.execute(args);
     });
-    let refreshProjectTask = commands.registerCommand('extension.syncProject',()=>{
-        try {
-            workspace.saveAll();
-            syncProject();
-        } catch (error) {
-            XLog.error(error);
-        }
+
+    let syncProjCmd = new SyncProjectCommand();
+    let refreshProjectTask = commands.registerCommand(syncProjCmd.commandName,(...args)=>{
+        syncProjCmd.execute(args);
     })
 
-    let createNewProjectTask = commands.registerCommand('extension.newProject',()=>{
+    let createNewProjectTask = commands.registerCommand('extension.createNewProject',()=>{
         try {
             createNewProject();
         } catch (error) {
@@ -110,49 +107,7 @@ export function activate(context: ExtensionContext) {
 }
 
 
-function syncProject(){
-    // Get the current text editor
-    let editor = window.activeTextEditor;
-    if(!editor){
-        XLog.error("Did not find the target project to sync.");
-        return;
-    }
 
-    // Start the task
-    XLog.success("Start syncing project..." );
-
-    let currentFilePath = editor.document.fileName;
-    
-    let path = require('path');  
-    let folderPath = path.dirname(currentFilePath); 
-    XLog.info("The target project folder: " + folderPath);
-    const fs = require('fs');
-    fs.readdir(folderPath, (err, files) => {
-        let filePaths = new Array();
-        files.forEach(file => {
-            let isHideFile = (file.indexOf(".") == 0)
-            let filePath = folderPath + path.sep + file;
-            if(isHideFile){
-                XLog.info("Skip hide file: " + filePath);
-                return; 
-            }
-            
-            filePaths.push(filePath);
-        });
-        let adbUtils = new ADBUtils();
-        let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
-        adbUtils.pushFiles(filePaths,debug_dir,{
-            onFinish:(err,stdout,stderr)=>{
-                if(err){
-                    XLog.error("Sync Project failed: " + folderPath);
-                }else{
-                    XLog.success("Sync Project successfully: " + folderPath);
-                }
-            }
-        });
-    })
-    return true;
-}
 
 function createNewProject(){
     const rootPath = workspace.rootPath;
