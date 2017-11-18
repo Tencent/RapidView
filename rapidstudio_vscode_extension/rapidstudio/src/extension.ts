@@ -46,7 +46,14 @@ export function activate(context: ExtensionContext) {
 
     let refreshFileTask = commands.registerCommand('extension.syncFile', () => {
         // The code you place here will be executed every time your command is executed
-        try {
+        try {       
+            // Save the file in active editor if it belong to the workspace
+            let filePath = window.activeTextEditor.document.fileName;
+            let workspacePath = workspace.rootPath;
+            if(filePath.indexOf(workspacePath) == -1){
+                XLog.error("Failed to sync because current file is not under the workspace.")
+                return;
+            }
             syncFile(); 
         } catch (error) {
             XLog.error(error);
@@ -55,6 +62,7 @@ export function activate(context: ExtensionContext) {
 
     let refreshProjectTask = commands.registerCommand('extension.syncProject',()=>{
         try {
+            workspace.saveAll();
             syncProject();
         } catch (error) {
             XLog.error(error);
@@ -226,6 +234,7 @@ function createNewView(){
         prompt: "Enter the name of view you want to create",
         placeHolder: "The name of new view"
     }
+
     function inputMainFileName(argViewName){
         viewName = argViewName;
         let mainFileOptions: InputBoxOptions = {
@@ -243,11 +252,15 @@ function createNewView(){
             addNewViewToFile(viewName,mainFileNameInput);
         });
     }
+    
+
     window.showInputBox(newViewOptions).then(viewNameInput => {
         if (!viewNameInput) return;
         // Then show the main file name input dialog
         inputMainFileName(viewNameInput);
     });
+
+    
 }
 
 function addNewViewToFile(view : String, mainFile : String){
