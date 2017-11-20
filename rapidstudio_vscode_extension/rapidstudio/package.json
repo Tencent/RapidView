@@ -102,7 +102,7 @@
                 "rapidstudio.autoSync": {
                     "type": "boolean",
                     "default": true,
-                    "description": "When saving, the file is automatically synchronized to SD card."
+                    "description": "When saving, the file will be automatically synchronized to SD card."
                 }
             }
         },

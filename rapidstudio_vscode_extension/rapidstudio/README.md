@@ -74,6 +74,21 @@ Buttions in the navigation bar in the upper right corner of the window:
 
 XML attributes and Lua function auto-completion support for rapid view. You can also install other lua extension for vscode extension market.
 
+You can also custom automatic completion for xml\lua through modify the rapid_wrokspace.json:
+
+```json
+{
+    "completion" : {
+        "xml_tags" : ["MyXMLTag"],
+        "xml_attrs" : ["my_attr"],
+        "lua_funcs" : ["my_function"]
+    }
+}
+```
+
+Every time you add new rapid workspace, rapid studio will copy a file from template file ``rapid_workspace.json`` under template folder.
+You can also modify the template of rapid_workspace.json under the ./vscode/extension/rapidstudio/template.
+
 ### Log Output Colorizer
 
 Reference to the realization of the previous project from IBM-Bluemix:
@@ -132,6 +147,14 @@ Add adb path configuration that can be modified.
 ### 1.0.4
 
 Add autoSync configuration.When saving, the file is automatically synchronized to SD card.
+
+### 1.0.5
+
++ Fix some bugs in synchronizing file and project.
++ Add custom auto completions config.
++ Support to custom workspace template.
+
+
 
 ## For more information
 
