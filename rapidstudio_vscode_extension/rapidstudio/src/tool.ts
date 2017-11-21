@@ -110,6 +110,8 @@ export class ADBUtils {
         let adbPath =  workspace.getConfiguration("rapidstudio").get<String>('adbPath');
         let command = util.format("%s push %s %s",adbPath,file,targetDir);
         XLog.debug(command);
+
+        // Call adb to push file
         let exec = require('child_process').exec;
         let _adbUtils = this;
         exec(command, function(err,stdout,stderr){

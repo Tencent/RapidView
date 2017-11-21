@@ -13,19 +13,19 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello",
-        "onCommand:extension.syncFile",
-        "onCommand:extension.syncProject",
-        "onCommand:extension.newProject",
-        "onCommand:extension.newView",
-        "onCommand:extension.saveRapidFile",
+        "onCommand:rapidstudio.sayHello",
+        "onCommand:rapidstudio.syncFile",
+        "onCommand:rapidstudio.syncProject",
+        "onCommand:rapidstudio.newProject",
+        "onCommand:rapidstudio.newView",
+        "onCommand:rapidstudio.saveRapidFile",
         "workspaceContains:rapid_workspace.json"
     ],
     "main": "./out/extension",
     "contributes": {
         "keybindings": [
             {
-                "command": "extension.saveRapidFile",
+                "command": "rapidstudio.saveRapidFile",
                 "key": "ctrl+s",
                 "mac": "cmd+s",
                 "when": "editorTextFocus"
@@ -33,49 +33,49 @@
         ],
         "commands": [
             {
-                "command": "extension.syncFile",
+                "command": "rapidstudio.syncFile",
                 "title": "Sync File"
             },
             {
-                "command": "extension.syncProject",
+                "command": "rapidstudio.syncProject",
                 "title": "Sync Project"
             },
             {
-                "command": "extension.sayHello",
-                "title": "Rapid start",
+                "command": "rapidstudio.sayHello",
+                "title": "Hello Rapid Studio",
                 "category": "RapidStudio"
             },
             {
-                "command": "extension.newProject",
+                "command": "rapidstudio.newProject",
                 "title": "New Rapid Workspace"
             },
             {
-                "command": "extension.newView",
+                "command": "rapidstudio.newView",
                 "title": "New Rapid View"
             },
             {
-                "command": "extension.saveRapidFile",
+                "command": "rapidstudio.saveRapidFile",
                 "title": "Save rapid file."
             }
         ],
         "menus": {
             "editor/title": [
                 {
-                    "command": "extension.syncFile",
+                    "command": "rapidstudio.syncFile",
                     "group": "navigation"
                 },
                 {
-                    "command": "extension.syncProject",
+                    "command": "rapidstudio.syncProject",
                     "group": "navigation"
                 }
             ],
             "explorer/context": [
                 {
-                    "command": "extension.newProject",
+                    "command": "rapidstudio.newProject",
                     "group": "rapidstudio"
                 },
                 {
-                    "command": "extension.newView",
+                    "command": "rapidstudio.newView",
                     "group": "rapidstudio"
                 }
             ]
@@ -102,7 +102,7 @@
                 "rapidstudio.autoSync": {
                     "type": "boolean",
                     "default": true,
-                    "description": "When saving, the file is automatically synchronized to SD card."
+                    "description": "When saving, the file will be automatically synchronized to SD card."
                 }
             }
         },

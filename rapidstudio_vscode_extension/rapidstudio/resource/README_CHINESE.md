@@ -81,6 +81,20 @@ MacOS下，取决于安装方式，所在目录会有一定差异，通过homebr
 
 [Lua](https://marketplace.visualstudio.com/items?itemName=keyring.Lua)
 
+同时你也可以通过修改rapid_workspace.json文件（使用 New Rapid Workspace创建工作空间）自定义一些自动补全：
+```json
+{
+    "completion" : {
+        "xml_tags" : ["MyXMLTag"],
+        "xml_attrs" : ["my_attr"],
+        "lua_funcs" : ["my_function"]
+    }
+}
+```
+使用New Rapid Project时，实际上是把rapid_workspace.json的模版文件拷贝了一份，所以你也可以直接修改模版文件，windows平台下，模版被放置在vscode的extension目录下：``C:\Users\username\.vscode\extensions\rapidstudio\tempalte``
+
+这样每次使用New Rapid Project时，会直接使用修改后的模版
+
 
 ## 拓展设置
 
@@ -104,7 +118,7 @@ For example:
 
 ## 已知问题
 
-暂不支持自定义关键字补全，以及自定义控件属性补全。
+在某些情况下，output面板的log没有颜色。
 
 ## 更多
 
