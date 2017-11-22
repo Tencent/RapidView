@@ -19,6 +19,7 @@ export class SyncFileCommand implements RapidCommand{
                 XLog.error("Failed to sync because current file is not under the workspace.")
                 return;
             }
+            window.activeTextEditor.document.save();
             this.syncFile(); 
         } catch (error) {
             XLog.error(error);
