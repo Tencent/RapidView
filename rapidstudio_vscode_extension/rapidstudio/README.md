@@ -15,7 +15,7 @@ Search rapidtudio in vscode extension market and install it:
 
 ### Set up Android Debug Bridge(adb)
 
-To use rapid stuido extension, you need to configure adb install path in .vscode/settings.json.
+To use rapid stuido extension, you need to configure adb install path in .vscode/settings.json (File->Preferences->Settings).
 
 Windows Examlple：
 ```json
@@ -40,6 +40,17 @@ How to add path:
 
 + [MacoS](https://stackoverflow.com/questions/17901692/set-up-adb-on-mac-os-x)
 + [WIndows](https://stackoverflow.com/questions/23400030/windows-7-add-path)
+
+### Set the debug path in sdcard
+
+All files under workspace will be push to a folder you set when click ``Sync File`` or ``Sync Project``.
+
+You can set the folder by configuring settings.json, for example:
+```json
+{
+    "rapidstudio.folder": "/sdcard/rapid_debug/"
+}
+
 
 ### More Settings
 
