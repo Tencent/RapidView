@@ -73,10 +73,33 @@ export class SyncFileCommand implements RapidCommand{
 
 
 export class SyncProjectCommand implements RapidCommand{
-    readonly commandName = "rapidstudio.syncProject";   
+    readonly commandName = "rapidstudio.syncProject";
+    private projectFolder = ".";
     public execute(...args: any[]):any{
         try {
             workspace.saveAll();
+            this.projectFolder = workspace.rootPath;
+            // let editor = window.activeTextEditor;
+            // window.visibleTextEditors.forEach(_editor=>{
+            //     if(!_editor){
+            //         return;
+            //     }
+            //     let currentFilePath = _editor.document.fileName;
+            //     let path = require('path');  
+            //     let folderPath = path.dirname(currentFilePath)
+            //     console.log(currentFilePath);
+            //     console.log(folderPath);
+
+            //     if(folderPath != "."){
+            //         this.projectFolder = folderPath;
+            //     }
+            // });
+            console.log(this.projectFolder);
+            if( this.projectFolder == "."){
+                XLog.error("Can not target project folder for this workspace" + this.projectFolder);
+                return;
+            }
+
             this.syncProject();
         } catch (error) {
             XLog.error(error);
@@ -84,30 +107,18 @@ export class SyncProjectCommand implements RapidCommand{
     }
 
     private syncProject(){
-        // Get the current text editor
-        let editor = window.activeTextEditor;
-        if(!editor){
-            XLog.error("Did not find the target project to sync.");
-            return;
-        }
-    
-        // Start the task
-        XLog.success("Start syncing project..." );
-    
-        let currentFilePath = editor.document.fileName;
+        XLog.info("The target project folder: " + this.projectFolder);
         
-        let path = require('path');  
-        let folderPath = path.dirname(currentFilePath); 
-        XLog.info("The target project folder: " + folderPath);
         const fs = require('fs');
+        const path = require('path'); 
 
         // Get files in project folder
-        fs.readdir(folderPath, (err, files) => {
+        fs.readdir(this.projectFolder, (err, files) => {
             let filePaths = new Array();
             files.forEach(file => {
                 //　Skip hide file
                 let isHideFile = (file.indexOf(".") == 0)
-                let filePath = folderPath + path.sep + file;
+                let filePath = this.projectFolder + path.sep + file;
                 if(isHideFile){
                     XLog.info("Skip hide file: " + filePath);
                     return; 
@@ -122,9 +133,9 @@ export class SyncProjectCommand implements RapidCommand{
             adbUtils.pushFiles(filePaths,debug_dir,{
                 onFinish:(err,stdout,stderr)=>{
                     if(err){
-                        XLog.error("Sync Project failed: " + folderPath);
+                        XLog.error("Sync Project failed: " + this.projectFolder);
                     }else{
-                        XLog.success("Sync Project successfully: " + folderPath);
+                        XLog.success("Sync Project successfully: " + this.projectFolder);
                     }
                 }
             });
