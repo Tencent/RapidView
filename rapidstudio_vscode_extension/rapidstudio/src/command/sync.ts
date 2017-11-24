@@ -25,7 +25,7 @@ export class SyncFileCommand implements RapidCommand{
             XLog.error(error);
         }
     }
-
+ 
     private pushFile(){
         let adbUtils = new ADBUtils();
 
@@ -77,24 +77,11 @@ export class SyncProjectCommand implements RapidCommand{
     private projectFolder = ".";
     public execute(...args: any[]):any{
         try {
+            // Save and sync all files under workspace
             workspace.saveAll();
             this.projectFolder = workspace.rootPath;
-            // let editor = window.activeTextEditor;
-            // window.visibleTextEditors.forEach(_editor=>{
-            //     if(!_editor){
-            //         return;
-            //     }
-            //     let currentFilePath = _editor.document.fileName;
-            //     let path = require('path');  
-            //     let folderPath = path.dirname(currentFilePath)
-            //     console.log(currentFilePath);
-            //     console.log(folderPath);
-
-            //     if(folderPath != "."){
-            //         this.projectFolder = folderPath;
-            //     }
-            // });
             console.log(this.projectFolder);
+
             if( this.projectFolder == "."){
                 XLog.error("Can not target project folder for this workspace" + this.projectFolder);
                 return;

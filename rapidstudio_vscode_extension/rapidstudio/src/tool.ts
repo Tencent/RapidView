@@ -98,6 +98,7 @@ export class ADBUtils {
         let util = require('util');
         let adbPath =  workspace.getConfiguration("rapidstudio").get<String>('adbPath');
         let command = util.format("%s push %s %s",adbPath,filePath,targetDir); 
+        XLog.debug(command);
         this.sendADBCommand(command,callback);
     }
 
