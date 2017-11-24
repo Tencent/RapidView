@@ -154,7 +154,9 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 + Add custom auto completions config.
 + Support to custom workspace template.
 
+### 1.0.6
 
++ Fix a bugs that console and output will be recognized as a file when syncing file.
 
 ## For more information
 
