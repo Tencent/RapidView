@@ -2,7 +2,7 @@
     "Layout": {
         "prefix": "layout",
         "body": [
-            "<${1:tag} width=\"${2:width}\" height=\"${3:height}\">",
+            "<${1:tag} width=\"${2:match_parent}\" height=\"${3:wrap_content}\">",
             "</${1:tag}>"
         ],
         "description": "Insert layout xml tag. [RapidView]"
@@ -10,14 +10,14 @@
     "View": {
         "prefix": "view",
         "body": [
-            "<${1:tag} width=\"${2:width}\" height=\"${3:height}\"/>"
+            "<${1:tag} width=\"${2:match_parent}\" height=\"${3:wrap_content}\"/>"
         ],
         "description": "Insert rapid view xml tag. [RapidView]"
     },
     "Task": {
         "prefix": "task",
         "body": [
-            "<task id=\"${1:id}\">",
+            "<task id=\"${1:taskId}\">",
             "\t<${2:action}/>",
             "</task>"
         ],
