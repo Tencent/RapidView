@@ -13,18 +13,27 @@ export class SyncFileCommand implements RapidCommand{
             // Save the file in active editor if it belong to the workspace
             let filePath = window.activeTextEditor.document.fileName;
             console.log(filePath);
+            const path = require('path');  
+            let folderPath = path.dirname(filePath);
+            console.log(folderPath);
+            if(folderPath == "."){
+                XLog.error("The sync file command will sync synchronize the currently focused file."
+                + " Output or console panel is not a file. Please click the editable area of a file to make it focused and synchronized.")
+                return;
+            }
             let workspacePath = workspace.rootPath;
             console.log(workspacePath);
             if(filePath.indexOf(workspacePath) == -1){
                 XLog.error("Failed to sync because current file is not under the workspace.")
                 return;
             }
+            window.activeTextEditor.document.save();
             this.syncFile(); 
         } catch (error) {
             XLog.error(error);
         }
     }
-
+ 
     private pushFile(){
         let adbUtils = new ADBUtils();
 
@@ -72,10 +81,20 @@ export class SyncFileCommand implements RapidCommand{
 
 
 export class SyncProjectCommand implements RapidCommand{
-    readonly commandName = "rapidstudio.syncProject";   
+    readonly commandName = "rapidstudio.syncProject";
+    private projectFolder = ".";
     public execute(...args: any[]):any{
         try {
+            // Save and sync all files under workspace
             workspace.saveAll();
+            this.projectFolder = workspace.rootPath;
+            console.log(this.projectFolder);
+
+            if( this.projectFolder == "."){
+                XLog.error("Can not target project folder for this workspace" + this.projectFolder);
+                return;
+            }
+
             this.syncProject();
         } catch (error) {
             XLog.error(error);
@@ -83,30 +102,18 @@ export class SyncProjectCommand implements RapidCommand{
     }
 
     private syncProject(){
-        // Get the current text editor
-        let editor = window.activeTextEditor;
-        if(!editor){
-            XLog.error("Did not find the target project to sync.");
-            return;
-        }
-    
-        // Start the task
-        XLog.success("Start syncing project..." );
-    
-        let currentFilePath = editor.document.fileName;
+        XLog.info("The target project folder: " + this.projectFolder);
         
-        let path = require('path');  
-        let folderPath = path.dirname(currentFilePath); 
-        XLog.info("The target project folder: " + folderPath);
         const fs = require('fs');
+        const path = require('path'); 
 
         // Get files in project folder
-        fs.readdir(folderPath, (err, files) => {
+        fs.readdir(this.projectFolder, (err, files) => {
             let filePaths = new Array();
             files.forEach(file => {
                 //　Skip hide file
                 let isHideFile = (file.indexOf(".") == 0)
-                let filePath = folderPath + path.sep + file;
+                let filePath = this.projectFolder + path.sep + file;
                 if(isHideFile){
                     XLog.info("Skip hide file: " + filePath);
                     return; 
@@ -121,9 +128,9 @@ export class SyncProjectCommand implements RapidCommand{
             adbUtils.pushFiles(filePaths,debug_dir,{
                 onFinish:(err,stdout,stderr)=>{
                     if(err){
-                        XLog.error("Sync Project failed: " + folderPath);
+                        XLog.error("Sync Project failed: " + this.projectFolder);
                     }else{
-                        XLog.success("Sync Project successfully: " + folderPath);
+                        XLog.success("Sync Project successfully: " + this.projectFolder);
                     }
                 }
             });

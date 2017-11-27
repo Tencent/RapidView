@@ -15,7 +15,7 @@ RapidView是一个Android动态控件加载库，可以从SD Card加载XML布局
 
 ### 配置安卓调试工具ADB
 
-ADB在.vscode/settins.json里配置adb的路径。
+ADB在.vscode/settins.json里配置adb的路径（可以通过文件->首选项->设置来进行更改）。
 
 通常windows下，adb被放置在``C:\Users\username\AppData\Local\Android\sdk\platform-tools``下，故可以如下设置：
 ```json
@@ -38,7 +38,19 @@ MacOS下，取决于安装方式，所在目录会有一定差异，通过homebr
 如何将ADB添加到Path？快捷链接：
 
 + [MacoS](https://stackoverflow.com/questions/17901692/set-up-adb-on-mac-os-x)
-+ [WIndows](https://stackoverflow.com/questions/23400030/windows-7-add-path)
++ [WIndows](https://stackoverflow.com/questions/23400030/windows-7-add-path)\
+
+### 配置Rapid调试目录
+
+当你点击Sync File或者Sync Project时，工作空间下的所有文件夹都会被同步到sdcard的指定目录。
+
+你可以通过设置.vscode/settins.json来指定该目录（可以通过文件->首选项->设置 配置setting.json文件），示例：
+```json
+{
+    "rapidstudio.folder": "/sdcard/rapid_debug/"
+}
+
+
 
 ### 更多设置
 
