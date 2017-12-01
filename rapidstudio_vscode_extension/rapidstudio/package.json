@@ -125,13 +125,13 @@
             {
                 "language": "rapid-log",
                 "scopeName": "source.log",
-                "path": "./src/syntaxes/log.tmLanguage"
+                "path": "./syntaxes/log.tmLanguage"
             }
         ],
         "snippets": [
             {
                 "language": "xml",
-                "path": "./src/snippets/xml.json"
+                "path": "./snippets/xml.json"
             }
         ]
     },

@@ -72,7 +72,7 @@ export class XLog{
         // log.split("\n",100).forEach(logLine => {
         //     this._outputPanel.appendLine(util.format('[RapidStudio %s][%s] %s',time,type,logLine));
         // });
-        this._outputPanel.appendLine(util.format('[RapidStudio %s][%s] %s',time,type,log));
+        this._outputPanel.appendLine(util.format('[RapidStudio %s][%s]\t %s',time,type,log));
     }
 }
 

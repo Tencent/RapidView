@@ -50,6 +50,7 @@ You can set the folder by configuring settings.json, for example:
 {
     "rapidstudio.folder": "/sdcard/rapid_debug/"
 }
+```
 
 
 ### More Settings

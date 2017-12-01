@@ -36,6 +36,7 @@ export class CreateNewRapidViewCommand implements RapidCommand{
 
     private inputViewName(){
         let newViewOptions: InputBoxOptions = {
+            ignoreFocusOut: true,
             prompt: "Enter the name of view you want to create",
             placeHolder: "The name of new view"
         }
@@ -50,6 +51,7 @@ export class CreateNewRapidViewCommand implements RapidCommand{
     private inputMainFileName(argViewName){
         this.viewName = argViewName;
         let mainFileOptions: InputBoxOptions = {
+            ignoreFocusOut: true,
             prompt: "Enter the mainfile name",
             placeHolder: "Main file name"
         }
