@@ -170,6 +170,12 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 
 + Fix a bugs that console and output will be recognized as a file when syncing file.
 
+### 1.0.7
+
++ Optimize the xml snipptes.
++ Optimize colorized log output.
+
+
 ## For more information
 
 ### For Contributors
