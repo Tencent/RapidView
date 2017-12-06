@@ -62,6 +62,7 @@
             "editor/title": [
                 {
                     "command": "rapidstudio.syncFile",
+                    "when": "editorTextFocus && !editorReadonly",
                     "group": "navigation"
                 },
                 {
