@@ -2,7 +2,7 @@
     "name": "rapidstudio",
     "displayName": "Rapid Studio",
     "description": "Visual Studio Code Extension for Tencent Rapidview",
-    "version": "1.0.3",
+    "version": "1.0.7",
     "publisher": "realhe",
     "icon": "assets/icon.png",
     "engines": {
@@ -13,56 +13,69 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello",
-        "onCommand:extension.syncFile",
-        "onCommand:extension.syncProject",
-        "onCommand:extension.newProject",
-        "onCommand:extension.newView",
+        "onCommand:rapidstudio.sayHello",
+        "onCommand:rapidstudio.syncFile",
+        "onCommand:rapidstudio.syncProject",
+        "onCommand:rapidstudio.newProject",
+        "onCommand:rapidstudio.newView",
+        "onCommand:rapidstudio.saveRapidFile",
         "workspaceContains:rapid_workspace.json"
     ],
     "main": "./out/extension",
     "contributes": {
+        "keybindings": [
+            {
+                "command": "rapidstudio.saveRapidFile",
+                "key": "ctrl+s",
+                "mac": "cmd+s",
+                "when": "editorTextFocus"
+            }
+        ],
         "commands": [
             {
-                "command": "extension.syncFile",
+                "command": "rapidstudio.syncFile",
                 "title": "Sync File"
             },
             {
-                "command": "extension.syncProject",
+                "command": "rapidstudio.syncProject",
                 "title": "Sync Project"
             },
             {
-                "command": "extension.sayHello",
-                "title": "Rapid start",
+                "command": "rapidstudio.sayHello",
+                "title": "Hello Rapid Studio",
                 "category": "RapidStudio"
             },
             {
-                "command": "extension.newProject",
+                "command": "rapidstudio.newProject",
                 "title": "New Rapid Workspace"
             },
             {
-                "command": "extension.newView",
+                "command": "rapidstudio.newView",
                 "title": "New Rapid View"
+            },
+            {
+                "command": "rapidstudio.saveRapidFile",
+                "title": "Save rapid file."
             }
         ],
         "menus": {
             "editor/title": [
                 {
-                    "command": "extension.syncFile",
+                    "command": "rapidstudio.syncFile",
                     "group": "navigation"
                 },
                 {
-                    "command": "extension.syncProject",
+                    "command": "rapidstudio.syncProject",
                     "group": "navigation"
                 }
             ],
             "explorer/context": [
                 {
-                    "command": "extension.newProject",
+                    "command": "rapidstudio.newProject",
                     "group": "rapidstudio"
                 },
                 {
-                    "command": "extension.newView",
+                    "command": "rapidstudio.newView",
                     "group": "rapidstudio"
                 }
             ]
@@ -85,6 +98,11 @@
                     "type": "string",
                     "default": "adb",
                     "description": "Android Debug Bridge(adb) install path."
+                },
+                "rapidstudio.autoSync": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "When saving, the file will be automatically synchronized to SD card."
                 }
             }
         },
@@ -94,7 +112,6 @@
                 "extensions": [
                     ".log"
                 ],
-                "configuration": "./log.configuration.json",
                 "mimetypes": [
                     "log",
                     "text/log",
@@ -108,7 +125,13 @@
             {
                 "language": "rapid-log",
                 "scopeName": "source.log",
-                "path": "./src/syntaxes/log.tmLanguage"
+                "path": "./syntaxes/log.tmLanguage"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "xml",
+                "path": "./snippets/xml.json"
             }
         ]
     },
