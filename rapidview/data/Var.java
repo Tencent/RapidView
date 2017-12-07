@@ -31,7 +31,7 @@ import org.luaj.vm2.lib.jse.CoerceJavaToLua;
  * @author arlozhang
  * @date 2016.12.08
  */
-public class Var implements IVar{
+public class Var implements IVar {
 
     public enum TYPE{
         enum_null,
@@ -136,7 +136,17 @@ public class Var implements IVar{
         mCurrentType = TYPE.enum_boolean;
     }
 
+    public void set(Boolean value){
+        mBoolean = value;
+        mCurrentType = TYPE.enum_boolean;
+    }
+
     public void set(int value){
+        mInt = value;
+        mCurrentType = TYPE.enum_int;
+    }
+
+    public void set(Integer value){
         mInt = value;
         mCurrentType = TYPE.enum_int;
     }
@@ -146,13 +156,22 @@ public class Var implements IVar{
         mCurrentType = TYPE.enum_long;
     }
 
+    public void set(Long value){
+        mLong = value;
+        mCurrentType = TYPE.enum_long;
+    }
+
     public void setLong(long value){
         mLong = value;
         mCurrentType = TYPE.enum_long;
     }
 
-
     public void set(float value){
+        mFloat = value;
+        mCurrentType = TYPE.enum_float;
+    }
+
+    public void set(Float value){
         mFloat = value;
         mCurrentType = TYPE.enum_float;
     }
@@ -167,7 +186,16 @@ public class Var implements IVar{
         mCurrentType = TYPE.enum_double;
     }
 
+    public void set(Double value){
+        mDouble = value;
+        mCurrentType = TYPE.enum_double;
+    }
+
     public void set(String value){
+        if( value == null ){
+            value = "";
+        }
+
         mString = value;
         mCurrentType = TYPE.enum_string;
     }
@@ -182,6 +210,7 @@ public class Var implements IVar{
         mCurrentType = TYPE.enum_object;
     }
 
+    @Override
     public boolean getBoolean(){
 
         switch (mCurrentType){
@@ -213,11 +242,16 @@ public class Var implements IVar{
                 return true;
             case enum_string:
                 return RapidStringUtils.stringToBoolean(mString);
+            case enum_object:
+                if( mObject != null && mObject instanceof Boolean ) {
+                    return ((Boolean) mObject).booleanValue();
+                }
         }
 
         return false;
     }
 
+    @Override
     public int getInt(){
 
         switch (mCurrentType){
@@ -242,6 +276,10 @@ public class Var implements IVar{
                     e.printStackTrace();
                 }
                 break;
+            case enum_object:
+                if( mObject != null && mObject instanceof Integer ){
+                    return ((Integer) mObject).intValue();
+                }
             default:
                 return 0;
         }
@@ -249,6 +287,7 @@ public class Var implements IVar{
         return 0;
     }
 
+    @Override
     public long getLong(){
 
         switch (mCurrentType){
@@ -273,6 +312,10 @@ public class Var implements IVar{
                     e.printStackTrace();
                 }
                 break;
+            case enum_object:
+                if( mObject != null && mObject instanceof Long ) {
+                    return ((Long) mObject).longValue();
+                }
             default:
                 return 0;
         }
@@ -280,6 +323,7 @@ public class Var implements IVar{
         return 0;
     }
 
+    @Override
     public float getFloat(){
 
         switch (mCurrentType){
@@ -304,6 +348,10 @@ public class Var implements IVar{
                     e.printStackTrace();
                 }
                 break;
+            case enum_object:
+                if( mObject != null && mObject instanceof Float ) {
+                    return ((Float) mObject).floatValue();
+                }
             default:
                 return 0;
         }
@@ -311,6 +359,7 @@ public class Var implements IVar{
         return 0;
     }
 
+    @Override
     public double getDouble(){
 
         switch (mCurrentType){
@@ -335,6 +384,10 @@ public class Var implements IVar{
                     e.printStackTrace();
                 }
                 break;
+            case enum_object:
+                if( mObject != null && mObject instanceof Double ) {
+                    return ((Double) mObject).doubleValue();
+                }
             default:
                 return 0;
         }
@@ -342,6 +395,7 @@ public class Var implements IVar{
         return 0;
     }
 
+    @Override
     public String getString(){
 
         switch (mCurrentType){
@@ -364,6 +418,7 @@ public class Var implements IVar{
         return "";
     }
 
+    @Override
     public Object getObject(){
 
         switch (mCurrentType){
@@ -388,6 +443,7 @@ public class Var implements IVar{
         return null;
     }
 
+    @Override
     public int getArrayLenth(){
         if( mCurrentType != TYPE.enum_array ){
             return -1;
@@ -400,16 +456,18 @@ public class Var implements IVar{
         return mArray.length;
     }
 
+    @Override
     public Object getArrayItem(int index){
         if( mCurrentType != TYPE.enum_array ||
-            mArray == null ||
-            index < 0 ||
-            index >= mArray.length ){
+                mArray == null ||
+                index < 0 ||
+                index >= mArray.length ){
             return null;
         }
 
         return mArray[index];
     }
+
 
     public Object[] getArray(){
         if( mCurrentType != TYPE.enum_array ){
@@ -419,6 +477,7 @@ public class Var implements IVar{
         return mArray;
     }
 
+    @Override
     public LuaValue getLuaValue(){
         switch (mCurrentType){
             case enum_object:

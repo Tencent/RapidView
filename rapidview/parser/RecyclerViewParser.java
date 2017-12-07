@@ -38,6 +38,7 @@ public class RecyclerViewParser extends ViewGroupParser {
     static{
         try{
             mRecyclerViewClassMap.put("layoutmanager", initlayoutmanager.class.newInstance());
+            mRecyclerViewClassMap.put("maxflingcount", initmaxflingcount.class.newInstance());
         }
         catch (Exception e){
             e.printStackTrace();
@@ -124,6 +125,15 @@ public class RecyclerViewParser extends ViewGroupParser {
                     ((NormalRecyclerView)view).setGridLayoutManager(Integer.parseInt(param1));
                 }
             }
+        }
+    }
+
+    private static class initmaxflingcount implements IFunction {
+        public initmaxflingcount() {
+        }
+
+        public void run(RapidParserObject object, Object view, Var value) {
+            ((NormalRecyclerView)view).setMaxFlingCount(value.getInt());
         }
     }
 }

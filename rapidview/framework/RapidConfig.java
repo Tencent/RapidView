@@ -58,12 +58,18 @@ public class RapidConfig {
     /**VIEW列表，此处配置仅为防止重名，便于索引。**/
     public enum VIEW{
         native_demo_view, //Demo视图
+        demo_card_1,
+        demo_card_2,
+        demo_card_3,
     }
 
     /** VIEW和NaitveXML的映射关系，当View不存在服务端下发的XML时，寻找本地XML作为默认布局 **/
     static{
         try{
             msMapViewNaitve.put(RapidConfig.VIEW.native_demo_view.toString(), "demo_view.xml");
+            msMapViewNaitve.put(RapidConfig.VIEW.demo_card_1.toString(), "demo_card_1.xml");
+            msMapViewNaitve.put(RapidConfig.VIEW.demo_card_2.toString(), "demo_card_2.xml");
+            msMapViewNaitve.put(RapidConfig.VIEW.demo_card_3.toString(), "demo_card_3.xml");
         }
         catch (Exception e){
             e.printStackTrace();

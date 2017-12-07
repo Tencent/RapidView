@@ -22,6 +22,7 @@ import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.data.Var;
 import com.tencent.rapidview.deobfuscated.control.IItemDecorationListener;
 import com.tencent.rapidview.deobfuscated.control.IRapidRecyclerView;
+import com.tencent.rapidview.utils.DeviceQualityUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,8 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
 
     private MANAGER_TYPE mManagerType = MANAGER_TYPE.LINEAR;
 
+    private int mFlingCount = 15000;
+
     private int mLinearOrientation = 1;
 
     private enum MANAGER_TYPE {
@@ -56,7 +59,7 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
 
     public NormalRecyclerView(Context context){
         super(context);
-
+        initFlingCount();
         initView();
     }
 
@@ -90,7 +93,7 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
     }
 
     @Override
-    public void updateData(List<Map<String, Var>> dataList, List<String> viewList, boolean clear){
+    public void updateData(List<Map<String, Var>> dataList, List<String> viewList, Boolean clear){
         mAdapter.updateData(dataList, viewList, clear);
     }
 
@@ -102,6 +105,44 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
     @Override
     public void updateFooterData(String key, Object value){
         mAdapter.updateFooterData(key, value);
+    }
+
+    @Override
+    public void setMaxFlingCount(int count){
+        mFlingCount = count;
+    }
+
+    @Override
+    public boolean fling(int velocityX, int velocityY) {
+        if( velocityX > 8000 ){
+            velocityX *= 0.5;
+        }
+
+        if( velocityY > 8000 ){
+            velocityY *= 0.5;
+        }
+
+        if( mFlingCount != 0 ){
+            if( velocityX > mFlingCount || velocityX < -mFlingCount ){
+                if( velocityX < 0 ){
+                    velocityX = -mFlingCount;
+                }
+                else {
+                    velocityX = mFlingCount;
+                }
+            }
+
+            if( velocityY > mFlingCount || velocityY < -mFlingCount ){
+                if( velocityY < 0 ){
+                    velocityY = -mFlingCount;
+                }
+                else {
+                    velocityY = mFlingCount;
+                }
+            }
+        }
+
+        return super.fling(velocityX, velocityY);
     }
 
     @Override
@@ -200,5 +241,19 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
 
         mManagerType = MANAGER_TYPE.GRID;
         setLayoutManager(manager);
+    }
+
+    private void initFlingCount(){
+        switch ( DeviceQualityUtils.getDeviceQuality() ){
+            case enum_low_quality:
+                mFlingCount = 5600;
+                break;
+            case enum_middum_quality:
+                mFlingCount = 11000;
+                break;
+            case enum_high_quality:
+                mFlingCount = 15000;
+                break;
+        }
     }
 }

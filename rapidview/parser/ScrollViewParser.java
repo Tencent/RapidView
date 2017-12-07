@@ -107,7 +107,7 @@ public class ScrollViewParser extends FrameLayoutParser {
                 }
 
                 @Override
-                public void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY){
+                public void onOverScrolled(int scrollX, int scrollY, Boolean clampedX, Boolean clampedY){
                     obj.notify(EVENT.enum_parent_over_scrolled, null, fview, scrollX, scrollY, clampedX, clampedY);
                 }
             });

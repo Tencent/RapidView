@@ -179,7 +179,7 @@ public class RapidLoader {
                           RapidStringUtils.isEmpty(xmlName) ? "main.xml" : xmlName,
                           null);
 
-        UIHandler.post(new Runnable() {
+                UIHandler.post(new Runnable() {
             @Override
             public void run() {
                 IRapidView rapidView = object.load( UIHandler,

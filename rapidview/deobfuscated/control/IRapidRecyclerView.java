@@ -62,7 +62,7 @@ public interface IRapidRecyclerView {
 
     void updateData(List<Map<String, Var>> dataList, List<String> viewList);
 
-    void updateData(List<Map<String, Var>> dataList, List<String> viewList, boolean clear);
+    void updateData(List<Map<String, Var>> dataList, List<String> viewList, Boolean clear);
 
     void setFooter(String viewName, Map<String, Var> mapData);
 
@@ -77,4 +77,6 @@ public interface IRapidRecyclerView {
     void scrollToTop();
 
     void setActionListener(IRapidActionListener listener);
+
+    void setMaxFlingCount(int count);
 }

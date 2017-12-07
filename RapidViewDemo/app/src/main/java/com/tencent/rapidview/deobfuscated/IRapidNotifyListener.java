@@ -35,5 +35,5 @@ public interface IRapidNotifyListener {
 
     void onKeyDown(StringBuilder intercept, int keyCode, KeyEvent event);
 
-    void onParentOverScrolled(View view, int scrollX, int scrollY, boolean clampedX, boolean clampedY);
+    void onParentOverScrolled(View view, int scrollX, int scrollY, Boolean clampedX, Boolean clampedY);
 }
