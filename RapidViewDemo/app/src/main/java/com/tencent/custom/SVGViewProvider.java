@@ -1,29 +1,34 @@
 package com.tencent.custom;
 
 import android.content.Context;
-import android.widget.TextView;
 
 import com.tencent.rapidview.config.RapidViewProvider;
 import com.tencent.rapidview.param.ParamsObject;
-import com.tencent.rapidview.parser.TextViewParser;
+import com.tencent.rapidview.parser.ViewParser;
 
 /**
  * Created by realhe on 2017/12/9.
  */
 
-public class SVGViewProvider extends RapidViewProvider<SVGView,SVGParser> {
+public class SVGViewProvider extends RapidViewProvider<SVGView,ViewParser> {
+    private static SVGViewParser mSVGViewParser = new SVGViewParser();
     @Override
-    public SVGParser provideParser() {
-        return null;
+    public String provideViewName() {
+        return "svgview";
+    }
+
+    @Override
+    public ViewParser provideParser() {
+        return mSVGViewParser;
     }
 
     @Override
     public SVGView provideView(Context context) {
-        return null;
+        return new SVGView(context);
     }
 
     @Override
-    public ParamsObject createParams(Context context) {
-        return null;
+    public int minLimitLevel() {
+        return -1;
     }
 }
