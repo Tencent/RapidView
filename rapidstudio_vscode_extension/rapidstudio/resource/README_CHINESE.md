@@ -91,7 +91,7 @@ MacOS下，取决于安装方式，所在目录会有一定差异，通过homebr
 
 [XML Tools](https://marketplace.visualstudio.com/items?itemName=DotJoshJohnson.xml)
 
-[Lua](https://marketplace.visualstudio.com/items?itemName=keyring.Lua)
+[vscode Lua](https://marketplace.visualstudio.com/items?itemName=trixnz.vscode-lua)
 
 同时你也可以通过修改rapid_workspace.json文件（使用 New Rapid Workspace创建工作空间）自定义一些自动补全：
 ```json
