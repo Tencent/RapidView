@@ -126,7 +126,7 @@ public abstract class RapidParserObject implements IRapidParser {
         mInitFunNodeList = new ArrayList<ATTRIBUTE_FUN_NODE>();
     }
 
-    protected interface IFunction {
+    public interface IFunction {
         void run(RapidParserObject object, Object view, Var value);
     }
 

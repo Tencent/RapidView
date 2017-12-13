@@ -15,6 +15,8 @@ package com.tencent.rapidviewdemo;
 
 import android.app.Application;
 
+import com.tencent.RapidView;
+import com.tencent.custom.SVGViewProvider;
 import com.tencent.rapidview.framework.RapidPool;
 
 
@@ -26,8 +28,9 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-
+        RapidView.registerProvider(new SVGViewProvider());
         RapidPool.getInstance().initialize(this, null);
+
     }
 
     public static Application getInstance() {

@@ -1,0 +1,3 @@
+<relativelayout id="task_container" width="match_parent" height="match_parent" backgroundcolor="ffabcdef">
+	<svgview svg="phone.svg" width="30" height="30" backgroundcolor="ffffffff" pathcolor="data@pathcolor$blue"/>
+</relativelayout>
