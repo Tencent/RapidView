@@ -13,13 +13,7 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:rapidstudio.sayHello",
-        "onCommand:rapidstudio.syncFile",
-        "onCommand:rapidstudio.syncProject",
-        "onCommand:rapidstudio.newProject",
-        "onCommand:rapidstudio.newView",
-        "onCommand:rapidstudio.saveRapidFile",
-        "workspaceContains:rapid_workspace.json"
+        "*"
     ],
     "main": "./out/extension",
     "contributes": {
