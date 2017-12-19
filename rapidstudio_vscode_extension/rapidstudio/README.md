@@ -180,6 +180,10 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 
 + Speed up project synchronization.
 
+### 1.0.9
+
++ Fix a bug some device cannot sycn project.
+
 ## For more information
 
 ### For Contributors
