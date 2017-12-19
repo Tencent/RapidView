@@ -176,6 +176,10 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 + Optimize colorized log output.
 
 
+### 1.0.8
+
++ Speed up project synchronization.
+
 ## For more information
 
 ### For Contributors
