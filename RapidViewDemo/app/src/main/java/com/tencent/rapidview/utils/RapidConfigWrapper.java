@@ -331,8 +331,13 @@ public class RapidConfigWrapper {
             RAPID_VIEW view = readView(listView.get(i));
 
             if( view == null || !isViewExist(view) ){
-                XLog.d(RapidConfig.RAPID_ERROR_TAG, "View文件不完整或为空" );
-                continue;
+                if( view == null ){
+                    XLog.d(RapidConfig.RAPID_ERROR_TAG, "VIEW为空" );
+                }
+                else{
+                    XLog.d(RapidConfig.RAPID_ERROR_TAG, "VIEW不存在：" + view.name == null ? "null" : view.name);
+                }
+
             }
 
             XLog.d(RapidConfig.RAPID_NORMAL_TAG, "添加视图到已鉴定存在的视图列表：" + view.name);

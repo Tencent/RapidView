@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.text.TextUtils;
+import android.util.StateSet;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -139,6 +140,8 @@ public class ViewParser extends RapidParserObject {
             mViewClassMap.put("realid", initrealid.class.newInstance());
             mViewClassMap.put("scrollexposure", initscrollexposure.class.newInstance());
             mViewClassMap.put("statelistdrawable", initstatelistdrawable.class.newInstance());
+            mViewClassMap.put("requestlayout", initrequestlayout.class.newInstance());
+            mViewClassMap.put("invalidate", initinvalidate.class.newInstance());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -167,91 +170,58 @@ public class ViewParser extends RapidParserObject {
         public initstatelistdrawable() {
         }
 
-        public void run(final RapidParserObject object, final Object view, final Var value) {
-            final View fView = (View) view;
+        public void run(RapidParserObject object, Object view, Var value) {
+            StateListDrawable drawable = new StateListDrawable();
+            Map<String, String> map = RapidStringUtils.stringToMap(value.getString());
 
-            RapidThreadPool.get().execute(new Runnable() {
-                @Override
-                public void run() {
-                    StateListDrawable drawable = new StateListDrawable();
-                    Map<String, String> map = RapidStringUtils.stringToMap(value.getString());
+            for (Map.Entry<String, String> entry : map.entrySet()) {
 
-                    for (Map.Entry<String, String> entry : map.entrySet()) {
-
-                        if (entry.getKey().compareToIgnoreCase("enabled") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_enabled}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("pressed") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_pressed}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("selected") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_selected}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("activated") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_activated}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("active") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_active}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("first") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_first}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("focused") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_focused}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("last") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_last}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("middle") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_middle}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("single") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_single}, getDrawable(entry.getValue()));
-                        } else if (entry.getKey().compareToIgnoreCase("window_focused") == 0) {
-                            drawable.addState(new int[]{android.R.attr.state_window_focused}, getDrawable(entry.getValue()));
-                        }
-                    }
-
-                    final Drawable fDrawable = drawable;
-                    object.getUIHandler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((View) view).setBackgroundDrawable(fDrawable);
-                        }
-                    });
+                if (entry.getKey().compareToIgnoreCase("enabled") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_enabled}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("pressed") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_pressed}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("selected") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_selected}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("activated") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_activated}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("active") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_active}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("first") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_first}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("focused") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_focused}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("last") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_last}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("middle") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_middle}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("single") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_single}, getDrawable(object, entry.getValue()));
+                } else if (entry.getKey().compareToIgnoreCase("window_focused") == 0) {
+                    drawable.addState(new int[]{android.R.attr.state_window_focused}, getDrawable(object, entry.getValue()));
+                } else if(entry.getKey().compareToIgnoreCase("wild_card") == 0){
+                    drawable.addState(StateSet.WILD_CARD, getDrawable(object, entry.getValue()));
                 }
+            }
 
-                private Drawable getDrawable(String value) {
-                    if (value.contains(".") || value.contains("res@")) {
-                        Bitmap bmp = RapidImageLoader.get(object.getContext(), value, object.getRapidID(), object.isLimitLevel());
-                        if (bmp != null) {
-                            return new BitmapDrawable(bmp);
-                        }
-                    }
-                    else{
-                        ColorDrawable drawable = new ColorDrawable(Color.parseColor("#" + value));
+            ((View) view).setBackgroundDrawable(drawable);
 
-                        return drawable;
-                    }
+        }
 
-
-                    return new ColorDrawable(Color.WHITE);
+        private Drawable getDrawable(RapidParserObject object, String value) {
+            if (value.contains(".") || value.contains("res@")) {
+                Bitmap bmp = RapidImageLoader.get(object.getContext(), value, object.getRapidID(), object.isLimitLevel());
+                if (bmp != null) {
+                    return new BitmapDrawable(bmp);
                 }
+            }
+            else{
+                ColorDrawable drawable = new ColorDrawable(Color.parseColor("#" + value));
 
-            });
+                return drawable;
+            }
 
-            RapidImageLoader.get(((View) view).getContext(), value.getString(), object.getRapidID(), object.isLimitLevel(),
-                    new RapidImageLoader.ICallback() {
 
-                        @Override
-                        public void finish(boolean succeed, String name, Bitmap bmp) {
-                            Drawable drawable = null;
-
-                            if (!succeed) {
-                                return;
-                            }
-
-                            byte[] chunk = bmp.getNinePatchChunk();
-                            if (chunk != null && NinePatch.isNinePatchChunk(chunk)) {
-                                drawable = new NinePatchDrawable(fView.getContext().getResources(), bmp, chunk, new Rect(), null);
-                            } else {
-                                drawable = new BitmapDrawable(bmp);
-                            }
-
-                            fView.setBackgroundDrawable(drawable);
-                        }
-                    });
+            return new ColorDrawable(Color.WHITE);
         }
     }
 
@@ -292,6 +262,10 @@ public class ViewParser extends RapidParserObject {
 
         public void run(RapidParserObject object, Object view, Var value){
             String str = value.getString();
+
+            if( str.compareTo("") == 0 ){
+                return;
+            }
 
             if( str.length() > 4 && str.substring(0, 4).compareToIgnoreCase("res@") == 0 ){
                 str = str.substring(4, str.length());
@@ -885,6 +859,23 @@ public class ViewParser extends RapidParserObject {
             }
 
             ((View)view).setId(RapidResource.mResourceMap.get(value.getString()));
+        }
+    }
+
+    private static class initrequestlayout implements IFunction {
+        public initrequestlayout(){}
+
+        public void run(RapidParserObject object, Object view, Var value) {
+            ((View)view).requestLayout();
+        }
+    }
+
+
+    private static class initinvalidate implements IFunction {
+        public initinvalidate(){}
+
+        public void run(RapidParserObject object, Object view, Var value) {
+            ((View)view).invalidate();
         }
     }
 

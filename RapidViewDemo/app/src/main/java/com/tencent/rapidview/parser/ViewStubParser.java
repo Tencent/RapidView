@@ -83,7 +83,7 @@ public class ViewStubParser extends ViewParser{
             IRapidView viewChild = ((ViewStubParser)object).mRapidReplaceView;
             Context context = null;
             Class[] clzParams = new Class[]{Context.class};
-            Object[] objParams = new Object[]{context};
+            Object[] objParams = null;
             ParamsObject paramObj = null;
             Constructor ctr;
 
@@ -133,6 +133,8 @@ public class ViewStubParser extends ViewParser{
             }
 
             try{
+                objParams = new Object[]{context};
+
                 ctr = object.getParams().getClass().getConstructor(clzParams);
                 paramObj = (ParamsObject) ctr.newInstance(objParams);
             }

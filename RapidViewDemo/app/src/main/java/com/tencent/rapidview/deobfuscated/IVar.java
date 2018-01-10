@@ -43,4 +43,28 @@ public interface IVar {
     int getArrayLenth();
 
     LuaValue getLuaValue();
+
+    void createIntArray(int length);
+
+    void createBooleanArray(int length);
+
+    void createFloatArray(int length);
+
+    void createDoubleArray(int length);
+
+    int[] getIntArray();
+
+    boolean[] getBooleanArray();
+
+    float[] getFloatArray();
+
+    double[] getDoubleArray();
+
+    int getIntArrayItem(int index);
+
+    boolean getBooleanArrayItem(int index);
+
+    float getFloatArrayItem(int index);
+
+    double getDoubleArrayItem(int index);
 }

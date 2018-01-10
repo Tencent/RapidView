@@ -103,6 +103,8 @@ public class RapidPool {
 
         mPreloader.setContext(context);
 
+        RapidRuntimeCachePool.getInstance().setContext(context);
+
         RapidThreadPool.get().execute(new Runnable() {
             @Override
             public void run() {
@@ -479,7 +481,7 @@ public class RapidPool {
                         continue;
                     }
 
-                    newCenter.initialize(mContext, null, null, false, xml, null, null);
+                    newCenter.initialize(mContext, "", null, false, xml, null, null);
 
                     mRapidProloadMap.put(xml, newCenter);
 
@@ -495,7 +497,7 @@ public class RapidPool {
                     RapidObject newCenter = new RapidObject();
                     String xml = entry.getKey();
 
-                    newCenter.initialize(mContext, null, null, false, xml, null, null);
+                    newCenter.initialize(mContext, "", null, false, xml, null, null);
 
                     mRapidProloadMap.put(xml, newCenter);
                     XLog.d(RapidConfig.RAPID_NORMAL_TAG, "已添加视图到缓存池：" + xml);
@@ -542,7 +544,9 @@ public class RapidPool {
                 oldCenter.initialize(mContext, null, null, false, rapidXml, null, null);
             }
 
-            add(rapidXml);
+            if( mIsInitialized ){
+                add(rapidXml);
+            }
 
             return oldCenter;
         }

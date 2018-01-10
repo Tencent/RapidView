@@ -31,6 +31,7 @@ import com.tencent.rapidview.deobfuscated.IRapidNotifyListener;
 import com.tencent.rapidview.deobfuscated.IRapidParser;
 import com.tencent.rapidview.deobfuscated.IRapidTask;
 import com.tencent.rapidview.deobfuscated.IRapidViewGroup;
+import com.tencent.rapidview.framework.RapidConfig;
 import com.tencent.rapidview.framework.RapidObjectImpl;
 import com.tencent.rapidview.lua.RapidLuaCaller;
 import com.tencent.rapidview.lua.RapidLuaEnvironment;
@@ -41,6 +42,7 @@ import com.tencent.rapidview.utils.DeviceUtils;
 import com.tencent.rapidview.utils.RapidControlNameCreator;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.utils.RapidStringUtils;
+import com.tencent.rapidview.utils.XLog;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaString;
@@ -146,6 +148,10 @@ public abstract class RapidParserObject implements IRapidParser {
                 function.run(this, view.getView(), entry.getValue());
             }
             catch (Exception e){
+                if( entry.getValue() != null ){
+                    XLog.d(RapidConfig.RAPID_ERROR_TAG, "解析参数异常：" + entry.getValue().getString());
+                }
+
                 e.printStackTrace();
             }
         }

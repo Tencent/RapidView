@@ -41,6 +41,8 @@ public class ActionChooser {
             mAllClassMap.put("luaaction", LuaActionGeter.class.newInstance());
             mAllClassMap.put("integeroperationaction", IntegerOperationActionGeter.class.newInstance());
             mAllClassMap.put("attributeaction", AttributeActionGeter.class.newInstance());
+            mAllClassMap.put("cacheviewaction", CacheViewActionGeter.class.newInstance());
+            mAllClassMap.put("invalidateaction", InvalidateActionGeter.class.newInstance());
         }
         catch (Exception e){
             e.printStackTrace();
@@ -54,6 +56,8 @@ public class ActionChooser {
             mLimitClassMap.put("luaaction", LuaActionGeter.class.newInstance());
             mLimitClassMap.put("integeroperationaction", IntegerOperationActionGeter.class.newInstance());
             mLimitClassMap.put("attributeaction", AttributeActionGeter.class.newInstance());
+            mLimitClassMap.put("cacheviewaction", CacheViewActionGeter.class.newInstance());
+            mLimitClassMap.put("invalidateaction", InvalidateActionGeter.class.newInstance());
         }
         catch (Exception e){
             e.printStackTrace();
@@ -154,6 +158,22 @@ public class ActionChooser {
         @Override
         public ActionObject get(Element element, Map<String, String> mapEnv){
             return new AttributeAction(element, mapEnv);
+        }
+    }
+
+    private static class CacheViewActionGeter implements IFunction {
+        public CacheViewActionGeter(){}
+        @Override
+        public ActionObject get(Element element, Map<String, String> mapEnv) {
+            return new CacheViewAction(element,mapEnv);
+        }
+    }
+
+    private static class InvalidateActionGeter implements IFunction {
+        public InvalidateActionGeter(){}
+        @Override
+        public ActionObject get(Element element, Map<String, String> mapEnv) {
+            return new InvalidateAction(element,mapEnv);
         }
     }
 }
