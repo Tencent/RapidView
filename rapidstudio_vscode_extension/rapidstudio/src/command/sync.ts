@@ -12,17 +12,14 @@ export class SyncFileCommand implements RapidCommand{
         try {       
             // Save the file in active editor if it belong to the workspace
             let filePath = window.activeTextEditor.document.fileName;
-            console.log(filePath);
             const path = require('path');  
             let folderPath = path.dirname(filePath);
-            console.log(folderPath);
             if(folderPath == "."){
                 XLog.error("The sync file command will sync synchronize the currently focused file."
                 + " Output or console panel is not a file. Please click the editable area of a file to make it focused and synchronized.")
                 return;
             }
             let workspacePath = workspace.rootPath;
-            console.log(workspacePath);
             if(filePath.indexOf(workspacePath) == -1){
                 XLog.error("Failed to sync because current file is not under the workspace.")
                 return;

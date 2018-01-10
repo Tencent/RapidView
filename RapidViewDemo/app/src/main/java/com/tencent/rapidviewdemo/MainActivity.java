@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.tencent.RapidView;
 import com.tencent.rapidview.RapidLoader;
 import com.tencent.rapidview.data.Var;
 import com.tencent.rapidview.deobfuscated.IRapidView;
@@ -44,8 +45,9 @@ public class MainActivity extends Activity {
 
         map.put("text_1", new Var("init_text"));
 
+        RapidView.registerView("demo_svg","demo_svg.xml");
         mRapidView = RapidLoader.load(
-                RapidConfig.VIEW.native_demo_view.toString(),
+                "demo_svg",
                 HandlerUtils.getMainHandler(),
                 this,
                 RelativeLayoutParams.class,

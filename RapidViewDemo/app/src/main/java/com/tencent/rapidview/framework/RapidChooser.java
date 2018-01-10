@@ -13,6 +13,8 @@
  ***************************************************************************************************/
 package com.tencent.rapidview.framework;
 
+import com.tencent.RapidView;
+import com.tencent.rapidview.config.RapidViewProvider;
 import com.tencent.rapidview.view.RapidAbsoluteLayout;
 import com.tencent.rapidview.view.RapidButton;
 import com.tencent.rapidview.view.RapidFrameLayout;
@@ -69,6 +71,9 @@ public class RapidChooser {
         mAllClassMap.put("runtimeview", RapidRuntimeView.class);
         mAllClassMap.put("viewpager", RapidViewPager.class);
         mAllClassMap.put("recyclerview", RapidRecyclerView.class);
+        for (RapidViewProvider provider : RapidView.getProviders()){
+            mAllClassMap.put(provider.provideViewName(),provider.getClass());
+        }
      }
 
     static{
@@ -85,6 +90,12 @@ public class RapidChooser {
         mLimitClassMap.put("viewstub", RapidViewStub.class);
         mLimitClassMap.put("viewpager", RapidViewPager.class);
         mLimitClassMap.put("recyclerview", RapidRecyclerView.class);
+        for (RapidViewProvider provider : RapidView.getProviders()){
+            if (provider.minLimitLevel() >= 0){
+                continue;
+            }
+            mAllClassMap.put(provider.provideViewName(),provider.getClass());
+        }
     }
 
     private RapidChooser(){}
