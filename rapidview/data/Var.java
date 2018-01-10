@@ -42,24 +42,36 @@ public class Var implements IVar {
         enum_double,
         enum_string,
         enum_array,
-        enum_object
+        enum_object,
+        enum_int_array,
+        enum_boolean_array,
+        enum_float_array,
+        enum_double_array,
     }
 
-    private TYPE     mCurrentType = TYPE.enum_null;
+    private TYPE      mCurrentType = TYPE.enum_null;
 
-    private boolean  mBoolean = false;
+    private boolean   mBoolean = false;
 
-    private int      mInt    = 0;
+    private int       mInt    = 0;
 
-    private long     mLong   = 0;
+    private long      mLong   = 0;
 
-    private float    mFloat  = 0;
+    private float     mFloat  = 0;
 
-    private double   mDouble = 0;
+    private double    mDouble = 0;
 
-    private String   mString = "";
+    private String    mString = "";
 
-    private Object[] mArray  = null;
+    private Object[]  mArray  = null;
+
+    private int[]     mIntArray = null;
+
+    private boolean[] mBooleanArray = null;
+
+    private float[]   mFloatArray = null;
+
+    private double[]  mDoubleArray = null;
 
     private Object   mObject = null;
 
@@ -91,6 +103,7 @@ public class Var implements IVar {
     }
 
     public Var(Object[] value){
+        int[] a = new int[6];
         set(value);
     }
 
@@ -117,6 +130,8 @@ public class Var implements IVar {
             set(value.touserdata());
             return;
         }
+
+        set(value);
     }
 
     public void setNull(){
@@ -202,6 +217,7 @@ public class Var implements IVar {
 
     public void set(Object[] value){
         mArray = value;
+
         mCurrentType = TYPE.enum_array;
     }
 
@@ -445,15 +461,21 @@ public class Var implements IVar {
 
     @Override
     public int getArrayLenth(){
-        if( mCurrentType != TYPE.enum_array ){
-            return -1;
+
+        switch (mCurrentType){
+            case enum_array:
+                return mArray.length;
+            case enum_int_array:
+                return mIntArray.length;
+            case enum_boolean_array:
+                return mBooleanArray.length;
+            case enum_float_array:
+                return mFloatArray.length;
+            case enum_double_array:
+                return mDoubleArray.length;
         }
 
-        if( mArray == null ){
-            return 0;
-        }
-
-        return mArray.length;
+        return -1;
     }
 
     @Override
@@ -468,6 +490,69 @@ public class Var implements IVar {
         return mArray[index];
     }
 
+    @Override
+    public void createIntArray(int length){
+        mIntArray = new int[length];
+        mCurrentType = TYPE.enum_int_array;
+    }
+
+    @Override
+    public void createBooleanArray(int length){
+        mBooleanArray = new boolean[length];
+        mCurrentType = TYPE.enum_boolean_array;
+    }
+
+    @Override
+    public void createFloatArray(int length){
+        mFloatArray = new float[length];
+        mCurrentType = TYPE.enum_float_array;
+    }
+
+    @Override
+    public void createDoubleArray(int length){
+        mDoubleArray = new double[length];
+        mCurrentType = TYPE.enum_double_array;
+    }
+
+    @Override
+    public int[] getIntArray(){
+        return mIntArray;
+    }
+
+    @Override
+    public boolean[] getBooleanArray(){
+        return mBooleanArray;
+    }
+
+    @Override
+    public float[] getFloatArray(){
+        return mFloatArray;
+    }
+
+    @Override
+    public double[] getDoubleArray(){
+        return mDoubleArray;
+    }
+
+    @Override
+    public int getIntArrayItem(int index){
+        return mIntArray[index];
+    }
+
+    @Override
+    public boolean getBooleanArrayItem(int index){
+        return mBooleanArray[index];
+    }
+
+    @Override
+    public float getFloatArrayItem(int index){
+        return mFloatArray[index];
+    }
+
+    @Override
+    public double getDoubleArrayItem(int index){
+        return mDoubleArray[index];
+    }
 
     public Object[] getArray(){
         if( mCurrentType != TYPE.enum_array ){
@@ -481,7 +566,17 @@ public class Var implements IVar {
     public LuaValue getLuaValue(){
         switch (mCurrentType){
             case enum_object:
-                return LuaValue.userdataOf(mObject);
+                if( mObject instanceof Object[] ||
+                        mObject instanceof byte[]   ||
+                        mObject instanceof int[]    ||
+                        mObject instanceof boolean[]||
+                        mObject instanceof float[]  ||
+                        mObject instanceof double[] ){
+                    return LuaValue.userdataOf(mObject);
+                }
+                else {
+                    return CoerceJavaToLua.coerce(mObject);
+                }
             case enum_boolean:
                 return LuaBoolean.valueOf(mBoolean);
             case enum_int:
