@@ -270,7 +270,7 @@ public class RapidImageLoader {
     }
 
     private static Bitmap getRapid(Context context, String name){
-        byte[] bytesBitmap = RapidPool.getInstance().getFile(name, true);
+        byte[] bytesBitmap = RapidPool.getInstance().getFile(name, false);
         Bitmap bmp;
 
         if( bytesBitmap == null ){
