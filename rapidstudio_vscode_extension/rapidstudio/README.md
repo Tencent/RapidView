@@ -86,7 +86,7 @@ Buttions in the navigation bar in the upper right corner of the window:
 
 XML attributes and Lua function auto-completion support for rapid view. You can also install other lua extension for vscode extension market.
 
-You can also custom automatic completion for xml\lua through modify the rapid_wrokspace.json:
+You can also custom automatic completion for xml\lua through modify the rapid_workspace.json:
 
 ```json
 {
