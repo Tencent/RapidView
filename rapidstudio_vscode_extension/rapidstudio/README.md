@@ -1,8 +1,12 @@
 # Rapid Studio Visual Studio Code Extension
-![](https://img.shields.io/travis/USER/REPO.svg)
-![](https://img.shields.io/badge/vs_store-v1.0.9-519dd9.svg)
 
-![](https://img.shields.io/badge/platform-OSX|Windows|Linux-lightgrey.svg)
+![](https://img.shields.io/github/license/mashape/apistatus.svg)
+![](https://img.shields.io/badge/vscode->=1.17.0-red.svg)
+![](https://img.shields.io/vscode-marketplace/v/realhe.rapidstudio.svg)
+![](https://img.shields.io/vscode-marketplace/d/realhe.rapidstudio.svg)
+
+
+![](https://img.shields.io/badge/platform-osx|windows|linux-lightgrey.svg)
 ![](https://img.shields.io/badge/language-TypeScript-orange.svg)
 
 This extension can help you quickly develop the RapidView project.
