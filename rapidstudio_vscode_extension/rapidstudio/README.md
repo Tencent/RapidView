@@ -1,5 +1,8 @@
 # Rapid Studio Visual Studio Code Extension
 
+![](https://img.shields.io/badge/vs_store-v1.0.9-519dd9.svg)
+![](https://img.shields.io/badge/platform-OSX-Windows-Linux-lightgrey.svg)
+
 This extension can help you quickly develop the RapidView project.
 
 [中文文档请点击这里](https://github.com/YongdongHe/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/resource/README_CHINESE.md)
