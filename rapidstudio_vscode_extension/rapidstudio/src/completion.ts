@@ -23,7 +23,7 @@ export class RapidCompletionManager{
         let workspace_file = rootPath + path.sep + "rapid_workspace.json";
         fs.readFile(workspace_file, 'utf8', function (err, data) {
             if (err) {
-                XLog.error("An error occurred while setting auto completion: cannot read data from rapid_wroksapce.json.");
+                XLog.error("An error occurred while setting auto completion: cannot read data from rapid_workspace.json.");
                 return;
             }
             // Catch json exception

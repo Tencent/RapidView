@@ -49,6 +49,7 @@ MacOS下，取决于安装方式，所在目录会有一定差异，通过homebr
 {
     "rapidstudio.folder": "/sdcard/rapid_debug/"
 }
+```
 
 
 
