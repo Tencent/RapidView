@@ -305,6 +305,11 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
         });
     }
 
+    @Override
+    public void setMaxRecycledViews(String viewName, int max){
+        getRecycledViewPool().setMaxRecycledViews(mAdapter.getViewType(viewName), max);
+    }
+
     public void setLinearLayoutManager(int orientation, boolean reverselayout){
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), orientation, reverselayout){
 

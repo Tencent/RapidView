@@ -71,6 +71,8 @@ public interface IRapidRecyclerView {
 
     void setScrollTopListener(IScrollTopListener listener);
 
+    void setMaxRecycledViews(String viewName, int max);
+
     void updateData(List<Map<String, Var>> dataList, List<String> viewList);
 
     void updateData(List<Map<String, Var>> dataList, List<String> viewList, Boolean clear);

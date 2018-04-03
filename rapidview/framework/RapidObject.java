@@ -15,6 +15,7 @@ package com.tencent.rapidview.framework;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Process;
 
 import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.animation.RapidAnimationCenter;
@@ -76,14 +77,15 @@ public class RapidObject extends RapidObjectImpl {
      * 界面加载的耗时操作都放到了该方法中，因此提前调用可以用于预加载。
      * 在listener中返回的view需在load后才可以使用。
      *
-     * @param context     用于读取数据的上下文。
-     * @param rapidID     当使用沙箱的方式加载时，需要传入rapidID
-     * @param globals     是否使用外部的globals，如果为null，则重新创建一个
-     * @param limitLevel  是否是受限级运行
-     * @param xmlName     视图主XML的全名
-     * @param initDataMap 初始化本身需要的数据池。目前除了无上限的include视图的情况，需要在初始化阶段确定需要
-     *                    include哪些文件外，暂时没有其它用处，大部分情况可以传null。
-     * @param listener    用于通知初始化完成。
+     * @param context      用于读取数据的上下文。
+     * @param rapidID      当使用沙箱的方式加载时，需要传入rapidID
+     * @param globals      是否使用外部的globals，如果为null，则重新创建一个
+     * @param limitLevel   是否是受限级运行
+     * @param xmlName      视图主XML的全名
+     * @param initDataMap  初始化本身需要的数据池。目前除了无上限的include视图的情况，需要在初始化阶段确定需要
+     *                     include哪些文件外，暂时没有其它用处，大部分情况可以传null。
+     * @param listener     用于通知初始化完成。
+     * @praam initDirectly 是否初始化完成
      */
     public void initialize(final Context context,
                            final String  rapidID,
@@ -91,9 +93,11 @@ public class RapidObject extends RapidObjectImpl {
                            final boolean limitLevel,
                            final String  xmlName,
                            final Map<String, Var> initDataMap,
-                           final IInitializeListener listener) {
-        initialize(new RapidDataBinder(initDataMap), context, rapidID, globals, limitLevel, xmlName, listener);
+                           final IInitializeListener listener,
+                           final boolean initDirectly) {
+        _initialize(new RapidDataBinder(initDataMap), context, rapidID, globals, limitLevel, xmlName, listener, initDirectly);
     }
+
 
     public void initialize(final RapidDataBinder binder,
                            final Context context,
@@ -102,6 +106,78 @@ public class RapidObject extends RapidObjectImpl {
                            final boolean limitLevel,
                            final String  xmlName,
                            final IInitializeListener listener){
+        _initialize(binder, context, rapidID, globals, limitLevel, xmlName, listener, false);
+    }
+
+    public boolean isInitialized(){
+        return mInitialized;
+    }
+
+    /**
+     * 加载界面，可在initialize调用后但未执行完时调用。必须在界面线程调用。
+     *
+     * @param uiHandler      界面线程的Handler。
+     * @param parent         父视图的context
+     * @param objClazz       父容器所对应的LayoutParams类型，例如父容器为RelativeLayout,
+     *                       则该参数传入RelativeLayoutParams.class。
+     * @param dataMap        数据池，界面要展示的数据、依赖的信息需放到map中传入，如数据尚未抵达，
+     *                       可能通过获取DataBinder，调用update的方式更新数据。
+     * @param actionListener 在父容器是客户端写死的情况下，需要配置的父容器交互、功能，通过该回调调用。回调参数
+     *                       由各自功能解释意义。
+     */
+    public IRapidView load(Handler uiHandler,
+                            Context parent,
+                            Class objClazz,
+                            Map<String, Var> dataMap,
+                            IRapidActionListener actionListener){
+
+        synchronized (mInitializeLock){
+
+            if( !mCalledInitialize ){
+                return null;
+            }
+
+            if( mCalledLoad ){
+                return mRapidView;
+            }
+
+            mCalledLoad = true;
+
+            if( !mInitialized ){
+
+                mWaited = true;
+
+                XLog.d(RapidConfig.RAPID_NORMAL_TAG, "开始等待初始化");
+                try{
+                    mInitializeLock.wait();
+                }
+                catch ( InterruptedException e){
+                    e.printStackTrace();
+                }
+                XLog.d(RapidConfig.RAPID_NORMAL_TAG, "等待初始化完毕");
+
+            }
+        }
+
+        if( uiHandler == null ){
+            return null;
+        }
+
+        if( dataMap == null ){
+            dataMap = new ConcurrentHashMap<String, Var>();
+        }
+
+        return _load(uiHandler, parent, objClazz, dataMap, actionListener);
+    }
+
+    private void _initialize(final RapidDataBinder binder,
+                             final Context context,
+                             final String  rapidID,
+                             final Globals globals,
+                             final boolean limitLevel,
+                             final String  xmlName,
+                             final IInitializeListener listener,
+                             final boolean initDirectly){
 
         synchronized (mInitializeLock){
 
@@ -118,121 +194,87 @@ public class RapidObject extends RapidObjectImpl {
             XLog.d(RapidConfig.RAPID_ERROR_TAG, "context为空：" + (xmlName == null ? "" : xmlName));
         }
 
-        RapidThreadPool.get().execute(new Runnable() {
+        if( initDirectly ){
+            _initialize(binder, context, rapidID, globals, limitLevel, xmlName, listener);
+        }
+        else{
+            RapidThreadPool.get().execute(new Runnable() {
 
-        @Override
-        public void run() {
-            try{
-                XLog.d(RapidConfig.RAPID_NORMAL_TAG, "获得初始化线程：" + xmlName);
-
-                IRapidView rapidView;
-                RapidDataBinder innerBinder = binder == null ? new RapidDataBinder(new ConcurrentHashMap<String, Var>()) : binder;
-                RapidTaskCenter taskCenter = new RapidTaskCenter(null, limitLevel);
-                RapidLuaEnvironment luaEnv = new RapidLuaEnvironment(globals, rapidID, limitLevel);
-
-                rapidView = initXml(context,
-                                     rapidID,
-                                     limitLevel,
-                                     xmlName,
-                                     new ConcurrentHashMap<String, String>(),
-                                     luaEnv,
-                                     taskCenter,
-                                     new RapidAnimationCenter(context, taskCenter),
-                                     innerBinder);
-
-                if( rapidView == null ){
-                    return;
-                }
-
-                innerBinder.addView(rapidView);
-
-                mRapidView = rapidView;
-
-                if( listener != null ){
-                    listener.onFinish();
-                }
-            }
-            finally {
-                XLog.d(RapidConfig.RAPID_NORMAL_TAG, "初始化完毕：" + xmlName);
-
-                synchronized (mInitializeLock){
-                    mInitialized = true;
-
-                    if (mWaited) {
-                        XLog.d(RapidConfig.RAPID_NORMAL_TAG, "通知等待初始化完毕");
-
-                        mWaited = false;
-
-                        mInitializeLock.notifyAll();
+                @Override
+                public void run() {
+                    if( !RapidPool.getInstance().isInitialize() ){
+                        Process.setThreadPriority(Process.THREAD_PRIORITY_LOWEST);
                     }
-                }
-            }
+                    else{
+                        Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
+                    }
 
-        }});
+                    _initialize(binder, context, rapidID, globals, limitLevel, xmlName, listener);
+                }
+            });
+        }
     }
 
-    /**
-     * 加载界面，可在initialize调用后但未执行完时调用。必须在界面线程调用。
-     *
-     * @param uiHandler      界面线程的Handler。
-     * @param parent         父视图的context
-     * @param objClazz       父容器所对应的LayoutParams类型，例如父容器为RelativeLayout,
-     *                       则该参数传入RelativeLayoutParams.class。
-     * @param dataMap        数据池，界面要展示的数据、依赖的信息需放到map中传入，如数据尚未抵达，
-     *                       可能通过获取DataBinder，调用update的方式更新数据。
-     * @param actionListener 在父容器是客户端写死的情况下，需要配置的父容器交互、功能，通过该回调调用。回调参数
-     *                       由各自功能解释意义。
-     */
-    public IRapidView load(Handler uiHandler,
-                           Context parent,
-                           Class objClazz,
-                           Map<String, Var> dataMap,
-                           IRapidActionListener actionListener){
+    private void _initialize(RapidDataBinder binder,
+                             Context context,
+                             String  rapidID,
+                             Globals globals,
+                             boolean limitLevel,
+                             String  xmlName,
+                             IInitializeListener listener){
+        try{
+            XLog.d(RapidConfig.RAPID_NORMAL_TAG, "获得初始化线程：" + xmlName);
 
-        synchronized (mInitializeLock){
+            IRapidView rapidView;
+            RapidDataBinder innerBinder = binder == null ? new RapidDataBinder(new ConcurrentHashMap<String, Var>()) : binder;
+            RapidTaskCenter taskCenter = new RapidTaskCenter(null, limitLevel);
+            RapidLuaEnvironment luaEnv = new RapidLuaEnvironment(globals, rapidID, limitLevel);
 
-                if( !mCalledInitialize ){
-                    return null;
-                }
+            rapidView = initXml(context,
+                                rapidID,
+                                limitLevel,
+                                xmlName,
+                                new ConcurrentHashMap<String, String>(),
+                                luaEnv,
+                                taskCenter,
+                                new RapidAnimationCenter(context, taskCenter),
+                                innerBinder);
 
-                if( mCalledLoad ){
-                    return mRapidView;
-                }
+            if( rapidView == null ){
+                return;
+            }
 
-                mCalledLoad = true;
+            innerBinder.addView(rapidView);
 
-                if( !mInitialized ){
+            mRapidView = rapidView;
 
-                    mWaited = true;
-
-                    XLog.d(RapidConfig.RAPID_NORMAL_TAG, "开始等待初始化");
-                    try{
-                        mInitializeLock.wait();
-                    }
-                    catch ( InterruptedException e){
-                        e.printStackTrace();
-                    }
-                    XLog.d(RapidConfig.RAPID_NORMAL_TAG, "等待初始化完毕");
-
-                }
+            if( listener != null ){
+                listener.onFinish();
+            }
         }
+        finally {
+            XLog.d(RapidConfig.RAPID_NORMAL_TAG, "初始化完毕：" + xmlName);
 
-        if( uiHandler == null ){
-            return null;
+            synchronized (mInitializeLock){
+                mInitialized = true;
+
+                if (mWaited) {
+                    XLog.d(RapidConfig.RAPID_NORMAL_TAG, "通知等待初始化完毕");
+
+                    mWaited = false;
+
+                    mInitializeLock.notifyAll();
+                }
+            }
         }
-
-        if( dataMap == null ){
-            dataMap = new ConcurrentHashMap<String, Var>();
-        }
-
-        return _load(uiHandler, parent, objClazz, dataMap, actionListener);
     }
+
 
     private IRapidView _load(Handler uiHandler, Context parent, Class objClazz,
                              Map<String, Var> dataMap, IRapidActionListener listener){
-        RapidTaskCenter taskCenter;
-        RapidDataBinder binder;
-        RapidLuaJavaBridge javaInterface;
+        RapidTaskCenter      taskCenter;
+        RapidDataBinder      binder;
+        RapidLuaJavaBridge   javaInterface;
         ParamsObject         paramObject = null;
         Class[]              clzParams = new Class[]{Context.class};
         Object[]             objParams = new Object[]{parent};

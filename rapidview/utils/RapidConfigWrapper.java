@@ -143,7 +143,30 @@ public class RapidConfigWrapper {
         }
     }
 
-    public void getExistView(Map<String, RAPID_VIEW> map){
+    public RAPID_VIEW getExistView(String viewName){
+        mLock.lock();
+
+        try{
+            RAPID_VIEW retView = null;
+
+            if( mCacheViewMap != null ){
+                return mCacheViewMap.get(viewName);
+            }
+
+            retView = readView(viewName);
+
+            if( !isViewExist(retView) ){
+                return null;
+            }
+
+            return retView;
+        }
+        finally {
+            mLock.unlock();
+        }
+    }
+
+    public void getAllExistView(Map<String, RAPID_VIEW> map){
         mLock.lock();
 
         XLog.d(RapidConfig.RAPID_NORMAL_TAG, "获取ExistView");
@@ -171,6 +194,7 @@ public class RapidConfigWrapper {
             mLock.unlock();
         }
     }
+
 
     public boolean update(List<RAPID_FILE> addFileList,
                        List<RAPID_FILE> addViewList,
@@ -228,6 +252,10 @@ public class RapidConfigWrapper {
 
     public boolean isViewExist(RAPID_VIEW view){
 
+        if( view == null ){
+            return false;
+        }
+
         for( int i = 0; i < view.relyFileList.size(); i++ ){
 
             if( !isFileExist( view.relyFileList.get(i) ) ){
@@ -239,17 +267,17 @@ public class RapidConfigWrapper {
         return true;
     }
 
-    public RAPID_VIEW readView(RAPID_FILE node){
+    public RAPID_VIEW readView(String name){
         String content;
         JSONObject viewObj;
         RAPID_VIEW rapidView = new RAPID_VIEW();
 
-        if( node.name == null ){
+        if( name == null ){
             return null;
         }
 
-        content = RapidFileLoader.getInstance().getString(node.name);
-        if( content.compareTo("") == 0 ){
+        content = RapidFileLoader.getInstance().getString(name);
+        if( content == null || content.compareTo("") == 0 ){
             return null;
         }
 
@@ -328,7 +356,7 @@ public class RapidConfigWrapper {
 
         for( int i = 0; i < listView.size(); i++ ){
 
-            RAPID_VIEW view = readView(listView.get(i));
+            RAPID_VIEW view = readView(listView.get(i).name);
 
             if( view == null || !isViewExist(view) ){
                 if( view == null ){

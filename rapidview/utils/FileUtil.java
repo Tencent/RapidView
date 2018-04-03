@@ -47,6 +47,8 @@ public class FileUtil
 
 	public static final String RAPID_SANDBOX_PATH = "/rapidsandbox";
 
+	public static final String RAPID_UPDATE_TEMPORARY = "/rapidtemporary";
+
 
 	public static boolean isSDCardExistAndCanWrite()
 	{
@@ -179,6 +181,11 @@ public class FileUtil
 	public static String getRapidSandBoxDir(){
 		return getCommonPath(RAPID_SANDBOX_PATH) + "/";
 	}
+
+	public static String getRapidTemporaryDir(){
+		return getCommonPath(RAPID_UPDATE_TEMPORARY) + "/";
+	}
+
 
 	public static boolean write2File(byte[] data, String dest)
 	{

@@ -88,6 +88,10 @@ public class RapidPool {
         return mContext;
     }
 
+    public boolean isInitialize(){
+        return mInitialized;
+    }
+
     public synchronized void initialize(final Context context, final IInitializeCallback callback){
         if( mInitialized ){
             return;
@@ -112,7 +116,7 @@ public class RapidPool {
 
                 RapidSandboxWrapper.getInstance().initSandbox();
                 RapidConfigWrapper.getInstance().clearCache();
-                RapidConfigWrapper.getInstance().getExistView(viewMap);
+                RapidConfigWrapper.getInstance().getAllExistView(viewMap);
 
                 for( Map.Entry<String, RapidConfigWrapper.RAPID_VIEW> entry : viewMap.entrySet() ){
 
@@ -248,7 +252,7 @@ public class RapidPool {
 
     private void cacheViewList(List<RapidConfigWrapper.RAPID_FILE> list){
         for( int i = 0; i < list.size(); i++ ){
-            RapidConfigWrapper.RAPID_VIEW view = RapidConfigWrapper.getInstance().readView(list.get(i));
+            RapidConfigWrapper.RAPID_VIEW view = RapidConfigWrapper.getInstance().readView(list.get(i).name);
 
             if( view == null || !RapidConfigWrapper.getInstance().isViewExist(view) ){
                 if( view != null ){
@@ -286,7 +290,7 @@ public class RapidPool {
             }
             else{
                 node.name = name;
-                view = RapidConfigWrapper.getInstance().readView(node);
+                view = RapidConfigWrapper.getInstance().readView(node.name);
 
                 if( view != null ){
                     mPreloader.delete(view.mainFile);
@@ -358,18 +362,14 @@ public class RapidPool {
     }
 
     private String _getMainXml(String viewName){
-        RapidConfigWrapper.RAPID_VIEW view;
+        RapidConfigWrapper.RAPID_VIEW view = null;
         String mainXml;
-
-        Map<String, RapidConfigWrapper.RAPID_VIEW> viewMap = new ConcurrentHashMap<String, RapidConfigWrapper.RAPID_VIEW>();
 
         if( viewName == null || viewName.compareTo("") == 0 ){
             return "";
         }
 
-        RapidConfigWrapper.getInstance().getExistView(viewMap);
-
-        view = viewMap.get(viewName);
+        view = RapidConfigWrapper.getInstance().getExistView(viewName);
         if( view == null ){
             return "";
         }
@@ -481,7 +481,7 @@ public class RapidPool {
                         continue;
                     }
 
-                    newCenter.initialize(mContext, "", null, false, xml, null, null);
+                    newCenter.initialize(mContext, "", null, false, xml, null, null, false);
 
                     mRapidProloadMap.put(xml, newCenter);
 
@@ -497,7 +497,7 @@ public class RapidPool {
                     RapidObject newCenter = new RapidObject();
                     String xml = entry.getKey();
 
-                    newCenter.initialize(mContext, "", null, false, xml, null, null);
+                    newCenter.initialize(mContext, "", null, false, xml, null, null, false);
 
                     mRapidProloadMap.put(xml, newCenter);
                     XLog.d(RapidConfig.RAPID_NORMAL_TAG, "已添加视图到缓存池：" + xml);
@@ -521,7 +521,7 @@ public class RapidPool {
 
         private RapidObject get(final String rapidXml) {
             RapidObject oldCenter = null;
-            RapidObject newCenter = new RapidObject();
+            RapidObject newCenter = null;
 
             XLog.d(RapidConfig.RAPID_NORMAL_TAG, "读取视图：" + rapidXml);
 
@@ -530,7 +530,10 @@ public class RapidPool {
                 FileUtil.isFileExists(FileUtil.getRapidDebugDir() + rapidXml) ){
                 XLog.d(RapidConfig.RAPID_NORMAL_TAG, "尝试读取调试模式文件");
 
-                newCenter.initialize(mContext, null, null, false, rapidXml, null, null);
+                newCenter = new RapidObject();
+
+                newCenter.initialize(mContext, null, null, false, rapidXml, null, null, false);
+
                 return newCenter;
             }
 
@@ -538,13 +541,19 @@ public class RapidPool {
                 oldCenter = mRapidProloadMap.remove(rapidXml);
             }
 
+            if( oldCenter != null && !oldCenter.isInitialized() ) {
+                newCenter = oldCenter;
+                mRapidProloadMap.put(rapidXml, newCenter);
+                oldCenter = null;
+            }
+
             if (oldCenter == null) {
                 XLog.d(RapidConfig.RAPID_NORMAL_TAG, "未发现缓存，准备全新加载视图：" + rapidXml);
                 oldCenter = new RapidObject();
-                oldCenter.initialize(mContext, null, null, false, rapidXml, null, null);
+                oldCenter.initialize(mContext, null, null, false, rapidXml, null, null, true);
             }
 
-            if( mIsInitialized ){
+            if( mIsInitialized && newCenter == null){
                 add(rapidXml);
             }
 
@@ -575,7 +584,7 @@ public class RapidPool {
 
                 RapidObject newCenter = new RapidObject();
 
-                newCenter.initialize(mContext, null, null, false, xml, null, null);
+                newCenter.initialize(mContext, null, null, false, xml, null, null, false);
 
                 mRapidProloadMap.put(xml, newCenter);
                 XLog.d(RapidConfig.RAPID_NORMAL_TAG, "已添加视图到缓存池：" + xml);

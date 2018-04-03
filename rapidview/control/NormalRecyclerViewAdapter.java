@@ -64,7 +64,9 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
 
     private boolean mLimitLevel = false;
 
-    private String mRapidID = "";
+    private String mRapidID = null;
+
+    private int mRapidIDLength = 0;
 
     public NormalRecyclerViewAdapter(){
 
@@ -75,7 +77,12 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
     }
 
     public void setRapidID(String rapidID){
+        if( rapidID == null || rapidID.compareTo("") == 0 ){
+            return;
+        }
+
         mRapidID = rapidID;
+        mRapidIDLength = rapidID.length();
     }
 
     public void setLimitLevel(boolean limitLevel){
@@ -246,17 +253,8 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
         return msIntToViewMap.get(type);
     }
 
-    @Override
-    public int getItemViewType(int position){
-        String viewName;
+    public int getViewType(String viewName){
         Integer ret = null;
-
-        if( position == mListViewName.size() ){
-            viewName = mFooterViewName;
-        }
-        else {
-            viewName = mListViewName.get(position);
-        }
 
         ret = msViewToIntMap.get(mergeViewName(viewName));
         if( ret != null ){
@@ -271,9 +269,24 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
     }
 
     @Override
+    public int getItemViewType(int position){
+        String viewName;
+
+        if( position == mListViewName.size() ){
+            viewName = mFooterViewName;
+        }
+        else {
+            viewName = mListViewName.get(position);
+        }
+
+        return getViewType(viewName);
+    }
+
+    @Override
     public NormalRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        String      viewName = splitViewName(msIntToViewMap.get(viewType));
-        IRapidView loadView = null;
+        String                   viewName = splitViewName(msIntToViewMap.get(viewType));
+        NormalRecyclerViewHolder holder   = null;
+        IRapidView               loadView = null;
 
         if( viewName.length() > 4 && viewName.substring(viewName.length() - 4, viewName.length()).compareToIgnoreCase(".xml") == 0 ){
             RapidObject object = RapidRuntimeCachePool.getInstance().get(mRapidID, viewName, mLimitLevel);
@@ -297,7 +310,9 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
 
         loadView.getView().setTag(loadView);
 
-        return new NormalRecyclerViewHolder(parent.getContext(), loadView);
+        holder = new NormalRecyclerViewHolder(parent.getContext(), loadView);
+
+        return holder;
     }
 
     @Override
@@ -318,8 +333,12 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
         view.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_data_start, "");
 
         updateCommonData(view, position);
-        view.getParser().getBinder().update(map);
 
+        for( Map.Entry<String, Var> entry : map.entrySet() ){
+            view.getParser().getBinder().update(entry.getKey(), entry.getValue());
+        }
+
+        view.getParser().onUpdateFinish();
         view.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_data_end, "");
 
         if( mViewBindMap.get(position) == null ){
@@ -378,11 +397,12 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
             return null;
         }
 
-        if( name.length() > 4 && name.substring(name.length() - 4, name.length()).compareToIgnoreCase(".xml") == 0 ){
-            return name + "|" + mRapidID;
+        if( mRapidID == null ){
+            return name;
         }
 
-        return name;
+
+        return mRapidID + name;
     }
 
     private String splitViewName(String name){
@@ -390,10 +410,10 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
             return null;
         }
 
-        if( name.contains(".xml|") ){
-            return name.substring(0, name.lastIndexOf(".xml|") + 4);
+        if( mRapidID == null ){
+            return name;
         }
 
-        return name;
+        return name.substring(mRapidIDLength);
     }
 }
