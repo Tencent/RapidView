@@ -1,6 +1,6 @@
 # Rapid Studio Visual Studio Code Extension
 
-This extension can help you quickly develop the RapidView project.
+This extension can help you to develop the RapidView project quickly.
 
 [中文文档请点击这里](https://github.com/YongdongHe/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/resource/README_CHINESE.md)
 
@@ -8,7 +8,7 @@ This extension can help you quickly develop the RapidView project.
 
 ### Install from extension market
 
-Search rapidtudio in vscode extension market and install it:
+Searching rapidtudio in vscode extension market and install it:
 
 ![Install From Extension Market](https://raw.githubusercontent.com/YongdongHe/RapidView/master/rapidstudio_vscode_extension/rapidstudio/resource/install_from_market.png)
 
@@ -17,7 +17,7 @@ Search rapidtudio in vscode extension market and install it:
 
 To use rapid stuido extension, you need to configure adb install path in .vscode/settings.json (File->Preferences->Settings).
 
-Windows Examlple：
+Examlple on Windows ：
 ```json
 {
     "rapidstudio.adbPath": "C:\\Users\\username\\AppData\\Local\\Android\\sdk\\platform-tools\\adb"
@@ -25,7 +25,7 @@ Windows Examlple：
 ```
 
 
-MacOS Examlple(Install adb with homebrew)：
+Examlple on  MacOS(Install adb with homebrew)：
 ```json
 {
     "rapidstudio.adbPath": "/usr/local/bin/adb"
@@ -34,16 +34,16 @@ MacOS Examlple(Install adb with homebrew)：
 
 Check Extension Settings for more information about this.
 
-If you have added adb to path, skip this step.
+If you have added adb to environment variables, ignore this step.
 
-How to add path:
+How to add environment variables:
 
 + [MacoS](https://stackoverflow.com/questions/17901692/set-up-adb-on-mac-os-x)
 + [WIndows](https://stackoverflow.com/questions/23400030/windows-7-add-path)
 
 ### Set the debug path in sdcard
 
-All files under workspace will be push to a folder you set when click ``Sync File`` or ``Sync Project``.
+All files under workspace will be push to a folder for debugging rapid project when click ``Sync File`` or ``Sync Project``.
 
 You can set the folder by configuring settings.json, for example:
 ```json
@@ -91,14 +91,15 @@ You can also custom automatic completion for xml\lua through modify the rapid_wr
 ```json
 {
     "completion" : {
-        "xml_tags" : ["MyXMLTag"],
-        "xml_attrs" : ["my_attr"],
-        "lua_funcs" : ["my_function"]
+        "xml_tags" : ["CostomView"],
+        "xml_attrs" : ["attr_name"],
+        "lua_funcs" : ["function_name"]
     }
 }
 ```
 
-Every time you add new rapid workspace, rapid studio will copy a file from template file ``rapid_workspace.json`` under template folder.
+Every time new rapid workspace is created, rapid studio will copy a file from template file ``rapid_workspace.json`` under template folder.
+
 You can also modify the template of rapid_workspace.json under the ./vscode/extension/rapidstudio/template.
 
 ### Log Output Colorizer
@@ -175,10 +176,6 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 + Optimize the xml snipptes.
 + Optimize colorized log output.
 
-
-### 1.0.8
-
-+ Speed up project synchronization.
 
 ## For more information
 
