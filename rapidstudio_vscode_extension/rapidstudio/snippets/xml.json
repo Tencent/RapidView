@@ -17,7 +17,7 @@
     "Task": {
         "prefix": "task",
         "body": [
-            "<task id=\"${1:taskId}\" hook=\"${2:loadfinish}\"",
+            "<task id=\"${1:taskId}\" hook=\"${2:loadfinish}\">",
             "</task>"
         ],
         "description": "Insert a rapid task. [RapidView]"
@@ -33,7 +33,7 @@
     "LinearLayout": {
         "prefix": "linearlayout",
         "body": [
-            "<LinearLayout width=\"match_parent\" height=\"wrap_content\">  orientation=\"vertical\"",
+            "<LinearLayout width=\"match_parent\" height=\"wrap_content\" orientation=\"vertical\">",
             "</LinearLayout>"
         ],
         "description": "Create a LinearLayout tag. [RapidView]"
@@ -62,7 +62,7 @@
     "Include": {
         "prefix": "include",
         "body": [
-            " <include layout=\"filename.xml\" environment=\"i:0\"/>"
+            "<include layout=\"filename.xml\" environment=\"i:0\"/>"
         ],
         "description": "Create a Include tag. [RapidView]"
     },
@@ -77,12 +77,12 @@
     "LuaAction": {
         "prefix": "luaction",
         "body": [
-            " <luaction load=\"filename.lua\" function=\"main\"/>"
+            "<luaction load=\"filename.lua\" function=\"main\"/>"
         ],
         "description": "Create a LuaAction tag. [RapidView]"
     },
     "ReportAction": {
-        "prefix": "luaction",
+        "prefix": "reportaction",
         "body": [
             "<reportaction param=\"actionid:100,slotid:00_000,subposition:-1\" recommendid=\"data@recommendid\"/>"
         ],
