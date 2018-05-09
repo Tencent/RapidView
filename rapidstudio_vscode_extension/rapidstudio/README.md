@@ -6,8 +6,7 @@ This extension can help you to develop the RapidView project quickly.
 
 ## Useage
 
-![Example]
-(https://raw.githubusercontent.com/YongdongHe/RapidView/master/rapidstudio_vscode_extension/rapidstudio/resource/example.gif)
+<a href="https://github.com/YongdongHe"><img src="https://raw.githubusercontent.com/YongdongHe/RapidView/master/rapidstudio_vscode_extension/rapidstudio/resource/example.gif"/></a>
 
 
 ### Install from extension market
