@@ -23,8 +23,8 @@ export class RapidCompletionManager{
         let workspace_file = rootPath + path.sep + "rapid_workspace.json";
         fs.readFile(workspace_file, 'utf8', function (err, data) {
             if (err) {
-                XLog.error("An error occurred while setting auto completion: cannot read data from rapid_workspace.json.");
-                return;
+                XLog.info("Custom Auto Completion is not available : cannot read data from rapid_workspace.json.");
+                XLog.info("If you want to enable it, create a new rapid-workspace here.");
             }else{
                 // Catch json exception
                 let workspaceData = JSON.parse(data);
