@@ -13,6 +13,8 @@
         "Other"
     ],
     "activationEvents": [
+        "onLanguage:lua",
+        "onLanguage:xml",
         "*"
     ],
     "main": "./out/extension",
@@ -127,6 +129,10 @@
             {
                 "language": "xml",
                 "path": "./snippets/xml.json"
+            },
+            {
+                "language": "lua",
+                "path": "./snippets/lua.json"
             }
         ]
     },

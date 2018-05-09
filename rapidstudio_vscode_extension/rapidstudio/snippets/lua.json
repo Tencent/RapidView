@@ -1,0 +1,47 @@
+{
+    "RpaidLua": {
+        "prefix": "rapid",
+        "body": [
+            "local mRapidView,mJavaBridge = ...",
+            "function main()",
+            "    -- body",
+            "end"
+        ],
+        "description": "Create a rapid lua template. [RapidView]"
+    },
+    "RpaidLog": {
+        "prefix": "log",
+        "body": [
+            "mJavaBridge:Log(\"${1:TagName}\",\"${2:TagContent}\")"
+        ],
+        "description": "Output log. [RapidView]"
+    },
+    "LuaClass": {
+        "prefix": "class",
+        "body": [
+            "${1:ClassName} = {",
+            "    _arg = argValue",
+            "}",
+            "${1:ClassName}.__index = ${1:ClassName}",
+            "function ${1:ClassName}:new(arg)",
+            "    local o = {}",
+            "    setmetatable(o,self)",
+            "    self.__index = self",
+            "    o._arg = arg",
+            "    return o",
+            "end"
+        ],
+        "description": "Create a lua class. [RapidView]"
+    },
+    "LuaInterface": {
+        "prefix": "interface",
+        "body": [
+            "${1:IExampleListener} = {}",
+            "function ${1:IExampleListener}.doSomething()",
+            "    -- body",
+            "end",
+            "local exampleListener = luajava.createProxy('${2:com.example.package.example$IExampleListener}', ${1:IExampleListener})"
+        ],
+        "description": "Create a lua proxy for Java interface . [RapidView]"
+    }
+}
