@@ -6,6 +6,9 @@ This extension can help you to develop the RapidView project quickly.
 
 ## Useage
 
+<a href="https://github.com/YongdongHe"><img src="https://raw.githubusercontent.com/YongdongHe/RapidView/master/rapidstudio_vscode_extension/rapidstudio/resource/example.gif"/></a>
+
+
 ### Install from extension market
 
 Searching rapidtudio in vscode extension market and install it:
@@ -176,6 +179,21 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 + Optimize the xml snipptes.
 + Optimize colorized log output.
 
+### 1.0.8
+
++ Fix some bugs
+
+### 1.0.9
+
++ Fix some bugs
+
+### 1.1.0
+
++ Add lots of snippets for lua and xml.
+
+### 1.1.0
+
++ Support .lua files complie to .out files.
 
 ## For more information
 

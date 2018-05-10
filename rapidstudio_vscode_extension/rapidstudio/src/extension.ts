@@ -14,7 +14,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import {window,workspace,languages, commands, Disposable, 
-    ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument,InputBoxOptions, extensions} from 'vscode';
+    ExtensionContext,extensions} from 'vscode';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
@@ -26,6 +26,7 @@ import {SayHelloCommand } from './command/sayhello';
 import {SyncFileCommand, SyncProjectCommand } from './command/sync';
 import {CreateNewProjectCommand, CreateNewRapidViewCommand } from './command/create';
 import {SavaRapidFileCommand} from './command/save';
+import {ComplieProjectCommand} from './command/complie';
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -42,6 +43,7 @@ export function activate(context: ExtensionContext) {
     rapidCommands.push(new SyncProjectCommand());
     rapidCommands.push(new CreateNewProjectCommand());
     rapidCommands.push(new CreateNewRapidViewCommand());
+    rapidCommands.push(new ComplieProjectCommand());
     rapidCommands.push(new SavaRapidFileCommand());
 
     // Register all command
@@ -75,4 +77,5 @@ export function activate(context: ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
+    
 }
