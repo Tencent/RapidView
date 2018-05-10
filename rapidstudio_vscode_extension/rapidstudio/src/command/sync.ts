@@ -13,6 +13,7 @@
 import {RapidCommand} from "./command";
 import {window,workspace} from 'vscode';
 import {XLog,ADBUtils,XMLUtils} from "../tool";
+import {RapidChecker} from "../safe/checker";
 
 export class SyncFileCommand implements RapidCommand{
 
@@ -50,6 +51,10 @@ export class SyncFileCommand implements RapidCommand{
         XLog.success("Start syncing files..." );
         let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
         XLog.info("Target folder: " + debug_dir);
+
+        // check path 
+        RapidChecker.assertSafeFilePath(debug_dir.toString());
+        RapidChecker.assertSafeFilePath(this.targetDoc.fileName);
 
         // Call adb     
         adbUtils.pushFile(this.targetDoc.fileName,debug_dir,{
@@ -114,6 +119,10 @@ export class SyncProjectCommand implements RapidCommand{
         XLog.info("The target project folder: " + this.projectFolder);
         let adbUtils = new ADBUtils();
         let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
+
+        // check path 
+        RapidChecker.assertSafeFilePath(debug_dir.toString());
+        
         // adbUtils.pushFolder(this.projectFolder,debug_dir,{
         //     onFinish:(err,stdout,stderr)=>{
         //     if(err){
@@ -130,6 +139,7 @@ export class SyncProjectCommand implements RapidCommand{
         fs.readdir(this.projectFolder, (err, files) => {
             let filePaths = new Array();
             files.forEach(file => {
+                RapidChecker.assertSafeFilePath(file);
                 //　Skip hide file
                 let isHideFile = (file.indexOf(".") == 0)
                 let filePath = this.projectFolder + path.sep + file;

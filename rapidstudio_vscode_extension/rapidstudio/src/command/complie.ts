@@ -14,7 +14,7 @@
 import {RapidCommand} from "./command";
 import {window,workspace,extensions} from 'vscode';
 import {XLog,ADBUtils} from "../tool";
-
+import {RapidChecker} from "../safe/checker";
 
 export class ComplieProjectCommand implements RapidCommand{
      
@@ -81,6 +81,13 @@ export class ComplieProjectCommand implements RapidCommand{
         let util = require('util');
         // comlie lua file 
         let complieTool = extensions.getExtension ("realhe.rapidstudio").extensionPath +  path.sep + "tools" + path.sep + "luac.exe";
+
+        // check path
+        RapidChecker.assertSafeFilePath(targetPath);
+        RapidChecker.assertSafeFilePath(outPath);
+        RapidChecker.assertSafeFilePath(complieTool);
+
+
         let complieCommand = util.format('%s -o %s %s',complieTool,outPath,targetPath);
 
         let exec = require('child_process').exec;
