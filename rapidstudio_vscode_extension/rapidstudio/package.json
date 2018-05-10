@@ -2,7 +2,7 @@
     "name": "rapidstudio",
     "displayName": "Rapid Studio",
     "description": "Visual Studio Code Extension for Tencent Rapidview",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "publisher": "realhe",
     "icon": "assets/icon.png",
     "engines": {
@@ -52,6 +52,10 @@
             {
                 "command": "rapidstudio.saveRapidFile",
                 "title": "Save rapid file."
+            },
+            {
+                "command": "rapidstudio.complieProject",
+                "title": "Complie Rapid Project"
             }
         ],
         "menus": {
@@ -73,6 +77,10 @@
                 },
                 {
                     "command": "rapidstudio.newView",
+                    "group": "rapidstudio"
+                },
+                {
+                    "command": "rapidstudio.complieProject",
                     "group": "rapidstudio"
                 }
             ]
