@@ -121,7 +121,9 @@ export class SyncProjectCommand implements RapidCommand{
         let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
 
         // check path 
-        // RapidChecker.assertSafeFilePath(debug_dir.toString());
+        RapidChecker.assertSafeFilePath(debug_dir.toString());
+        RapidChecker.assertSafeFilePath(this.projectFolder.toString());
+
         console.error(this.projectFolder);
         adbUtils.pushFolder(this.projectFolder,debug_dir,{
             onFinish:(err,stdout,stderr)=>{

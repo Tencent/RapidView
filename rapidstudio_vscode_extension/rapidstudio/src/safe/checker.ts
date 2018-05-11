@@ -11,12 +11,13 @@
  ***************************************************************************************************/
 
 import {XLog} from "../tool"
+import { toUnicode, encode, decode } from "punycode";
 
 export class RapidChecker{
     public static assertSafeFilePath(path : string ){
         try {
             // a safe file path should include blank or chinese symbol 
-            if(this.containsUnicode(path)){
+            if(this.containsValidChar(path)){
                 throw new Error("Path cannot contains chinese symbol or other unicode: " + path);
             }
     
@@ -30,12 +31,13 @@ export class RapidChecker{
         
     }
 
-    private static containsUnicode(str : string){ 
-        if(encodeURI(str).indexOf("%u")<0){  
-            return false;
-        }  
-        else{  
-            return true;
-        }  
+    private static containsValidChar(str:string){ 
+        for (var i=0; i < str.length; i++) {
+            var el = str.charCodeAt(i);
+            if(el > 255){
+                return true;
+            }
+        }
+        return false;
     }
 }
