@@ -121,49 +121,50 @@ export class SyncProjectCommand implements RapidCommand{
         let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
 
         // check path 
-        RapidChecker.assertSafeFilePath(debug_dir.toString());
-        
-        // adbUtils.pushFolder(this.projectFolder,debug_dir,{
-        //     onFinish:(err,stdout,stderr)=>{
-        //     if(err){
-        //         XLog.error("Sync Project failed: " + this.projectFolder);
-        //     }else{
-        //         XLog.success("Sync Project successfully: " + this.projectFolder);
-        //     }
-        // }});
-        
-        const fs = require('fs');
-        const path = require('path'); 
+        // RapidChecker.assertSafeFilePath(debug_dir.toString());
+        console.error(this.projectFolder);
+        adbUtils.pushFolder(this.projectFolder,debug_dir,{
+            onFinish:(err,stdout,stderr)=>{
+            if(err){
+                XLog.error("Sync Project failed: " + this.projectFolder);
+            }else{
+                XLog.success("Sync Project successfully: " + this.projectFolder);
+            }
+        }});
 
-        // Get files in project folder
-        fs.readdir(this.projectFolder, (err, files) => {
-            let filePaths = new Array();
-            files.forEach(file => {
-                RapidChecker.assertSafeFilePath(file);
-                //　Skip hide file
-                let isHideFile = (file.indexOf(".") == 0)
-                let filePath = this.projectFolder + path.sep + file;
-                if(isHideFile){
-                    XLog.info("Skip hide file: " + filePath);
-                    return; 
-                }
+        
+        // const fs = require('fs');
+        // const path = require('path'); 
+
+        // // Get files in project folder
+        // fs.readdir(this.projectFolder, (err, files) => {
+        //     let filePaths = new Array();
+        //     files.forEach(file => {
+        //         RapidChecker.assertSafeFilePath(file);
+        //         //　Skip hide file
+        //         let isHideFile = (file.indexOf(".") == 0)
+        //         let filePath = this.projectFolder + path.sep + file;
+        //         if(isHideFile){
+        //             XLog.info("Skip hide file: " + filePath);
+        //             return; 
+        //         }
                 
-                filePaths.push(filePath);
-            });
+        //         filePaths.push(filePath);
+        //     });
 
             
-            let adbUtils = new ADBUtils();
-            let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
-            adbUtils.pushFiles(filePaths,debug_dir,{
-                onFinish:(err,stdout,stderr)=>{
-                    if(err){
-                        XLog.error("Sync Project failed: " + this.projectFolder);
-                    }else{
-                        XLog.success("Sync Project successfully: " + this.projectFolder);
-                    }
-                }
-            });
-        })
-        return;
+        //     let adbUtils = new ADBUtils();
+        //     let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
+        //     adbUtils.pushFiles(filePaths,debug_dir,{
+        //         onFinish:(err,stdout,stderr)=>{
+        //             if(err){
+        //                 XLog.error("Sync Project failed: " + this.projectFolder);
+        //             }else{
+        //                 XLog.success("Sync Project successfully: " + this.projectFolder);
+        //             }
+        //         }
+        //     });
+        // })
+        // return;
     }
 }

@@ -204,6 +204,10 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 
 + Support .lua files compile to .out files.
 
+### 1.1.2
+
++ Optimize the speed of syncing project.
+
 ## For more information
 
 ### For Contributors
