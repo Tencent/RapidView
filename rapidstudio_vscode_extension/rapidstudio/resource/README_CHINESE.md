@@ -73,6 +73,7 @@ MacOS下，取决于安装方式，所在目录会有一定差异，通过homebr
 
 * `New Rapid Workspace ` : 在当前根目录下创建Rapid工作空间. 这个操作将在根目录下生成一个rapid_workspace.json文件
 * `New Rapid View ` : 新建视图，并且给视图绑定一个XML主文件。
+* `Complie Rapid Project ` : 编译当前目录下所有lua文件，生成.out文件。
 
 ### 快速调试
 

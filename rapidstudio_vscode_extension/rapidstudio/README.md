@@ -83,6 +83,7 @@ Items in explorer right-click menu:
 
 * `New Rapid Workspace ` : Initial a rapid workspace in current root directory. This operation creates a file named rapid_workspace.json.
 * `New Rapid View ` : Create a view, and bind a main file for it.
+* `Complie Rapid Project ` : Complie all files. The .lua will be complied to .out files.
 
 ### Quick debug
 
