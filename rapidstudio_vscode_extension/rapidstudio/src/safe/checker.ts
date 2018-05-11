@@ -31,7 +31,7 @@ export class RapidChecker{
     }
 
     private static containsUnicode(str : string){ 
-        if(encodeURI(str).indexOf("%u")<0){  
+        if(escape(str).indexOf("%u")<0){  
             return false;
         }  
         else{  
