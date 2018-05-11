@@ -54,8 +54,8 @@
                 "title": "Save rapid file."
             },
             {
-                "command": "rapidstudio.complieProject",
-                "title": "Complie Rapid Project"
+                "command": "rapidstudio.compileProject",
+                "title": "Compile Rapid Project"
             }
         ],
         "menus": {
@@ -80,7 +80,7 @@
                     "group": "rapidstudio"
                 },
                 {
-                    "command": "rapidstudio.complieProject",
+                    "command": "rapidstudio.compileProject",
                     "group": "rapidstudio"
                 }
             ]

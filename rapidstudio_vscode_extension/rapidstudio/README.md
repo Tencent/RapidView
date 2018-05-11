@@ -83,7 +83,7 @@ Items in explorer right-click menu:
 
 * `New Rapid Workspace ` : Initial a rapid workspace in current root directory. This operation creates a file named rapid_workspace.json.
 * `New Rapid View ` : Create a view, and bind a main file for it.
-* `Complie Rapid Project ` : Complie all files. The .lua will be complied to .out files.
+* `compile Rapid Project ` : compile all files. The .lua will be compiled to .out files.
 
 ### Quick debug
 
@@ -202,7 +202,7 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 
 ### 1.1.1
 
-+ Support .lua files complie to .out files.
++ Support .lua files compile to .out files.
 
 ## For more information
 
