@@ -43,7 +43,7 @@ public class RapidLoader {
     public interface IListener{
         /**
          * 加载实时View时，异步通知加载完毕，在界面线程调用，可直接处理。
-         * 关于实时View：实时从后台下拉文件，并保存到光子沙箱中，实时加载，可选择是否准许获取受限等级光子权限。如果，
+         * 关于实时View：实时从后台下拉文件，并保存到RapidView沙箱中，实时加载，可选择是否准许获取受限等级RapidView权限。如果，
          * 是CP提供的文件，则一般禁止访问受限控件和能力，如果是内部的功能，则可访问受限能力。
          *
          * @param rapidView
@@ -82,7 +82,7 @@ public class RapidLoader {
             nativeXml = "";
         }
 
-        XLog.d(RapidConfig.RAPID_NORMAL_TAG, "准备加载光子视图，视图名：" + viewName + ",默认视图XML：" + nativeXml);
+        XLog.d(RapidConfig.RAPID_NORMAL_TAG, "准备加载RapidView视图，视图名：" + viewName + ",默认视图XML：" + nativeXml);
         RapidBenchMark.get().start(callMark.toString(), "开始加载" + viewName + "或" + nativeXml);
 
         RapidPool.getInstance().updateLock();
@@ -122,7 +122,7 @@ public class RapidLoader {
     }
 
     /**
-     * 异步从光子沙箱里加载实时界面
+     * 异步从RapidView沙箱里加载实时界面
      *
      * @param rapidID     rapidViewID，根据ID在沙盘中读取相应文件夹中的文件
      * @param xmlName     指定加载的XML名称，不指定的话默认为main.xml
@@ -132,8 +132,8 @@ public class RapidLoader {
      * @param objClazz    父容器所对应的LayoutParams类型，例如父容器为RelativeLayout,
      *                    则该参数传入RelativeLayoutParams.class。
      * @param globals     外部提供的lua Globals，如果外部不提供则重新创建一个
-     * @param binder      当当前视图是添加到其他光子视图中时，可以将父视图的binder传入，如果是主视图则填入null
-     * @param contextMap  光子对象上下文数据
+     * @param binder      当当前视图是添加到其他RapidView中时，可以将父视图的binder传入，如果是主视图则填入null
+     * @param contextMap  RapidView对象上下文数据
      * @param listener    加载完成的监听器，会在界面线程完成调用
      *
      * @return            是否正常开始加载
@@ -179,7 +179,7 @@ public class RapidLoader {
                           RapidStringUtils.isEmpty(xmlName) ? "main.xml" : xmlName,
                           null);
 
-        UIHandler.post(new Runnable() {
+                UIHandler.post(new Runnable() {
             @Override
             public void run() {
                 IRapidView rapidView = object.load( UIHandler,

@@ -17,11 +17,16 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 
 import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.data.Var;
 import com.tencent.rapidview.deobfuscated.control.IItemDecorationListener;
 import com.tencent.rapidview.deobfuscated.control.IRapidRecyclerView;
+import com.tencent.rapidview.utils.DeviceQualityUtils;
+
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
 
 import java.util.List;
 import java.util.Map;
@@ -45,7 +50,13 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
 
     private IScrollTopListener mTopListener = null;
 
+    private IInterruptTouchListener mInterruptListener = null;
+
     private MANAGER_TYPE mManagerType = MANAGER_TYPE.LINEAR;
+
+    private int mFlingCount = 15000;
+
+    private boolean mScrollEnable = true;
 
     private int mLinearOrientation = 1;
 
@@ -56,12 +67,17 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
 
     public NormalRecyclerView(Context context){
         super(context);
-
+        initFlingCount();
         initView();
     }
 
     public NormalRecyclerViewAdapter getAdapter(){
         return mAdapter;
+    }
+
+    @Override
+    public void setInterruptTouchEvent(IInterruptTouchListener listener){
+        mInterruptListener = listener;
     }
 
     @Override
@@ -90,8 +106,23 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
     }
 
     @Override
-    public void updateData(List<Map<String, Var>> dataList, List<String> viewList, boolean clear){
+    public void updateData(String view, LuaTable data, Boolean clear){
+        mAdapter.updateData(view, data, clear);
+    }
+
+    @Override
+    public void updateData(List<Map<String, Var>> dataList, List<String> viewList, Boolean clear){
         mAdapter.updateData(dataList, viewList, clear);
+    }
+
+    @Override
+    public void updateData(LuaTable viewList, LuaTable dataList){
+        mAdapter.updateData(viewList, dataList);
+    }
+
+    @Override
+    public void updateItemData(int index, String key, LuaValue value){
+        mAdapter.updateItemData(index, key, value);
     }
 
     @Override
@@ -102,6 +133,65 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
     @Override
     public void updateFooterData(String key, Object value){
         mAdapter.updateFooterData(key, value);
+    }
+
+    @Override
+    public int getTypeByName(String name){
+        return mAdapter.getTypeByName(name);
+    }
+
+    @Override
+    public String getNameByType(int type){
+        return mAdapter.getNameByType(type);
+    }
+
+    @Override
+    public int getItemViewType(int position){
+        return mAdapter.getItemViewType(position);
+    }
+
+
+    @Override
+    public void setMaxFlingCount(int count){
+        mFlingCount = count;
+    }
+
+    @Override
+    public void setScrollEnable(Boolean enable){
+        mScrollEnable = enable;
+    }
+
+    @Override
+    public boolean fling(int velocityX, int velocityY) {
+        if( velocityX > 8000 ){
+            velocityX *= 0.5;
+        }
+
+        if( velocityY > 8000 ){
+            velocityY *= 0.5;
+        }
+
+        if( mFlingCount != 0 ){
+            if( velocityX > mFlingCount || velocityX < -mFlingCount ){
+                if( velocityX < 0 ){
+                    velocityX = -mFlingCount;
+                }
+                else {
+                    velocityX = mFlingCount;
+                }
+            }
+
+            if( velocityY > mFlingCount || velocityY < -mFlingCount ){
+                if( velocityY < 0 ){
+                    velocityY = -mFlingCount;
+                }
+                else {
+                    velocityY = mFlingCount;
+                }
+            }
+        }
+
+        return super.fling(velocityX, velocityY);
     }
 
     @Override
@@ -130,6 +220,26 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
     }
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int ret;
+
+        if( mInterruptListener == null ) {
+            return super.onInterceptTouchEvent(ev);
+        }
+
+        ret = mInterruptListener.onInterceptTouchEvent(ev);
+        if( ret == 1 ){
+            return true;
+        }
+
+        if( ret == 0 ){
+            return false;
+        }
+
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
     public void addItemDecoration(IItemDecorationListener listener){
         NormalItemDecoration itemDecoration = new NormalItemDecoration();
 
@@ -139,6 +249,15 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
 
         itemDecoration.setListener(listener);
         addItemDecoration(itemDecoration);
+    }
+
+    @Override
+    public void clear(){
+        mAdapter.clear();
+    }
+
+    private boolean getScrollEnable(){
+        return mScrollEnable;
     }
 
     private void initView(){
@@ -186,19 +305,66 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
         });
     }
 
+    @Override
+    public void setMaxRecycledViews(String viewName, int max){
+        getRecycledViewPool().setMaxRecycledViews(mAdapter.getViewType(viewName), max);
+    }
+
     public void setLinearLayoutManager(int orientation, boolean reverselayout){
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(), orientation, reverselayout);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), orientation, reverselayout){
+
+            @Override
+            public boolean canScrollVertically() {
+                return getScrollEnable() && super.canScrollVertically();
+            }
+
+            @Override
+            public boolean canScrollHorizontally(){
+                return getScrollEnable() && super.canScrollHorizontally();
+            }
+        };
 
         mManagerType = MANAGER_TYPE.LINEAR;
         mLinearOrientation = orientation;
-
         setLayoutManager(manager);
     }
 
     public void setGridLayoutManager(int spanCount){
-        GridLayoutManager manager = new GridLayoutManager(getContext(), spanCount);
+        GridLayoutManager manager = new GridLayoutManager(getContext(), spanCount){
+
+            @Override
+            public boolean canScrollVertically() {
+                return getScrollEnable() && super.canScrollVertically();
+            }
+
+            @Override
+            public boolean canScrollHorizontally(){
+                return getScrollEnable() && super.canScrollHorizontally();
+            }
+        };
 
         mManagerType = MANAGER_TYPE.GRID;
         setLayoutManager(manager);
+    }
+
+    public void setStaggeredGridLayoutManager(int spanCount, int orientation){
+//        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(spanCount, orientation);
+//
+//        mManagerType = MANAGER_TYPE.GRID;
+//        setLayoutManager(manager);
+    }
+
+    private void initFlingCount(){
+        switch ( DeviceQualityUtils.getDeviceQuality() ){
+            case enum_low_quality:
+                mFlingCount = 5600;
+                break;
+            case enum_middum_quality:
+                mFlingCount = 11000;
+                break;
+            case enum_high_quality:
+                mFlingCount = 15000;
+                break;
+        }
     }
 }

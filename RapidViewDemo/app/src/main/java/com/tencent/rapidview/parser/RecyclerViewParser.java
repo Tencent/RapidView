@@ -38,6 +38,7 @@ public class RecyclerViewParser extends ViewGroupParser {
     static{
         try{
             mRecyclerViewClassMap.put("layoutmanager", initlayoutmanager.class.newInstance());
+            mRecyclerViewClassMap.put("maxflingcount", initmaxflingcount.class.newInstance());
         }
         catch (Exception e){
             e.printStackTrace();
@@ -49,7 +50,7 @@ public class RecyclerViewParser extends ViewGroupParser {
     @Override
     protected void loadFinish(){
         ((NormalRecyclerView)mRapidView.getView()).getAdapter().setLimitLevel(mLimitLevel);
-        ((NormalRecyclerView)mRapidView.getView()).getAdapter().setPhotonID(mRapidID);
+        ((NormalRecyclerView)mRapidView.getView()).getAdapter().setRapidID(mRapidID);
         ((NormalRecyclerView)mRapidView.getView()).getAdapter().setActionListener(getActionListener());
     }
 
@@ -79,7 +80,7 @@ public class RecyclerViewParser extends ViewGroupParser {
                 if( type.compareToIgnoreCase("linearlayoutmanager") == 0 ){
                     ((NormalRecyclerView)view).setLinearLayoutManager(LinearLayoutManager.VERTICAL, false);
                 }
-                else if( type.compareToIgnoreCase("girdlayoutmanager") == 0 ){
+                else if( type.compareToIgnoreCase("gridlayoutmanager") == 0 ){
                     ((NormalRecyclerView)view).setGridLayoutManager(3);
                 }
             }
@@ -98,7 +99,7 @@ public class RecyclerViewParser extends ViewGroupParser {
 
                     ((NormalRecyclerView)view).setLinearLayoutManager(orientation, false);
                 }
-                else if( type.compareToIgnoreCase("girdlayoutmanager") == 0 ){
+                else if( type.compareToIgnoreCase("gridlayoutmanager") == 0 ){
                     ((NormalRecyclerView)view).setGridLayoutManager(Integer.parseInt(param1));
                 }
             }
@@ -120,10 +121,19 @@ public class RecyclerViewParser extends ViewGroupParser {
 
                     ((NormalRecyclerView)view).setLinearLayoutManager(orientation, reverseLayout);
                 }
-                else if( type.compareToIgnoreCase("girdlayoutmanager") == 0 ){
+                else if( type.compareToIgnoreCase("gridlayoutmanager") == 0 ){
                     ((NormalRecyclerView)view).setGridLayoutManager(Integer.parseInt(param1));
                 }
             }
+        }
+    }
+
+    private static class initmaxflingcount implements IFunction {
+        public initmaxflingcount() {
+        }
+
+        public void run(RapidParserObject object, Object view, Var value) {
+            ((NormalRecyclerView)view).setMaxFlingCount(value.getInt());
         }
     }
 }

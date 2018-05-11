@@ -106,7 +106,7 @@ public class RapidImageLoader {
     }
 
     public static void get(final Context context, final String name, final String rapidID, final boolean limitLevel, final ICallback callback){
-        if( context == null || name == null || callback == null ){
+        if( context == null || name == null || name.compareTo("") == 0 || callback == null ){
             return;
         }
 
@@ -270,7 +270,7 @@ public class RapidImageLoader {
     }
 
     private static Bitmap getRapid(Context context, String name){
-        byte[] bytesBitmap = RapidPool.getInstance().getFile(name, true);
+        byte[] bytesBitmap = RapidPool.getInstance().getFile(name, false);
         Bitmap bmp;
 
         if( bytesBitmap == null ){

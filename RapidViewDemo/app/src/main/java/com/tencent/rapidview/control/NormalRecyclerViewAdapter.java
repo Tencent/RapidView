@@ -23,8 +23,13 @@ import com.tencent.rapidview.data.Var;
 import com.tencent.rapidview.deobfuscated.IRapidTask;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.framework.RapidObject;
+import com.tencent.rapidview.framework.RapidRuntimeCachePool;
 import com.tencent.rapidview.param.RecyclerViewLayoutParams;
 import com.tencent.rapidview.utils.HandlerUtils;
+
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.Varargs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,12 +74,20 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
         mListener = listener;
     }
 
-    public void setPhotonID(String photonID){
-        mRapidID = photonID;
+    public void setRapidID(String rapidID){
+        mRapidID = rapidID;
     }
 
     public void setLimitLevel(boolean limitLevel){
         mLimitLevel = limitLevel;
+    }
+
+    public void clear(){
+        mListData.clear();
+        mListViewName.clear();
+        mViewBindMap.clear();
+
+        notifyDataSetChanged();
     }
 
     public void updateData(List<Map<String, Var>> dataList, List<String> viewList, boolean clear){
@@ -96,6 +109,67 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
         mListViewName.addAll(viewList);
 
         notifyDataSetChanged();
+    }
+
+    public void updateData(String view, LuaTable data, Boolean clear){
+
+        if( clear ){
+            mListData.clear();
+            mListViewName.clear();
+            mViewBindMap.clear();
+        }
+
+        if( view == null || data == null || !data.istable() ){
+            return;
+        }
+
+        addData(view, data);
+
+        notifyDataSetChanged();
+    }
+
+    public void updateData(LuaTable viewList, LuaTable dataList){
+        LuaValue dataKey = LuaValue.NIL;
+        LuaValue dataValue = LuaValue.NIL;
+        LuaValue viewKey = LuaValue.NIL;
+        LuaValue viewValue = LuaValue.NIL;
+
+        if( viewList == null || dataList == null || !viewList.istable() || !dataList.istable() ){
+            return;
+        }
+
+        while(true){
+            Varargs argsView = viewList.next(dataKey);
+            Varargs argsData = dataList.next(viewKey);
+
+            viewKey = argsView.arg1();
+            dataKey = argsData.arg1();
+
+            if( dataKey.isnil() || viewKey.isnil() ){
+                break;
+            }
+
+            viewValue = argsView.arg(2);
+            dataValue = argsData.arg(2);
+
+            if( !viewValue.isstring() || !dataValue.istable() ){
+                continue;
+            }
+
+            addData(viewValue.toString(), dataValue.checktable());
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void updateItemData(int index, String key, LuaValue value){
+        Map<String, Var> map = mListData.get(index);
+
+        if( map == null || key == null || value == null ){
+            return;
+        }
+
+        map.put(key, new Var(value));
     }
 
     public void setFooter(String viewName, Map<String, Var> mapData){
@@ -134,27 +208,27 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
             return;
         }
 
-        if( value instanceof String){
+        if( value instanceof String ){
             mFooterData.put(key, new Var((String)value));
             return;
         }
 
-        if( value instanceof Long){
+        if( value instanceof Long ){
             mFooterData.put(key, new Var((Long)value));
             return;
         }
 
-        if( value instanceof Integer){
+        if( value instanceof Integer ){
             mFooterData.put(key, new Var((Integer) value));
             return;
         }
 
-        if( value instanceof Double){
+        if( value instanceof Double ){
             mFooterData.put(key, new Var((Double)value));
             return;
         }
 
-        if( value instanceof Boolean){
+        if( value instanceof Boolean ){
             mFooterData.put(key, new Var((Boolean)value));
             return;
         }
@@ -162,6 +236,14 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
         mFooterData.put(key, new Var(value));
 
         notifyDataSetChanged();
+    }
+
+    public int getTypeByName(String name){
+        return msViewToIntMap.get(name);
+    }
+
+    public String getNameByType(int type){
+        return msIntToViewMap.get(type);
     }
 
     @Override
@@ -190,19 +272,17 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
 
     @Override
     public NormalRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        String viewName = splitViewName(msIntToViewMap.get(viewType));
+        String      viewName = splitViewName(msIntToViewMap.get(viewType));
         IRapidView loadView = null;
 
         if( viewName.length() > 4 && viewName.substring(viewName.length() - 4, viewName.length()).compareToIgnoreCase(".xml") == 0 ){
-            RapidObject object = new RapidObject();
-
-            object.initialize(null, parent.getContext(), mRapidID, null, mLimitLevel, viewName, null);
+            RapidObject object = RapidRuntimeCachePool.getInstance().get(mRapidID, viewName, mLimitLevel);
 
             loadView = object.load(HandlerUtils.getMainHandler(),
-                                   parent.getContext(),
-                                   RecyclerViewLayoutParams.class,
-                                   null,
-                                   mListener);
+                    parent.getContext(),
+                    RecyclerViewLayoutParams.class,
+                    null,
+                    mListener);
 
         }
         else{
@@ -214,6 +294,8 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
         }
 
         loadView.getView().setLayoutParams(loadView.getParser().getParams().getLayoutParams());
+
+        loadView.getView().setTag(loadView);
 
         return new NormalRecyclerViewHolder(parent.getContext(), loadView);
     }
@@ -235,6 +317,7 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
 
         view.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_data_start, "");
 
+        updateCommonData(view, position);
         view.getParser().getBinder().update(map);
 
         view.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_data_end, "");
@@ -252,6 +335,42 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
         }
 
         return mListViewName.size() + 1;
+    }
+
+    private void addData(String view, LuaTable data){
+        LuaValue key = LuaValue.NIL;
+        LuaValue value = LuaValue.NIL;
+        Map<String, Var> map = new ConcurrentHashMap<String, Var>();
+
+        while(true){
+            Varargs argsItem = data.next(key);
+            key = argsItem.arg1();
+            Var var = null;
+
+            if( key.isnil() ){
+                break;
+            }
+
+            value = argsItem.arg(2);
+
+            if( !value.isuserdata() || !(value.touserdata() instanceof Var) ){
+                var = new Var(value);
+            }
+            else{
+                var = (Var)value.touserdata();
+            }
+
+            if( key.isstring() ){
+                map.put(key.toString(), var);
+            }
+        }
+
+        mListViewName.add(view);
+        mListData.add(map);
+    }
+
+    private void updateCommonData(IRapidView view, int position){
+        view.getParser().getBinder().update("index", new Var(position));
     }
 
     private String mergeViewName(String name){

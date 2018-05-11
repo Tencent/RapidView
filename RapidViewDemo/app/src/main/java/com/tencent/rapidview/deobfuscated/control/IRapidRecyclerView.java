@@ -14,9 +14,13 @@
 package com.tencent.rapidview.deobfuscated.control;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 
 import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.data.Var;
+
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
 
 import java.util.List;
 import java.util.Map;
@@ -50,7 +54,14 @@ public interface IRapidRecyclerView {
         void onScrollToTop();
     }
 
+    interface IInterruptTouchListener{
+
+        int onInterceptTouchEvent(MotionEvent ev);
+    }
+
     void addItemDecoration(IItemDecorationListener listener);
+
+    void setInterruptTouchEvent(IInterruptTouchListener listener);
 
     void setScrollStateChangedListener(IScrollStateChangedListener listener);
 
@@ -62,7 +73,13 @@ public interface IRapidRecyclerView {
 
     void updateData(List<Map<String, Var>> dataList, List<String> viewList);
 
-    void updateData(List<Map<String, Var>> dataList, List<String> viewList, boolean clear);
+    void updateData(List<Map<String, Var>> dataList, List<String> viewList, Boolean clear);
+
+    void updateData(String view, LuaTable data, Boolean clear);
+
+    void updateData(LuaTable viewList, LuaTable dataList);
+
+    void updateItemData(int index, String key, LuaValue value);
 
     void setFooter(String viewName, Map<String, Var> mapData);
 
@@ -77,4 +94,16 @@ public interface IRapidRecyclerView {
     void scrollToTop();
 
     void setActionListener(IRapidActionListener listener);
+
+    void setMaxFlingCount(int count);
+
+    void setScrollEnable(Boolean disable);
+
+    int getTypeByName(String name);
+
+    String getNameByType(int type);
+
+    int getItemViewType(int position);
+
+    void clear();
 }

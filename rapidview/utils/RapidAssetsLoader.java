@@ -20,6 +20,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 
+import com.tencent.rapidview.framework.RapidConfig;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -191,11 +193,16 @@ public class RapidAssetsLoader {
             return null;
         }
 
+        if( url == null ){
+            return null;
+        }
+
         try {
             is = context.getAssets().open(RAPID_DIR + url);
             b = BitmapFactory.decodeStream(is);
             is.close();
         } catch (IOException e) {
+            XLog.d(RapidConfig.RAPID_ERROR_TAG, "读取文件失败：" + url);
             e.printStackTrace();
             Closer.close(is);
             return b;

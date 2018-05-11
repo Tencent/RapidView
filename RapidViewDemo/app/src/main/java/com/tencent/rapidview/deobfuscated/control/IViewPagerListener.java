@@ -32,5 +32,5 @@ public interface IViewPagerListener {
     /**
      * 提供一个首次反动到当前页面的标记，便于页面进行加载
      */
-    void onPageSelected(int pos, String tag, boolean first);
+    void onPageSelected(int pos, String tag, Boolean first);
 }

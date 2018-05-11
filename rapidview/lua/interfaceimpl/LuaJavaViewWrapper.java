@@ -25,6 +25,7 @@ import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.deobfuscated.IRapidViewGroup;
 import com.tencent.rapidview.framework.RapidConfig;
 import com.tencent.rapidview.framework.RapidObject;
+import com.tencent.rapidview.framework.RapidRuntimeCachePool;
 import com.tencent.rapidview.param.ParamsChooser;
 import com.tencent.rapidview.parser.RapidParserObject;
 import com.tencent.rapidview.utils.RapidStringUtils;
@@ -48,8 +49,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class LuaJavaViewWrapper extends RapidLuaJavaObject{
 
-    public LuaJavaViewWrapper(String photonID, IRapidView rapidView){
-        super(photonID, rapidView);
+    public LuaJavaViewWrapper(String rapidID, IRapidView rapidView){
+        super(rapidID, rapidView);
     }
 
     public LuaValue loadView(String viewName, String params, LuaTable data, IRapidActionListener listener){
@@ -75,26 +76,26 @@ public class LuaJavaViewWrapper extends RapidLuaJavaObject{
         return ret;
     }
 
-    public LuaValue addView(String viewName, String parentID, String above, RapidDataBinder binder, LuaTable data, IRapidActionListener listener){
+    public LuaValue addView(String xmlName, String parentID, String above, RapidDataBinder binder, LuaTable data, IRapidActionListener listener){
         LuaValue value = null;
 
         if(RapidConfig.TEST_MODE){
             try{
-                value = _addView(viewName, parentID, above, binder, data, listener);
+                value = _addView(xmlName, parentID, above, binder, data, listener);
             }
             catch (Exception e){
                 e.printStackTrace();
             }
         }
         else{
-            value = _addView(viewName, parentID, above, binder, data, listener);
+            value = _addView(xmlName, parentID, above, binder, data, listener);
         }
 
         return value;
     }
 
     private IRapidView _loadView(String view, String params, LuaTable data, IRapidActionListener listener){
-        IRapidView         loadView = null;
+        IRapidView        loadView = null;
         Map<String, Var>   map      = null;
         RapidParserObject parser   = getParser();
 
@@ -105,15 +106,13 @@ public class LuaJavaViewWrapper extends RapidLuaJavaObject{
         map = translateData(data);
 
         if( view.length() > 4 && view.substring(view.length() - 4, view.length()).compareToIgnoreCase(".xml") == 0 ){
-            RapidObject object = new RapidObject();
+            RapidObject object = RapidRuntimeCachePool.getInstance().get(mRapidID, view, parser.isLimitLevel());
 
-            object.initialize(null, parser.getContext(), mRapidID, null, parser.isLimitLevel(), view, null);
-
-            loadView = object.load(parser.getUIHandler(),
-                    parser.getContext(),
-                    ParamsChooser.getParamsClass(params),
-                    map,
-                    listener == null ? parser.getActionListener() : listener);
+            loadView = object.load( parser.getUIHandler(),
+                                    parser.getContext(),
+                                    ParamsChooser.getParamsClass(params),
+                                    map,
+                                    listener == null ? parser.getActionListener() : listener);
 
         }
         else{
@@ -123,16 +122,17 @@ public class LuaJavaViewWrapper extends RapidLuaJavaObject{
         return loadView;
     }
 
-    private LuaValue _addView(String viewName, String parentID, String above, RapidDataBinder binder, LuaTable data, IRapidActionListener listener){
-        IRapidView         addView      = null;
+    private LuaValue _addView(String xmlName, String parentID, String above, RapidDataBinder binder, LuaTable data, IRapidActionListener listener){
+        IRapidView        addView      = null;
         int                indexOfAbove = -1;
-        IRapidViewGroup    parentView   = null;
-        IRapidView         aboveView    = null;
+        IRapidViewGroup   parentView   = null;
+        IRapidView        aboveView    = null;
         ViewGroup          parent       = null;
-        RapidParserObject  parser       = getParser();
-        Map<String, Var> map          = null;
+        RapidObject       object       = null;
+        RapidParserObject parser       = getParser();
+        Map<String, Var>   map          = null;
 
-        if( parser == null || RapidStringUtils.isEmpty(viewName) || RapidStringUtils.isEmpty(parentID) ){
+        if( parser == null || RapidStringUtils.isEmpty(xmlName) || RapidStringUtils.isEmpty(parentID) ){
             return null;
         }
 
@@ -152,26 +152,17 @@ public class LuaJavaViewWrapper extends RapidLuaJavaObject{
             }
         }
 
-        if( viewName.length() > 4 && viewName.substring(viewName.length() - 4, viewName.length()).compareToIgnoreCase(".xml") == 0 ){
-            RapidObject object = new RapidObject();
+        object = RapidRuntimeCachePool.getInstance().get(mRapidID, xmlName, parser.isLimitLevel());
 
-            object.initialize(binder, parser.getContext(), mRapidID, null, parser.isLimitLevel(), viewName, null);
-
-            addView = object.load( parser.getUIHandler(),
-                                   parser.getContext(),
-                                   parentView == null ? parser.getParams().getClass() :
-                                   parentView.createParams(getParser().getContext()).getClass(),
-                                   map,
+        addView = object.load(parser.getUIHandler(),
+                parser.getContext(),
+                parentView == null ? parser.getParams().getClass() :
+                        parentView.createParams(getParser().getContext()).getClass(),
+                map,
                                    listener == null ? parser.getActionListener() : listener);
 
-        }
-        else{
-            addView = RapidLoader.load(viewName, parser.getUIHandler(), parser.getContext(), parentView == null ? parser.getParams().getClass() :
-                    parentView.createParams(getParser().getContext()).getClass(), map, listener == null ? parser.getActionListener() : listener);
-        }
-
         if( addView == null ){
-            XLog.d(RapidConfig.RAPID_ERROR_TAG, "AddView接口需要添加的视图加载失败：" + viewName + "(photonID:" + mRapidID + ")");
+            XLog.d(RapidConfig.RAPID_ERROR_TAG, "AddView接口需要添加的视图加载失败：" + xmlName + "(rapidID:" + mRapidID + ")");
             return null;
         }
 
@@ -181,7 +172,7 @@ public class LuaJavaViewWrapper extends RapidLuaJavaObject{
         addView.getParser().getBinder().update(map);
 
         addView.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_data_end, "");
-
+        
 
         if( RapidStringUtils.isEmpty(parentID) && RapidStringUtils.isEmpty(above)  ){
             XLog.d(RapidConfig.RAPID_ERROR_TAG, "未指定父视图（parent）或底视图(above)");
@@ -222,8 +213,8 @@ public class LuaJavaViewWrapper extends RapidLuaJavaObject{
         parent = (ViewGroup) parentView.getView();
 
         if( parent == null ||
-            !(parentView instanceof IRapidViewGroup) ||
-            !(parentView.getView() instanceof ViewGroup) ){
+                !(parentView instanceof IRapidViewGroup) ||
+                !(parentView.getView() instanceof ViewGroup) ){
             XLog.d(RapidConfig.RAPID_ERROR_TAG, "AddViewAction父视图为空");
             return null;
         }
@@ -244,8 +235,8 @@ public class LuaJavaViewWrapper extends RapidLuaJavaObject{
         }
         else{
             parent.addView(addView.getView(),
-                           indexOfAbove,
-                           addView.getParser().getParams().getLayoutParams());
+                    indexOfAbove,
+                    addView.getParser().getParams().getLayoutParams());
         }
 
         addView.getParser().mBrotherMap = parentView.getParser().mMapChild;

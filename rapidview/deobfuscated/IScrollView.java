@@ -30,7 +30,7 @@ public interface IScrollView {
 
         void onScrollChanged(int l, int t, int oldl, int oldt);
 
-        void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY);
+        void onOverScrolled(int scrollX, int scrollY, Boolean clampedX, Boolean clampedY);
     }
 
     interface IInterruptTouchListener{

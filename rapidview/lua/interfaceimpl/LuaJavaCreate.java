@@ -59,6 +59,7 @@ public class LuaJavaCreate extends RapidLuaJavaObject {
             mFunctionMap.put("jsonstringer", JSONStringerGeter.class.newInstance());
             mFunctionMap.put("jsontokener", JSONTokenerGeter.class.newInstance());
             mFunctionMap.put("bitmap", BitmapGeter.class.newInstance());
+            mFunctionMap.put("bytes", BytesGeter.class.newInstance() );
         }
         catch (Exception e){
             e.printStackTrace();
@@ -221,6 +222,21 @@ public class LuaJavaCreate extends RapidLuaJavaObject {
             }
 
             return bmp;
+        }
+    }
+
+    private static class BytesGeter implements IFunction {
+        public BytesGeter() {
+        }
+
+        @Override
+        public Object get(Object... args) {
+
+            if( args.length == 0 || !(args[0] instanceof byte[]) ){
+                return null;
+            }
+
+            return new Bytes((byte[])args[0]);
         }
     }
 }
