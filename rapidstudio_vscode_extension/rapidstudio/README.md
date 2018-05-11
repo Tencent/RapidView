@@ -199,7 +199,7 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 
 + Add lots of snippets for lua and xml.
 
-### 1.1.0
+### 1.1.1
 
 + Support .lua files complie to .out files.
 
