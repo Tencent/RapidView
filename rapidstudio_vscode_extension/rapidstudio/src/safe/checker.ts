@@ -18,11 +18,11 @@ export class RapidChecker{
         try {
             // a safe file path should include blank or chinese symbol 
             if(this.containsValidChar(path)){
-                throw new Error("Path cannot contains chinese symbol or other unicode: " + path);
+                throw new Error("Path cannot contain illegal characters(Can only use English path): " + path);
             }
     
             if(path.indexOf(" ")>=0){
-                throw new Error("Path cannot contains space: " + path);
+                throw new Error("Path cannot contain spaces: " + path);
             }
         } catch (error) {
             XLog.error((<Error>error).message);

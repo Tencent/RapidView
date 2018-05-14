@@ -75,9 +75,9 @@
         "description": "Create a Button tag. [RapidView]"
     },
     "LuaAction": {
-        "prefix": "luaction",
+        "prefix": "luaaction",
         "body": [
-            "<luaction load=\"filename.lua\" function=\"main\"/>"
+            "<luaaction load=\"filename.lua\" function=\"main\"/>"
         ],
         "description": "Create a LuaAction tag. [RapidView]"
     },

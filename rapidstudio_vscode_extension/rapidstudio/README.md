@@ -208,6 +208,10 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 
 + Optimize the speed of syncing project.
 
+### 1.1.3
+
++ Fix bugs in luaaction completion.
+
 ## For more information
 
 ### For Contributors
