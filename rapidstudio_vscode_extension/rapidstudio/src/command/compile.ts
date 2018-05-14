@@ -14,11 +14,11 @@
 import {RapidCommand} from "./command";
 import {window,workspace,extensions} from 'vscode';
 import {XLog,ADBUtils} from "../tool";
+import {RapidChecker} from "../safe/checker";
 
-
-export class ComplieProjectCommand implements RapidCommand{
+export class compileProjectCommand implements RapidCommand{
      
-    readonly commandName = "rapidstudio.complieProject";
+    readonly commandName = "rapidstudio.compileProject";
     private projectFolder = ".";
     public execute(...args: any[]):any{
         try {
@@ -39,13 +39,13 @@ export class ComplieProjectCommand implements RapidCommand{
                 return;
             }
 
-            this.complieProject();
+            this.compileProject();
         } catch (error) {
             XLog.error(error);
         }
     }
 
-    private complieProject(){
+    private compileProject(){
         XLog.info("Compiling project: " + this.projectFolder);
         
         const fs = require('fs');
@@ -68,23 +68,30 @@ export class ComplieProjectCommand implements RapidCommand{
                 if(ext == "lua"){
     
                     let outPath = filePath.substr(0,filePath.lastIndexOf('.')) + ".out";
-                    this.complieLuaFile(filePath,outPath);
+                    this.compileLuaFile(filePath,outPath);
                 }  
             });
         })
         return;
     }
 
-    private complieLuaFile(targetPath,outPath){
+    private compileLuaFile(targetPath,outPath){
         const fs = require('fs');
         const path = require('path');
         let util = require('util');
         // comlie lua file 
-        let complieTool = extensions.getExtension ("realhe.rapidstudio").extensionPath +  path.sep + "tools" + path.sep + "luac.exe";
-        let complieCommand = util.format('%s -o %s %s',complieTool,outPath,targetPath);
+        let compileTool = extensions.getExtension ("realhe.rapidstudio").extensionPath +  path.sep + "tools" + path.sep + "luac.exe";
+
+        // check path
+        RapidChecker.assertSafeFilePath(targetPath);
+        RapidChecker.assertSafeFilePath(outPath);
+        RapidChecker.assertSafeFilePath(compileTool);
+
+
+        let compileCommand = util.format('%s -o %s %s',compileTool,outPath,targetPath);
 
         let exec = require('child_process').exec;
-        exec(complieCommand, function(err,stdout,stderr){
+        exec(compileCommand, function(err,stdout,stderr){
             XLog.info(stdout);
             if(err) {
                 XLog.error(stderr);

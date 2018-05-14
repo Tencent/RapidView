@@ -26,7 +26,7 @@ import {SayHelloCommand } from './command/sayhello';
 import {SyncFileCommand, SyncProjectCommand } from './command/sync';
 import {CreateNewProjectCommand, CreateNewRapidViewCommand } from './command/create';
 import {SavaRapidFileCommand} from './command/save';
-import {ComplieProjectCommand} from './command/complie';
+import {compileProjectCommand} from './command/compile';
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -43,7 +43,7 @@ export function activate(context: ExtensionContext) {
     rapidCommands.push(new SyncProjectCommand());
     rapidCommands.push(new CreateNewProjectCommand());
     rapidCommands.push(new CreateNewRapidViewCommand());
-    rapidCommands.push(new ComplieProjectCommand());
+    rapidCommands.push(new compileProjectCommand());
     rapidCommands.push(new SavaRapidFileCommand());
 
     // Register all command

@@ -1,5 +1,13 @@
 # Rapid Studio Visual Studio Code Extension
 
+![](https://img.shields.io/github/license/mashape/apistatus.svg)
+![](https://img.shields.io/badge/vscode->=1.17.0-red.svg)
+![](https://img.shields.io/vscode-marketplace/v/realhe.rapidstudio.svg)
+![](https://img.shields.io/vscode-marketplace/d/realhe.rapidstudio.svg)
+
+
+![](https://img.shields.io/badge/platform-osx|windows|linux-lightgrey.svg)
+
 This extension can help you to develop the RapidView project quickly.
 
 [中文文档请点击这里](https://github.com/YongdongHe/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/resource/README_CHINESE.md)
@@ -75,6 +83,7 @@ Items in explorer right-click menu:
 
 * `New Rapid Workspace ` : Initial a rapid workspace in current root directory. This operation creates a file named rapid_workspace.json.
 * `New Rapid View ` : Create a view, and bind a main file for it.
+* `compile Rapid Project ` : compile all files. The .lua will be compiled to .out files.
 
 ### Quick debug
 
@@ -191,9 +200,13 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 
 + Add lots of snippets for lua and xml.
 
-### 1.1.0
+### 1.1.1
 
-+ Support .lua files complie to .out files.
++ Support .lua files compile to .out files.
+
+### 1.1.2
+
++ Optimize the speed of syncing project.
 
 ## For more information
 
