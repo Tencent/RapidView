@@ -18,6 +18,7 @@
         "prefix": "task",
         "body": [
             "<task id=\"${1:taskId}\" hook=\"${2:loadfinish}\">",
+            "\t${3:}",
             "</task>"
         ],
         "description": "Insert a rapid task. [RapidView]"
