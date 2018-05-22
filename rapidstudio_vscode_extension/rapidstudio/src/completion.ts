@@ -26,10 +26,9 @@ export class RapidCompletionManager{
                 XLog.info("Custom Auto Completion is not available : cannot read data from rapid_workspace.json.");
                 XLog.info("If you want to enable it, create a new rapid-workspace here.");
             }else{
-                // Catch json exception
-                let workspaceData = JSON.parse(data);
                 try{
-                    
+                    // Catch json exception
+                    let workspaceData = JSON.parse(data);
                     if(workspaceData['completion'] && workspaceData['completion']['xml_tags']){
                         let _xmlTags =  workspaceData['completion']['xml_tags'];
                         _xmlTags.forEach(_xmlTag => {

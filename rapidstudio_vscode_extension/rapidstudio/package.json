@@ -131,6 +131,11 @@
                 "language": "rapid-log",
                 "scopeName": "source.log",
                 "path": "./syntaxes/log.tmLanguage"
+            },
+            {
+                "language": "xml",
+                "scopeName": "source.xml",
+                "path": "./syntaxes/rlua.tmLanguage.json"
             }
         ],
         "snippets": [
