@@ -20,13 +20,23 @@ import {window,workspace,languages, commands, Disposable,
 
 // Import tool module
 import {XLog,ADBCallback,ADBUtils,XMLUtils,MessageToastUtils} from "./tool";
-import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider, RapidCompletionManager} from "./completion";
+import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider, 
+    RapidLuaInXMLCompletionItemProvider,RapidCompletionManager} from "./completion";
 import {RapidCommand} from "./command/command";
 import {SayHelloCommand } from './command/sayhello';
 import {SyncFileCommand, SyncProjectCommand } from './command/sync';
 import {CreateNewProjectCommand, CreateNewRapidViewCommand } from './command/create';
 import {SavaRapidFileCommand} from './command/save';
 import {compileProjectCommand} from './command/compile';
+
+
+// Lua language server
+import {
+    LanguageClient, LanguageClientOptions, ServerOptions,
+    TransportKind
+} from 'vscode-languageclient';
+import * as path from 'path';
+
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -64,16 +74,72 @@ export function activate(context: ExtensionContext) {
     RapidCompletionManager.initCompletion(()=>{
         let xmlCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
         let xmlAttrsCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLAttrsCompletionItemProvider(),'\"',' ','m','a');
+        let luaInXMLCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidLuaInXMLCompletionItemProvider(),':');
         let luaCompletionProvider = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),':');
+        context.subscriptions.push(luaInXMLCompletionProvider);
         context.subscriptions.push(xmlCompletionProvider);
         context.subscriptions.push(xmlAttrsCompletionProvider);
         context.subscriptions.push(luaCompletionProvider);
     });
     
     context.subscriptions.push(outputPanel);
+
+
+    // Start lua language server
+    // startLanguageServer(context);
 }
 
+// function startLanguageServer(context: ExtensionContext) {
+//     const serverModule = path.join(__dirname, '../server', 'main.js');
 
+//     const debugOptions = {
+//         execArgv: ['--nolazy', '--inspect=6009'], env: {
+//             NODE_ENV: 'development'
+//         }
+//     };
+
+//     const runOptions = {
+//         env: {
+//             NODE_ENV: 'production'
+//         }
+//     };
+
+//     const serverOptions: ServerOptions = {
+//         run: { module: serverModule, transport: TransportKind.ipc, options: runOptions },
+//         debug: {
+//             module: serverModule,
+//             transport: TransportKind.ipc,
+//             // The current version of node shipped with VSCode Insiders (as of April 3 2017) seems to have an issue with
+//             // --inspect debugging, so we'll assume that someone debugging the extension has a recent version of node on
+//             // on their PATH.
+//             // If you do not, comment this line out and replace the --inspect above with --debug.
+//             runtime: 'node',
+//             options: debugOptions
+//         }
+//     };
+
+//     // Options to control the language client
+//     const clientOptions: LanguageClientOptions = {
+//         // Register the server for plain text documents
+//         documentSelector: [
+//             { language: 'lua', scheme: 'file' },
+//             { language: 'lua', scheme: 'untitled' }
+//         ],
+//         synchronize: {
+//             configurationSection: [
+//                 'lua'
+//             ]
+//         }
+//     };
+
+//     // Create the language client and start the client.
+//     const disposable = new LanguageClient('luaLanguageServer',
+//         'Lua Language Server', serverOptions, clientOptions).start();
+
+//     // Push the disposable to the context's subscriptions so that the
+//     // client can be deactivated on extension deactivation
+//     context.subscriptions.push(disposable);
+// }
 
 // this method is called when your extension is deactivated
 export function deactivate() {

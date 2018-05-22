@@ -146,6 +146,18 @@
             {
                 "language": "lua",
                 "path": "./snippets/lua.json"
+            },
+            {
+                "language": "lua",
+                "path": "./snippets/rapid-lua.json"
+            },
+            {
+                "language": "xml",
+                "path": "./snippets/lua-in-xml.json"
+            },
+            {
+                "language": "xml",
+                "path": "./snippets/rapid-lua.json"
             }
         ]
     },
@@ -164,7 +176,8 @@
     },
     "dependencies": {
         "execa": "^0.8.0",
-        "xml2js": "^0.4.19"
+        "xml2js": "^0.4.19",
+        "vscode-languageclient": "^3.0.3"
     },
     "keywords": [
         "rapid",
