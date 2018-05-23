@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Complie Server",
+            "program": "${workspaceFolder}/src\\server.ts",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/../rapidstudio/server/**/*.js"
+            ]
+        },
+		{
+			"name": "Attach to Server",
+			"type": "node",
+			"request": "attach",
+			"port": 6009,
+			"sourceMaps": true,
+			"outFiles": [
+				"${workspaceFolder}/../rapidstudio/server/**/*.js"
+			],
+			"preLaunchTask": "watch:server"
+		}
+
+    ]
+}

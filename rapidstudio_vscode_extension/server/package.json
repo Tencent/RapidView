@@ -21,6 +21,8 @@
 	"scripts": {
 		"installServer": "installServerIntoExtension ../rapidstudio ./package.json ./tsconfig.json && tsc -p .",
 		"compile": "installServerIntoExtension ../rapidstudio ./package.json ./tsconfig.json && tsc -p .",
-		"watch": "installServerIntoExtension ../rapidstudio ./package.json ./tsconfig.json && tsc -w -p ."
+		"watch": "installServerIntoExtension ../rapidstudio ./package.json ./tsconfig.json && tsc -w -p .",
+		"compile:server": "cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
+		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json"
 	}
 }
