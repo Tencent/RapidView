@@ -9,12 +9,14 @@
         "vscode": "^1.17.0"
     },
     "categories": [
-        "Languages",
-        "Other"
+        "Programming Languages",
+        "Snippets",
+        "Linters"
     ],
     "activationEvents": [
         "onLanguage:lua",
         "onLanguage:xml",
+        "onLanguage:plaintext",
         "*"
     ],
     "main": "./out/extension",

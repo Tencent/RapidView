@@ -89,57 +89,39 @@ export function activate(context: ExtensionContext) {
     // startLanguageServer(context);
 }
 
-// function startLanguageServer(context: ExtensionContext) {
-//     const serverModule = path.join(__dirname, '../server', 'main.js');
+function startLanguageServer(context: ExtensionContext) {
+    // The server is implemented in node
+	let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
+	// The debug options for the server
+	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
 
-//     const debugOptions = {
-//         execArgv: ['--nolazy', '--inspect=6009'], env: {
-//             NODE_ENV: 'development'
-//         }
-//     };
+	// If the extension is launched in debug mode then the debug server options are used
+	// Otherwise the run options are used
+	let serverOptions: ServerOptions = {
+		run : { module: serverModule, transport: TransportKind.ipc },
+		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
+	};
 
-//     const runOptions = {
-//         env: {
-//             NODE_ENV: 'production'
-//         }
-//     };
+	// Options to control the language client
+	let clientOptions: LanguageClientOptions = {
+		// Register the server for plain text documents
+		documentSelector: [{scheme: 'file', language: 'plaintext'}],
+		synchronize: {
+			// Synchronize the setting section 'lspSample' to the server
+			configurationSection: 'lspSample',
+			// Notify the server about file changes to '.clientrc' files contain in the workspace
+			fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
+		}
+    };
+    
+    
+	// Create the language client and start the client.
+	let disposable = new LanguageClient('lspSample', 'Language Server Example', serverOptions, clientOptions).start();
 
-//     const serverOptions: ServerOptions = {
-//         run: { module: serverModule, transport: TransportKind.ipc, options: runOptions },
-//         debug: {
-//             module: serverModule,
-//             transport: TransportKind.ipc,
-//             // The current version of node shipped with VSCode Insiders (as of April 3 2017) seems to have an issue with
-//             // --inspect debugging, so we'll assume that someone debugging the extension has a recent version of node on
-//             // on their PATH.
-//             // If you do not, comment this line out and replace the --inspect above with --debug.
-//             runtime: 'node',
-//             options: debugOptions
-//         }
-//     };
-
-//     // Options to control the language client
-//     const clientOptions: LanguageClientOptions = {
-//         // Register the server for plain text documents
-//         documentSelector: [
-//             { language: 'lua', scheme: 'file' },
-//             { language: 'lua', scheme: 'untitled' }
-//         ],
-//         synchronize: {
-//             configurationSection: [
-//                 'lua'
-//             ]
-//         }
-//     };
-
-//     // Create the language client and start the client.
-//     const disposable = new LanguageClient('luaLanguageServer',
-//         'Lua Language Server', serverOptions, clientOptions).start();
-
-//     // Push the disposable to the context's subscriptions so that the
-//     // client can be deactivated on extension deactivation
-//     context.subscriptions.push(disposable);
-// }
+	// Push the disposable to the context's subscriptions so that the
+	// client can be deactivated on extension deactivation
+	context.subscriptions.push(disposable);
+}
 
 // this method is called when your extension is deactivated
 export function deactivate() {
