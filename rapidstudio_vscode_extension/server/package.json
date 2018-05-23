@@ -19,7 +19,7 @@
 		"@types/node": "^6.0.101"
 	},
 	"scripts": {
-		"installServer": "installServerIntoExtension ../rapidstudio ./package.json ./tsconfig.json",
+		"installServer": "installServerIntoExtension ../rapidstudio ./package.json ./tsconfig.json && tsc -p .",
 		"compile": "installServerIntoExtension ../rapidstudio ./package.json ./tsconfig.json && tsc -p .",
 		"watch": "installServerIntoExtension ../rapidstudio ./package.json ./tsconfig.json && tsc -w -p ."
 	}
