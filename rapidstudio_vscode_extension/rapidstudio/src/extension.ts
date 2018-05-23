@@ -91,7 +91,7 @@ export function activate(context: ExtensionContext) {
 
 function startLanguageServer(context: ExtensionContext) {
     // The server is implemented in node
-    let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
+    let serverModule = path.join(__dirname, '../server', 'server.js');;
 	// The debug options for the server
 	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
 
@@ -120,7 +120,7 @@ function startLanguageServer(context: ExtensionContext) {
 
 	// Push the disposable to the context's subscriptions so that the
 	// client can be deactivated on extension deactivation
-    context.subscriptions.push(disposable);
+    // context.subscriptions.push(disposable);
     
     console.log('Congratulations, languageserver is now active!');
 }
