@@ -86,7 +86,7 @@ export function activate(context: ExtensionContext) {
 
 
     // Start lua language server
-    startLanguageServer(context);
+    // startLanguageServer(context);
 }
 
 function startLanguageServer(context: ExtensionContext) {

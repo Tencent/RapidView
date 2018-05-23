@@ -4,23 +4,9 @@
 		{
 			"label": "compile",
 			"dependsOn": [
-				"compile:client",
 				"compile:server"
 			],
 			"problemMatcher": []
-		},
-		{
-			"label": "compile:client",
-			"type": "npm",
-			"script": "compile:client",
-			"group": "build",
-			"presentation": {
-				"panel": "dedicated",
-				"reveal": "never"
-			},
-			"problemMatcher": [
-				"$tsc"
-			]
 		},
 		{
 			"label": "compile:server",
@@ -38,7 +24,6 @@
 		{
 			"label": "watch",
 			"dependsOn": [
-				"watch:client",
 				"watch:server"
 			],
 			"group": {
@@ -46,20 +31,6 @@
 				"isDefault": true
 			},
 			"problemMatcher": []
-		},
-		{
-			"label": "watch:client",
-			"type": "npm",
-			"script": "watch:client",
-			"isBackground": true,
-			"group": "build",
-			"presentation": {
-				"panel": "dedicated",
-				"reveal": "never"
-			},
-			"problemMatcher": [
-				"$tsc-watch"
-			]
 		},
 		{
 			"label": "watch:server",

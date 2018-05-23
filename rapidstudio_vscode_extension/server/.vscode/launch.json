@@ -19,7 +19,8 @@
 			"type": "node",
 			"request": "attach",
 			"port": 6009,
-			"sourceMaps": true,
+            "sourceMaps": true,
+            "protocol": "inspector",
 			"outFiles": [
 				"${workspaceFolder}/../rapidstudio/server/**/*.js"
 			],
