@@ -212,6 +212,10 @@ Add autoSync configuration.When saving, the file is automatically synchronized t
 
 + Fix bugs in luaaction completion.
 
+### 1.1.4
+
++ Add lua support in xml.
+
 ## For more information
 
 ### For Contributors
