@@ -18,6 +18,7 @@
         "prefix": "task",
         "body": [
             "<task id=\"${1:taskId}\" hook=\"${2:loadfinish}\">",
+            "\t${3:}",
             "</task>"
         ],
         "description": "Insert a rapid task. [RapidView]"
@@ -75,9 +76,9 @@
         "description": "Create a Button tag. [RapidView]"
     },
     "LuaAction": {
-        "prefix": "luaction",
+        "prefix": "luaaction",
         "body": [
-            "<luaction load=\"filename.lua\" function=\"main\"/>"
+            "<luaaction load=\"filename.lua\" function=\"main\"/>"
         ],
         "description": "Create a LuaAction tag. [RapidView]"
     },

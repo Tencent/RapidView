@@ -26,10 +26,9 @@ export class RapidCompletionManager{
                 XLog.info("Custom Auto Completion is not available : cannot read data from rapid_workspace.json.");
                 XLog.info("If you want to enable it, create a new rapid-workspace here.");
             }else{
-                // Catch json exception
-                let workspaceData = JSON.parse(data);
                 try{
-                    
+                    // Catch json exception
+                    let workspaceData = JSON.parse(data);
                     if(workspaceData['completion'] && workspaceData['completion']['xml_tags']){
                         let _xmlTags =  workspaceData['completion']['xml_tags'];
                         _xmlTags.forEach(_xmlTag => {
@@ -51,7 +50,6 @@ export class RapidCompletionManager{
                 }catch(error){
                     console.log(error);
                     XLog.error("An error occurred while setting auto completion, the default setting has been used.");
-                    return;
                 }
             }   
             onSuccess();
@@ -93,6 +91,24 @@ export class RapidXMLAttrsCompletionItemProvider implements CompletionItemProvid
         return ['a', 'b', 'd', 'e', 'f', 't', 'u', 'w', 'r', 'i', 'l', 'n', 'o', 'g', 'L', 'c', 's'];
     }
 }
+
+
+export class RapidLuaInXMLCompletionItemProvider implements CompletionItemProvider {
+    private _completionItems: CompletionItem[];
+    constructor (){
+        this._completionItems = new Array<CompletionItem>();
+        luaInXMLFunctions.forEach(tag => {
+            this._completionItems.push(new CompletionItem(tag,CompletionItemKind.Field));
+        });
+    }
+    
+    public provideCompletionItems(
+        document: TextDocument, position: Position, token: CancellationToken): 
+        CompletionItem[] {
+            return this._completionItems;
+    }
+}
+
 
 export class RapidLuaCompletionItemProvider implements CompletionItemProvider {
     private _completionItems: CompletionItem[];
@@ -544,21 +560,17 @@ let xmlAttrs = [
     "vertical"
 ]
 
-let luaFunctions = [
-    "getBytesFromBitmap",
+let luaInXMLFunctions = [
+    "mPhotonView",
+    "mJavaBridge",
+    "mRapidView",
     "Log",
     "create",
     "decode",
     "encode",
     "getAnimationCenter",
-    "getEnv",
-    "getGlobals",
-    "getJavaInterface",
     "isLimitLevel",
     "getContext",
-    "getPhotonID",
-    "getLayoutParams",
-    "getUiHandler",
     "addView",
     "removeView",
     "update",
@@ -571,8 +583,50 @@ let luaFunctions = [
     "isNil",
     "getString",
     "getLength",
-    "shareImageToWX",
-    "shareTextToWX",
+    "request",
+    "getView",
+    "getParser",
+    "addView",
+    "add",
+    "run",
+    "notify",
+    "getActionRunner",
+    "getFilterRunner",
+    "setParentView",
+    "getParentView",
+    "update",
+    "getID",
+    "getChildView",
+    "getBinder",
+    "getListener",
+    "getTaskCenter",
+]
+
+let luaFunctions = [
+    "mPhotonView",
+    "mJavaBridge",
+    "mRapidView",
+    "getBytesFromBitmap",
+    "Log",
+    "create",
+    "decode",
+    "encode",
+    "getAnimationCenter",
+    "getJavaInterface",
+    "isLimitLevel",
+    "getContext",
+    "addView",
+    "removeView",
+    "update",
+    "bind",
+    "unregister",
+    "get",
+    "removeData",
+    "getObject",
+    "getArrayByte",
+    "isNil",
+    "getString",
+    "getLength",
     "request",
     "takePicture",
     "choosePicture",
@@ -581,11 +635,7 @@ let luaFunctions = [
     "getID",
     "getView",
     "getParser",
-    "load",
-    "initialize",
     "addView",
-    "setArrayView",
-    "setEnvironment",
     "getEnv",
     "add",
     "run",
@@ -596,9 +646,7 @@ let luaFunctions = [
     "getParentView",
     "setIndexInParent",
     "getIndexInParent",
-    "getUIHandler",
     "update",
-    "getParams",
     "getID",
     "getChildView",
     "getBinder",

@@ -2,19 +2,21 @@
     "name": "rapidstudio",
     "displayName": "Rapid Studio",
     "description": "Visual Studio Code Extension for Tencent Rapidview",
-    "version": "1.1.2",
+    "version": "1.1.4",
     "publisher": "realhe",
     "icon": "assets/icon.png",
     "engines": {
         "vscode": "^1.17.0"
     },
     "categories": [
-        "Languages",
-        "Other"
+        "Programming Languages",
+        "Snippets",
+        "Linters"
     ],
     "activationEvents": [
         "onLanguage:lua",
         "onLanguage:xml",
+        "onLanguage:plaintext",
         "*"
     ],
     "main": "./out/extension",
@@ -131,6 +133,11 @@
                 "language": "rapid-log",
                 "scopeName": "source.log",
                 "path": "./syntaxes/log.tmLanguage"
+            },
+            {
+                "language": "xml",
+                "scopeName": "source.xml",
+                "path": "./syntaxes/rlua.tmLanguage.json"
             }
         ],
         "snippets": [
@@ -141,6 +148,18 @@
             {
                 "language": "lua",
                 "path": "./snippets/lua.json"
+            },
+            {
+                "language": "lua",
+                "path": "./snippets/rapid-lua.json"
+            },
+            {
+                "language": "xml",
+                "path": "./snippets/lua-in-xml.json"
+            },
+            {
+                "language": "xml",
+                "path": "./snippets/rapid-lua.json"
             }
         ]
     },
@@ -159,7 +178,8 @@
     },
     "dependencies": {
         "execa": "^0.8.0",
-        "xml2js": "^0.4.19"
+        "xml2js": "^0.4.19",
+        "vscode-languageclient": "^3.0.3"
     },
     "keywords": [
         "rapid",
