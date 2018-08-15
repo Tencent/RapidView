@@ -14,18 +14,29 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import {window,workspace,languages, commands, Disposable, 
-    ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument,InputBoxOptions, extensions} from 'vscode';
+    ExtensionContext,extensions} from 'vscode';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
 // Import tool module
 import {XLog,ADBCallback,ADBUtils,XMLUtils,MessageToastUtils} from "./tool";
-import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider, RapidCompletionManager} from "./completion";
+import {RapidXMLCompletionItemProvider,RapidLuaCompletionItemProvider,RapidXMLAttrsCompletionItemProvider, 
+    RapidLuaInXMLCompletionItemProvider,RapidCompletionManager} from "./completion";
 import {RapidCommand} from "./command/command";
 import {SayHelloCommand } from './command/sayhello';
 import {SyncFileCommand, SyncProjectCommand } from './command/sync';
 import {CreateNewProjectCommand, CreateNewRapidViewCommand } from './command/create';
 import {SavaRapidFileCommand} from './command/save';
+import {compileProjectCommand} from './command/compile';
+
+
+// Lua language server
+import {
+    LanguageClient, LanguageClientOptions, ServerOptions,
+    TransportKind
+} from 'vscode-languageclient';
+import * as path from 'path';
+
 export function activate(context: ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -42,6 +53,7 @@ export function activate(context: ExtensionContext) {
     rapidCommands.push(new SyncProjectCommand());
     rapidCommands.push(new CreateNewProjectCommand());
     rapidCommands.push(new CreateNewRapidViewCommand());
+    rapidCommands.push(new compileProjectCommand());
     rapidCommands.push(new SavaRapidFileCommand());
 
     // Register all command
@@ -62,17 +74,58 @@ export function activate(context: ExtensionContext) {
     RapidCompletionManager.initCompletion(()=>{
         let xmlCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLCompletionItemProvider(),'<','\"');
         let xmlAttrsCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidXMLAttrsCompletionItemProvider(),'\"',' ','m','a');
+        let luaInXMLCompletionProvider = languages.registerCompletionItemProvider('xml',new RapidLuaInXMLCompletionItemProvider(),':');
         let luaCompletionProvider = languages.registerCompletionItemProvider('lua',new RapidLuaCompletionItemProvider(),':');
+        context.subscriptions.push(luaInXMLCompletionProvider);
         context.subscriptions.push(xmlCompletionProvider);
         context.subscriptions.push(xmlAttrsCompletionProvider);
         context.subscriptions.push(luaCompletionProvider);
     });
     
     context.subscriptions.push(outputPanel);
+
+
+    // Start lua language server
+    // startLanguageServer(context);
 }
 
+function startLanguageServer(context: ExtensionContext) {
+    // The server is implemented in node
+    let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
+	// The debug options for the server
+	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
 
+	// If the extension is launched in debug mode then the debug server options are used
+	// Otherwise the run options are used
+	let serverOptions: ServerOptions = {
+		run : { module: serverModule, transport: TransportKind.ipc },
+		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
+	};
+
+	// Options to control the language client
+	let clientOptions: LanguageClientOptions = {
+		// Register the server for plain text documents
+		documentSelector: [{scheme: 'file', language: 'plaintext'}],
+		synchronize: {
+			// Synchronize the setting section 'lspSample' to the server
+			configurationSection: 'lspSample',
+			// Notify the server about file changes to '.clientrc' files contain in the workspace
+			fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
+		}
+    };
+    
+    
+	// Create the language client and start the client.
+	let disposable = new LanguageClient('lspSample', 'Language Server Example', serverOptions, clientOptions).start();
+
+	// Push the disposable to the context's subscriptions so that the
+	// client can be deactivated on extension deactivation
+    context.subscriptions.push(disposable);
+    
+    console.log('Congratulations, languageserver is now active!');
+}
 
 // this method is called when your extension is deactivated
 export function deactivate() {
+    
 }

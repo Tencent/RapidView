@@ -1,6 +1,19 @@
+/***************************************************************************************************
+ Tencent is pleased to support the open source community by making RapidView available.
+ Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.
+ Licensed under the MITLicense (the "License"); you may not use this file except in compliance
+ withthe License. You mayobtain a copy of the License at
+ http://opensource.org/licenses/MIT
+ Unless required by applicable law or agreed to in writing, software distributed under the License is
+ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ implied. See the License for the specific language governing permissions and limitations under the
+ License.
+ ***************************************************************************************************/
+
 import {RapidCommand} from "./command";
 import {window,workspace} from 'vscode';
 import {XLog,ADBUtils,XMLUtils} from "../tool";
+import {RapidChecker} from "../safe/checker";
 
 export class SyncFileCommand implements RapidCommand{
 
@@ -38,6 +51,10 @@ export class SyncFileCommand implements RapidCommand{
         XLog.success("Start syncing files..." );
         let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
         XLog.info("Target folder: " + debug_dir);
+
+        // check path 
+        RapidChecker.assertSafeFilePath(debug_dir.toString());
+        RapidChecker.assertSafeFilePath(this.targetDoc.fileName);
 
         // Call adb     
         adbUtils.pushFile(this.targetDoc.fileName,debug_dir,{
@@ -102,46 +119,54 @@ export class SyncProjectCommand implements RapidCommand{
         XLog.info("The target project folder: " + this.projectFolder);
         let adbUtils = new ADBUtils();
         let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
-        // adbUtils.pushFolder(this.projectFolder,debug_dir,{
-        //     onFinish:(err,stdout,stderr)=>{
-        //     if(err){
-        //         XLog.error("Sync Project failed: " + this.projectFolder);
-        //     }else{
-        //         XLog.success("Sync Project successfully: " + this.projectFolder);
-        //     }
-        // }});
-        
-        const fs = require('fs');
-        const path = require('path'); 
 
-        // Get files in project folder
-        fs.readdir(this.projectFolder, (err, files) => {
-            let filePaths = new Array();
-            files.forEach(file => {
-                //　Skip hide file
-                let isHideFile = (file.indexOf(".") == 0)
-                let filePath = this.projectFolder + path.sep + file;
-                if(isHideFile){
-                    XLog.info("Skip hide file: " + filePath);
-                    return; 
-                }
+        // check path 
+        RapidChecker.assertSafeFilePath(debug_dir.toString());
+        RapidChecker.assertSafeFilePath(this.projectFolder.toString());
+
+        console.error(this.projectFolder);
+        adbUtils.pushFolder(this.projectFolder,debug_dir,{
+            onFinish:(err,stdout,stderr)=>{
+            if(err){
+                XLog.error("Sync Project failed: " + this.projectFolder);
+            }else{
+                XLog.success("Sync Project successfully: " + this.projectFolder);
+            }
+        }});
+
+        
+        // const fs = require('fs');
+        // const path = require('path'); 
+
+        // // Get files in project folder
+        // fs.readdir(this.projectFolder, (err, files) => {
+        //     let filePaths = new Array();
+        //     files.forEach(file => {
+        //         RapidChecker.assertSafeFilePath(file);
+        //         //　Skip hide file
+        //         let isHideFile = (file.indexOf(".") == 0)
+        //         let filePath = this.projectFolder + path.sep + file;
+        //         if(isHideFile){
+        //             XLog.info("Skip hide file: " + filePath);
+        //             return; 
+        //         }
                 
-                filePaths.push(filePath);
-            });
+        //         filePaths.push(filePath);
+        //     });
 
             
-            let adbUtils = new ADBUtils();
-            let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
-            adbUtils.pushFiles(filePaths,debug_dir,{
-                onFinish:(err,stdout,stderr)=>{
-                    if(err){
-                        XLog.error("Sync Project failed: " + this.projectFolder);
-                    }else{
-                        XLog.success("Sync Project successfully: " + this.projectFolder);
-                    }
-                }
-            });
-        })
-        return;
+        //     let adbUtils = new ADBUtils();
+        //     let debug_dir = workspace.getConfiguration("rapidstudio").get<String>('folder');
+        //     adbUtils.pushFiles(filePaths,debug_dir,{
+        //         onFinish:(err,stdout,stderr)=>{
+        //             if(err){
+        //                 XLog.error("Sync Project failed: " + this.projectFolder);
+        //             }else{
+        //                 XLog.success("Sync Project successfully: " + this.projectFolder);
+        //             }
+        //         }
+        //     });
+        // })
+        // return;
     }
 }

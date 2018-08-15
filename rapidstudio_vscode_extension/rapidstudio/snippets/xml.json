@@ -17,10 +17,91 @@
     "Task": {
         "prefix": "task",
         "body": [
-            "<task id=\"${1:taskId}\">",
-            "\t<${2:action}/>",
+            "<task id=\"${1:taskId}\" hook=\"${2:loadfinish}\">",
+            "\t${3:}",
             "</task>"
         ],
         "description": "Insert a rapid task. [RapidView]"
+    },
+    "RelativeLayout": {
+        "prefix": "ralativelayout",
+        "body": [
+            "<RelativeLayout width=\"match_parent\" height=\"wrap_content\">",
+            "</RelativeLayout>"
+        ],
+        "description": "Create a RelativeLayout tag. [RapidView]"
+    },
+    "LinearLayout": {
+        "prefix": "linearlayout",
+        "body": [
+            "<LinearLayout width=\"match_parent\" height=\"wrap_content\" orientation=\"vertical\">",
+            "</LinearLayout>"
+        ],
+        "description": "Create a LinearLayout tag. [RapidView]"
+    },
+    "TextView": {
+        "prefix": "textview",
+        "body": [
+            "<TextView width=\"wrap_content\" height=\"wrap_content\"  text=\"ChickenDinner\" textsize=\"11\" textcolor=\"ffffffff\"/>"
+        ],
+        "description": "Create a TextView tag. [RapidView]"
+    },
+    "ImageView": {
+        "prefix": "imageview",
+        "body": [
+            "<ImageView width=\"wrap_content\" height=\"wrap_content\"/>"
+        ],
+        "description": "Create a ImageView tag. [RapidView]"
+    },
+    "RecyclerView": {
+        "prefix": "recyclerview",
+        "body": [
+            "<recyclerview width=\"match_parent\" height=\"match_parent\"  layoutmanager=\"linearlayoutmanager\"/>"
+        ],
+        "description": "Create a RecyclerView tag. [RapidView]"
+    },
+    "Include": {
+        "prefix": "include",
+        "body": [
+            "<include layout=\"filename.xml\" environment=\"i:0\"/>"
+        ],
+        "description": "Create a Include tag. [RapidView]"
+    },
+    "Button": {
+        "prefix": "button",
+        "body": [
+            "<Button text=\"Button\" width=\"wrap_content\" height=\"wrap_content\" textsize=\"12\" textcolor=\"ffbebebe\"",
+            "gradientdrawable=\"cornerradius:1.5,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ffbebebe\"/>"
+        ],
+        "description": "Create a Button tag. [RapidView]"
+    },
+    "LuaAction": {
+        "prefix": "luaaction",
+        "body": [
+            "<luaaction load=\"filename.lua\" function=\"main\"/>"
+        ],
+        "description": "Create a LuaAction tag. [RapidView]"
+    },
+    "ReportAction": {
+        "prefix": "reportaction",
+        "body": [
+            "<reportaction param=\"actionid:100,slotid:00_000,subposition:-1\" recommendid=\"data@recommendid\"/>"
+        ],
+        "description": "Create a ReportAction tag. [RapidView]"
+    },
+    "TMastAction": {
+        "prefix": "tmastaction",
+        "body": [
+            "<tmastaction tmast=\"uri:page\"/>"
+        ],
+        "description": "Create a TMastAction tag. [RapidView]"
+    },
+    "ViewchangeAction": {
+        "prefix": "viewchangeaction",
+        "body": [
+            "<viewchangeaction value=\"${1:id},${2:attrName},${3:value}\"/>"
+        ],
+        "description": "Create a ViewchangeAction tag. [RapidView]"
     }
 }
+

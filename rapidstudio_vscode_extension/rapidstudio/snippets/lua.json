@@ -1,0 +1,1124 @@
+{
+    "_G": {
+        "body": "_G(${0:...})",
+        "description": "5.1,5.2,5.3\n\n_G",
+        "prefix": "_G",
+        "scope": "source.lua"
+    },
+    "_VERSION": {
+        "body": "_VERSION(${0:...})",
+        "description": "5.1,5.2,5.3\n\n_VERSION",
+        "prefix": "_VERSION",
+        "scope": "source.lua"
+    },
+    "assert": {
+        "body": "assert(${1:v}${2:[, message]})",
+        "description": "5.1,5.2,5.3\n\nassert()",
+        "prefix": "assert",
+        "scope": "source.lua"
+    },
+    "bit32.arshift": {
+        "body": "bit32.arshift(${0:...})",
+        "description": "5.2\n\nbit32.arshift (x, disp)",
+        "prefix": "bit32.arshift",
+        "scope": "source.lua"
+    },
+    "bit32.band": {
+        "body": "bit32.band(${0:...})",
+        "description": "5.2\n\nbit32.band (...)",
+        "prefix": "bit32.band",
+        "scope": "source.lua"
+    },
+    "bit32.bnot": {
+        "body": "bit32.bnot(${0:...})",
+        "description": "5.2\n\nbit32.bnot (x)",
+        "prefix": "bit32.bnot",
+        "scope": "source.lua"
+    },
+    "bit32.bor": {
+        "body": "bit32.bor(${0:...})",
+        "description": "5.2\n\nbit32.bor (...)",
+        "prefix": "bit32.bor",
+        "scope": "source.lua"
+    },
+    "bit32.btest": {
+        "body": "bit32.btest(${0:...})",
+        "description": "5.2\n\nbit32.btest (...)",
+        "prefix": "bit32.btest",
+        "scope": "source.lua"
+    },
+    "bit32.bxor": {
+        "body": "bit32.bxor(${0:...})",
+        "description": "5.2\n\nbit32.bxor (...)",
+        "prefix": "bit32.bxor",
+        "scope": "source.lua"
+    },
+    "bit32.extract": {
+        "body": "bit32.extract(${0:...})",
+        "description": "5.2\n\nbit32.extract (n, field [, width])",
+        "prefix": "bit32.extract",
+        "scope": "source.lua"
+    },
+    "bit32.lrotate": {
+        "body": "bit32.lrotate(${0:...})",
+        "description": "5.2\n\nbit32.lrotate (x, disp)",
+        "prefix": "bit32.lrotate",
+        "scope": "source.lua"
+    },
+    "bit32.lshift": {
+        "body": "bit32.lshift(${0:...})",
+        "description": "5.2\n\nbit32.lshift (x, disp)",
+        "prefix": "bit32.lshift",
+        "scope": "source.lua"
+    },
+    "bit32.replace": {
+        "body": "bit32.replace(${0:...})",
+        "description": "5.2\n\nbit32.replace (n, v, field [, width])",
+        "prefix": "bit32.replace",
+        "scope": "source.lua"
+    },
+    "bit32.rrotate": {
+        "body": "bit32.rrotate(${0:...})",
+        "description": "5.2\n\nbit32.rrotate (x, disp)",
+        "prefix": "bit32.rrotate",
+        "scope": "source.lua"
+    },
+    "bit32.rshift": {
+        "body": "bit32.rshift(${0:...})",
+        "description": "5.2\n\nbit32.rshift (x, disp)",
+        "prefix": "bit32.rshift",
+        "scope": "source.lua"
+    },
+    "collectgarbage": {
+        "body": "collectgarbage(${1:[opt]}${2:[, arg]})",
+        "description": "5.1,5.2,5.3\n\ncollectgarbage()",
+        "prefix": "collectgarbage",
+        "scope": "source.lua"
+    },
+    "coroutine.create": {
+        "body": "coroutine.create( ${1:function} )",
+        "description": "5.1,5.2,5.3\n\ncoroutine.create",
+        "prefix": "coroutine.create",
+        "scope": "source.lua"
+    },
+    "coroutine.isyieldable": {
+        "body": "coroutine.isyieldable( )",
+        "description": "5.3\n\ncoroutine.isyieldable",
+        "prefix": "coroutine.isyieldable",
+        "scope": "source.lua"
+    },
+    "coroutine.resume": {
+        "body": "coroutine.resume( ${1:co}${2:[, val1, \u00b7\u00b7\u00b7]} )",
+        "description": "5.1,5.2,5.3\n\ncoroutine.resume",
+        "prefix": "coroutine.resume",
+        "scope": "source.lua"
+    },
+    "coroutine.running": {
+        "body": "coroutine.running( )",
+        "description": "5.1,5.2,5.3\n\ncoroutine.running",
+        "prefix": "coroutine.running",
+        "scope": "source.lua"
+    },
+    "coroutine.status": {
+        "body": "coroutine.status( ${1:co} )",
+        "description": "5.1,5.2,5.3\n\ncoroutine.status",
+        "prefix": "coroutine.status",
+        "scope": "source.lua"
+    },
+    "coroutine.wrap": {
+        "body": "coroutine.wrap( ${1:function} )",
+        "description": "5.1,5.2,5.3\n\ncoroutine.wrap",
+        "prefix": "coroutine.wrap",
+        "scope": "source.lua"
+    },
+    "coroutine.yield": {
+        "body": "coroutine.yield( ${1:...} )",
+        "description": "5.1,5.2,5.3\n\ncoroutine.yield",
+        "prefix": "coroutine.yield",
+        "scope": "source.lua"
+    },
+    "debug.debug": {
+        "body": "debug.debug()",
+        "description": "5.1,5.2,5.3\n\ndebug.debug ()",
+        "prefix": "debug.debug",
+        "scope": "source.lua"
+    },
+    "debug.getfenv": {
+        "body": "debug.getfenv(${0:...})",
+        "description": "5.1\n\ndebug.getfenv (o)",
+        "prefix": "debug.getfenv",
+        "scope": "source.lua"
+    },
+    "debug.gethook": {
+        "body": "debug.gethook( ${1:[thread]} )",
+        "description": "5.1,5.2,5.3\n\ndebug.gethook ([thread])",
+        "prefix": "debug.gethook",
+        "scope": "source.lua"
+    },
+    "debug.getinfo": {
+        "body": "debug.getinfo( ${1:[thread],}${2:f}${3:[, what]} )",
+        "description": "5.1,5.2,5.3\n\ndebug.getinfo ([thread,] f [, what])",
+        "prefix": "debug.getinfo",
+        "scope": "source.lua"
+    },
+    "debug.getlocal": {
+        "body": "debug.getlocal( ${1:[thread],}${2:f}${3:[, local]} )",
+        "description": "5.1,5.2,5.3\n\ndebug.getlocal ([thread,] f, local)",
+        "prefix": "debug.getlocal",
+        "scope": "source.lua"
+    },
+    "debug.getmetatable": {
+        "body": "debug.getmetatable( ${1:value} )",
+        "description": "5.1,5.2,5.3\n\ndebug.getmetatable (value)",
+        "prefix": "debug.getmetatable",
+        "scope": "source.lua"
+    },
+    "debug.getregistry": {
+        "body": "debug.getregistry()",
+        "description": "5.1,5.2,5.3\n\ndebug.getregistry ()",
+        "prefix": "debug.getregistry",
+        "scope": "source.lua"
+    },
+    "debug.getupvalue": {
+        "body": "debug.getupvalue( ${1:f}, ${2:up} )",
+        "description": "5.1,5.2,5.3\n\ndebug.getupvalue (f, up)",
+        "prefix": "debug.getupvalue",
+        "scope": "source.lua"
+    },
+    "debug.getuservalue": {
+        "body": "debug.getuservalue(${0:...})",
+        "description": "5.2,5.3\n\ndebug.getuservalue (u)",
+        "prefix": "debug.getuservalue",
+        "scope": "source.lua"
+    },
+    "debug.getuservalue ": {
+        "body": "debug.getuservalue ( ${1:u} )",
+        "description": "debug.getuservalue (u)",
+        "prefix": "debug.getuservalue ",
+        "scope": "source.lua"
+    },
+    "debug.setfenv": {
+        "body": "debug.setfenv(${0:...})",
+        "description": "5.1\n\ndebug.setfenv (object, table)",
+        "prefix": "debug.setfenv",
+        "scope": "source.lua"
+    },
+    "debug.sethook": {
+        "body": "debug.sethook( ${1:[thead,]}${2:hook}, ${3:mask}${4:[, count]} )",
+        "description": "5.1,5.2,5.3\n\ndebug.sethook ([thread,] hook, mask [, count])",
+        "prefix": "debug.sethook",
+        "scope": "source.lua"
+    },
+    "debug.setlocal": {
+        "body": "debug.setlocal( ${1:[thead,]}${2:level}, ${3:local}, ${4:value} )",
+        "description": "5.1,5.2,5.3\n\ndebug.setlocal ([thread,] level, local, value)",
+        "prefix": "debug.setlocal",
+        "scope": "source.lua"
+    },
+    "debug.setmetatable": {
+        "body": "debug.setmetatable( ${1:value}, ${2:table} )",
+        "description": "5.1,5.2,5.3\n\ndebug.setmetatable (value, table)",
+        "prefix": "debug.setmetatable",
+        "scope": "source.lua"
+    },
+    "debug.setupvalue": {
+        "body": "debug.setupvalue( ${1:f}, ${2:up}, ${3:value} )",
+        "description": "5.1,5.2,5.3\n\ndebug.setupvalue (f, up, value)",
+        "prefix": "debug.setupvalue",
+        "scope": "source.lua"
+    },
+    "debug.setuservalue": {
+        "body": "debug.setuservalue( ${1:udata}, ${2:value} )",
+        "description": "5.2,5.3\n\ndebug.setuservalue (udata, value)",
+        "prefix": "debug.setuservalue",
+        "scope": "source.lua"
+    },
+    "debug.traceback": {
+        "body": "debug.traceback( ${1:[thread,]}${2:[message]}${3:[, level]} )",
+        "description": "5.1,5.2,5.3\n\ndebug.traceback ([thread,] [message [, level]])",
+        "prefix": "debug.traceback",
+        "scope": "source.lua"
+    },
+    "debug.upvalueid": {
+        "body": "debug.upvalueid( ${1:f}, ${2:n})",
+        "description": "5.2,5.3\n\ndebug.upvalueid (f, n)",
+        "prefix": "debug.upvalueid",
+        "scope": "source.lua"
+    },
+    "debug.upvaluejoin": {
+        "body": "debug.upvaluejoin( ${1:f1}, ${2:n1}, ${3:f2}, ${4:n2} )",
+        "description": "5.2,5.3\n\ndebug.upvaluejoin (f1, n1, f2, n2)",
+        "prefix": "debug.upvaluejoin",
+        "scope": "source.lua"
+    },
+    "dofile": {
+        "body": "dofile(${1:[filename]})",
+        "description": "5.1,5.2,5.3\n\ndofile ([filename])",
+        "prefix": "dofile",
+        "scope": "source.lua"
+    },
+    "elif": {
+        "body": "else if ${1:condition} then\n\t${0:-- body}\n",
+        "description": "elif",
+        "prefix": "elif",
+        "scope": "source.lua"
+    },
+    "error": {
+        "body": "error(${0:...})",
+        "description": "5.1,5.2,5.3\n\nerror (message [, level])",
+        "prefix": "error",
+        "scope": "source.lua"
+    },
+    "file:close": {
+        "body": "file:close(${0:...})",
+        "description": "5.1,5.2,5.3\n\nfile:close ()",
+        "prefix": "file:close",
+        "scope": "source.lua"
+    },
+    "file:flush": {
+        "body": "file:flush(${0:...})",
+        "description": "5.1,5.2,5.3\n\nfile:flush ()",
+        "prefix": "file:flush",
+        "scope": "source.lua"
+    },
+    "file:lines": {
+        "body": "file:lines(${0:...})",
+        "description": "5.1,5.2,5.3\n\nfile:lines ()",
+        "prefix": "file:lines",
+        "scope": "source.lua"
+    },
+    "file:read": {
+        "body": "file:read(${0:...})",
+        "description": "5.1,5.2,5.3\n\nfile:read (...)",
+        "prefix": "file:read",
+        "scope": "source.lua"
+    },
+    "file:seek": {
+        "body": "file:seek(${0:...})",
+        "description": "5.1,5.2,5.3\n\nfile:seek ([whence] [, offset])",
+        "prefix": "file:seek",
+        "scope": "source.lua"
+    },
+    "file:setvbuf": {
+        "body": "file:setvbuf(${0:...})",
+        "description": "5.1,5.2,5.3\n\nfile:setvbuf (mode [, size])",
+        "prefix": "file:setvbuf",
+        "scope": "source.lua"
+    },
+    "file:write": {
+        "body": "file:write(${0:...})",
+        "description": "5.1,5.2,5.3\n\nfile:write (...)",
+        "prefix": "file:write",
+        "scope": "source.lua"
+    },
+    "for": {
+        "body": "for ${1:i}=${2:1},${3:10} do\n\t${0:print(i)}\nend",
+        "description": "for i=1,10",
+        "prefix": "for",
+        "scope": "source.lua"
+    },
+    "fori": {
+        "body": "for ${1:i},${2:v} in ipairs(${3:table_name}) do\n\t${0:print(i,v)}\nend",
+        "description": "for i,v in ipairs()",
+        "prefix": "fori",
+        "scope": "source.lua"
+    },
+    "forp": {
+        "body": "for ${1:k},${2:v} in pairs(${3:table_name}) do\n\t${0:print(k,v)}\nend",
+        "description": "for k,v in pairs()",
+        "prefix": "forp",
+        "scope": "source.lua"
+    },
+    "fun": {
+        "body": "function ${1:function_name}( ${2:...} )\n\t${0:-- body}\nend",
+        "description": "function",
+        "prefix": "fun",
+        "scope": "source.lua"
+    },
+    "function": {
+        "body": "function ${1:function_name}( ${2:...} )\n\t${0:-- body}\nend",
+        "description": "function",
+        "prefix": "function",
+        "scope": "source.lua"
+    },
+    "getfenv": {
+        "body": "getfenv(${0:...})",
+        "description": "5.1\n\ngetfenv ([f])",
+        "prefix": "getfenv",
+        "scope": "source.lua"
+    },
+    "getmetatable": {
+        "body": "getmetatable(${1:object})",
+        "description": "5.1,5.2,5.3\n\ngetmetatable (object)",
+        "prefix": "getmetatable",
+        "scope": "source.lua"
+    },
+    "if": {
+        "body": "if ${1:condition} then\n\t${0:-- body}\nend",
+        "description": "if",
+        "prefix": "if",
+        "scope": "source.lua"
+    },
+    "ifel": {
+        "body": "if ${1:condition} then\n\t${2:-- body}\nelse\n\t${0:-- body}\nend",
+        "description": "ifel",
+        "prefix": "ifel",
+        "scope": "source.lua"
+    },
+    "io.close": {
+        "body": "io.close(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.close ([file])",
+        "prefix": "io.close",
+        "scope": "source.lua"
+    },
+    "io.flush": {
+        "body": "io.flush(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.flush ()",
+        "prefix": "io.flush",
+        "scope": "source.lua"
+    },
+    "io.input": {
+        "body": "io.input(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.input ([file])",
+        "prefix": "io.input",
+        "scope": "source.lua"
+    },
+    "io.lines": {
+        "body": "io.lines(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.lines ([filename])",
+        "prefix": "io.lines",
+        "scope": "source.lua"
+    },
+    "io.open": {
+        "body": "io.open(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.open (filename [, mode])",
+        "prefix": "io.open",
+        "scope": "source.lua"
+    },
+    "io.output": {
+        "body": "io.output(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.output ([file])",
+        "prefix": "io.output",
+        "scope": "source.lua"
+    },
+    "io.popen": {
+        "body": "io.popen(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.popen (prog [, mode])",
+        "prefix": "io.popen",
+        "scope": "source.lua"
+    },
+    "io.read": {
+        "body": "io.read(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.read (...)",
+        "prefix": "io.read",
+        "scope": "source.lua"
+    },
+    "io.tmpfile": {
+        "body": "io.tmpfile(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.tmpfile ()",
+        "prefix": "io.tmpfile",
+        "scope": "source.lua"
+    },
+    "io.type": {
+        "body": "io.type(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.type (obj)",
+        "prefix": "io.type",
+        "scope": "source.lua"
+    },
+    "io.write": {
+        "body": "io.write(${0:...})",
+        "description": "5.1,5.2,5.3\n\nio.write (...)",
+        "prefix": "io.write",
+        "scope": "source.lua"
+    },
+    "ipairs": {
+        "body": "ipairs(${0:...})",
+        "description": "5.1,5.2,5.3\n\nipairs (t)",
+        "prefix": "ipairs",
+        "scope": "source.lua"
+    },
+    "load": {
+        "body": "load(${0:...})",
+        "description": "5.1,5.2,5.3\n\nload (func [, chunkname])",
+        "prefix": "load",
+        "scope": "source.lua"
+    },
+    "loadfile": {
+        "body": "loadfile(${0:...})",
+        "description": "5.1,5.2,5.3\n\nloadfile ([filename])",
+        "prefix": "loadfile",
+        "scope": "source.lua"
+    },
+    "loadstring": {
+        "body": "loadstring(${0:...})",
+        "description": "5.1\n\nloadstring (string [, chunkname])",
+        "prefix": "loadstring",
+        "scope": "source.lua"
+    },
+    "local": {
+        "body": "local ${1:x} = ${0:1}",
+        "description": "local x = 1",
+        "prefix": "local",
+        "scope": "source.lua"
+    },
+    "math.abs": {
+        "body": "math.abs( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.abs",
+        "prefix": "math.abs",
+        "scope": "source.lua"
+    },
+    "math.acos": {
+        "body": "math.acos( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.acos",
+        "prefix": "math.acos",
+        "scope": "source.lua"
+    },
+    "math.asin": {
+        "body": "math.asin( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.asin",
+        "prefix": "math.asin",
+        "scope": "source.lua"
+    },
+    "math.atan": {
+        "body": "math.atan( ${1:y}${2:[, x]} )",
+        "description": "5.1,5.2,5.3\n\nmath.atan",
+        "prefix": "math.atan",
+        "scope": "source.lua"
+    },
+    "math.atan2": {
+        "body": "math.atan2(${0:...})",
+        "description": "5.1,5.2\n\nmath.atan2 (y, x)",
+        "prefix": "math.atan2",
+        "scope": "source.lua"
+    },
+    "math.ceil": {
+        "body": "math.ceil( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.ceil",
+        "prefix": "math.ceil",
+        "scope": "source.lua"
+    },
+    "math.cos": {
+        "body": "math.cos( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.cos",
+        "prefix": "math.cos",
+        "scope": "source.lua"
+    },
+    "math.cosh": {
+        "body": "math.cosh(${0:...})",
+        "description": "5.1,5.2\n\nmath.cosh (x)",
+        "prefix": "math.cosh",
+        "scope": "source.lua"
+    },
+    "math.deg": {
+        "body": "math.deg( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.deg",
+        "prefix": "math.deg",
+        "scope": "source.lua"
+    },
+    "math.exp": {
+        "body": "math.exp( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.exp",
+        "prefix": "math.exp",
+        "scope": "source.lua"
+    },
+    "math.floor": {
+        "body": "math.floor( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.floor",
+        "prefix": "math.floor",
+        "scope": "source.lua"
+    },
+    "math.fmod": {
+        "body": "math.fmod( ${1:x},${2:y} )",
+        "description": "5.1,5.2,5.3\n\nmath.fmod",
+        "prefix": "math.fmod",
+        "scope": "source.lua"
+    },
+    "math.frexp": {
+        "body": "math.frexp(${0:...})",
+        "description": "5.1,5.2\n\nmath.frexp (x)",
+        "prefix": "math.frexp",
+        "scope": "source.lua"
+    },
+    "math.huge": {
+        "body": "math.huge(${0:...})",
+        "description": "5.1,5.2,5.3\n\nmath.huge",
+        "prefix": "math.huge",
+        "scope": "source.lua"
+    },
+    "math.ldexp": {
+        "body": "math.ldexp(${0:...})",
+        "description": "5.1,5.2\n\nmath.ldexp (m, e)",
+        "prefix": "math.ldexp",
+        "scope": "source.lua"
+    },
+    "math.log": {
+        "body": "math.log( ${1:x}${2:[, base]} )",
+        "description": "5.1,5.2,5.3\n\nmath.log",
+        "prefix": "math.log",
+        "scope": "source.lua"
+    },
+    "math.log10": {
+        "body": "math.log10(${0:...})",
+        "description": "5.1\n\nmath.log10 (x)",
+        "prefix": "math.log10",
+        "scope": "source.lua"
+    },
+    "math.math.randomseed": {
+        "body": "math.math.randomseed( ${1:x} )",
+        "description": "math.math.randomseed",
+        "prefix": "math.math.randomseed",
+        "scope": "source.lua"
+    },
+    "math.max": {
+        "body": "math.max( ${1:x},${2:...} )",
+        "description": "5.1,5.2,5.3\n\nmath.max",
+        "prefix": "math.max",
+        "scope": "source.lua"
+    },
+    "math.maxinteger": {
+        "body": "math.maxinteger(${0:...})",
+        "description": "5.3\n\nmath.maxinteger",
+        "prefix": "math.maxinteger",
+        "scope": "source.lua"
+    },
+    "math.min": {
+        "body": "math.min( ${1:x},${2:...} )",
+        "description": "5.1,5.2,5.3\n\nmath.min",
+        "prefix": "math.min",
+        "scope": "source.lua"
+    },
+    "math.mininteger": {
+        "body": "math.mininteger(${0:...})",
+        "description": "5.3\n\nmath.mininteger",
+        "prefix": "math.mininteger",
+        "scope": "source.lua"
+    },
+    "math.modf": {
+        "body": "math.modf( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.modf",
+        "prefix": "math.modf",
+        "scope": "source.lua"
+    },
+    "math.pi": {
+        "body": "math.pi(${0:...})",
+        "description": "5.1,5.2,5.3\n\nmath.pi",
+        "prefix": "math.pi",
+        "scope": "source.lua"
+    },
+    "math.pow": {
+        "body": "math.pow(${0:...})",
+        "description": "5.1,5.2\n\nmath.pow (x, y)",
+        "prefix": "math.pow",
+        "scope": "source.lua"
+    },
+    "math.rad": {
+        "body": "math.rad(${0:...})",
+        "description": "5.1,5.2,5.3\n\nmath.rad (x)",
+        "prefix": "math.rad",
+        "scope": "source.lua"
+    },
+    "math.random": {
+        "body": "math.random( ${1:[m]}${2:[, n]} )",
+        "description": "5.1,5.2,5.3\n\nmath.random",
+        "prefix": "math.random",
+        "scope": "source.lua"
+    },
+    "math.randomseed": {
+        "body": "math.randomseed(${0:...})",
+        "description": "5.1,5.2,5.3\n\nmath.randomseed (x)",
+        "prefix": "math.randomseed",
+        "scope": "source.lua"
+    },
+    "math.sin": {
+        "body": "math.sin( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.sin",
+        "prefix": "math.sin",
+        "scope": "source.lua"
+    },
+    "math.sinh": {
+        "body": "math.sinh(${0:...})",
+        "description": "5.1,5.2\n\nmath.sinh (x)",
+        "prefix": "math.sinh",
+        "scope": "source.lua"
+    },
+    "math.sqrt": {
+        "body": "math.sqrt( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.sqrt",
+        "prefix": "math.sqrt",
+        "scope": "source.lua"
+    },
+    "math.tan": {
+        "body": "math.tan( ${1:x} )",
+        "description": "5.1,5.2,5.3\n\nmath.tan",
+        "prefix": "math.tan",
+        "scope": "source.lua"
+    },
+    "math.tanh": {
+        "body": "math.tanh(${0:...})",
+        "description": "5.1,5.2\n\nmath.tanh (x)",
+        "prefix": "math.tanh",
+        "scope": "source.lua"
+    },
+    "math.tointeger": {
+        "body": "math.tointeger( ${1:x} )",
+        "description": "5.3\n\nmath.tointeger",
+        "prefix": "math.tointeger",
+        "scope": "source.lua"
+    },
+    "math.type": {
+        "body": "math.type( ${1:x} )",
+        "description": "5.3\n\nmath.type",
+        "prefix": "math.type",
+        "scope": "source.lua"
+    },
+    "math.ult": {
+        "body": "math.ult(${0:...})",
+        "description": "5.3\n\nmath.ult (m, n)",
+        "prefix": "math.ult",
+        "scope": "source.lua"
+    },
+    "module": {
+        "body": "module(${0:...})",
+        "description": "5.1\n\nmodule (name [, ...])",
+        "prefix": "module",
+        "scope": "source.lua"
+    },
+    "next": {
+        "body": "next(${1:table}${2:[, index]})",
+        "description": "5.1,5.2,5.3\n\nnext (table [, index])",
+        "prefix": "next",
+        "scope": "source.lua"
+    },
+    "os.clock": {
+        "body": "os.clock(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.clock ()",
+        "prefix": "os.clock",
+        "scope": "source.lua"
+    },
+    "os.date": {
+        "body": "os.date(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.date ([format [, time]])",
+        "prefix": "os.date",
+        "scope": "source.lua"
+    },
+    "os.difftime": {
+        "body": "os.difftime(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.difftime (t2, t1)",
+        "prefix": "os.difftime",
+        "scope": "source.lua"
+    },
+    "os.execute": {
+        "body": "os.execute(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.execute ([command])",
+        "prefix": "os.execute",
+        "scope": "source.lua"
+    },
+    "os.exit": {
+        "body": "os.exit(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.exit ([code])",
+        "prefix": "os.exit",
+        "scope": "source.lua"
+    },
+    "os.getenv": {
+        "body": "os.getenv(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.getenv (varname)",
+        "prefix": "os.getenv",
+        "scope": "source.lua"
+    },
+    "os.remove": {
+        "body": "os.remove(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.remove (filename)",
+        "prefix": "os.remove",
+        "scope": "source.lua"
+    },
+    "os.rename": {
+        "body": "os.rename(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.rename (oldname, newname)",
+        "prefix": "os.rename",
+        "scope": "source.lua"
+    },
+    "os.setlocale": {
+        "body": "os.setlocale(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.setlocale (locale [, category])",
+        "prefix": "os.setlocale",
+        "scope": "source.lua"
+    },
+    "os.time": {
+        "body": "os.time(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.time ([table])",
+        "prefix": "os.time",
+        "scope": "source.lua"
+    },
+    "os.tmpname": {
+        "body": "os.tmpname(${0:...})",
+        "description": "5.1,5.2,5.3\n\nos.tmpname ()",
+        "prefix": "os.tmpname",
+        "scope": "source.lua"
+    },
+    "package.config": {
+        "body": "package.config(${0:...})",
+        "description": "5.2,5.3\n\npackage.config",
+        "prefix": "package.config",
+        "scope": "source.lua"
+    },
+    "package.cpath": {
+        "body": "package.cpath(${0:...})",
+        "description": "5.1,5.2,5.3\n\npackage.cpath",
+        "prefix": "package.cpath",
+        "scope": "source.lua"
+    },
+    "package.loaded": {
+        "body": "package.loaded(${0:...})",
+        "description": "5.1,5.2,5.3\n\npackage.loaded",
+        "prefix": "package.loaded",
+        "scope": "source.lua"
+    },
+    "package.loaders": {
+        "body": "package.loaders(${0:...})",
+        "description": "5.1\n\npackage.loaders",
+        "prefix": "package.loaders",
+        "scope": "source.lua"
+    },
+    "package.loadlib": {
+        "body": "package.loadlib(${0:...})",
+        "description": "5.1,5.2,5.3\n\npackage.loadlib (libname, funcname)",
+        "prefix": "package.loadlib",
+        "scope": "source.lua"
+    },
+    "package.path": {
+        "body": "package.path(${0:...})",
+        "description": "5.1,5.2,5.3\n\npackage.path",
+        "prefix": "package.path",
+        "scope": "source.lua"
+    },
+    "package.preload": {
+        "body": "package.preload(${0:...})",
+        "description": "5.1,5.2,5.3\n\npackage.preload",
+        "prefix": "package.preload",
+        "scope": "source.lua"
+    },
+    "package.searchers": {
+        "body": "package.searchers(${0:...})",
+        "description": "5.2,5.3\n\npackage.searchers",
+        "prefix": "package.searchers",
+        "scope": "source.lua"
+    },
+    "package.searchpath": {
+        "body": "package.searchpath(${0:...})",
+        "description": "5.2,5.3\n\npackage.searchpath (name, path [, sep [, rep]])",
+        "prefix": "package.searchpath",
+        "scope": "source.lua"
+    },
+    "package.seeall": {
+        "body": "package.seeall(${0:...})",
+        "description": "5.1\n\npackage.seeall (module)",
+        "prefix": "package.seeall",
+        "scope": "source.lua"
+    },
+    "pairs": {
+        "body": "pairs(${0:...})",
+        "description": "5.1,5.2,5.3\n\npairs (t)",
+        "prefix": "pairs",
+        "scope": "source.lua"
+    },
+    "pcall": {
+        "body": "pcall(${0:...})",
+        "description": "5.1,5.2,5.3\n\npcall (f, arg1, ...)",
+        "prefix": "pcall",
+        "scope": "source.lua"
+    },
+    "print": {
+        "body": "print(${1:...})",
+        "description": "5.1,5.2,5.3\n\nprint(...)",
+        "prefix": "print",
+        "scope": "source.lua"
+    },
+    "rawequal": {
+        "body": "rawequal(${0:...})",
+        "description": "5.1,5.2,5.3\n\nrawequal (v1, v2)",
+        "prefix": "rawequal",
+        "scope": "source.lua"
+    },
+    "rawget": {
+        "body": "rawget(${0:...})",
+        "description": "5.1,5.2,5.3\n\nrawget (table, index)",
+        "prefix": "rawget",
+        "scope": "source.lua"
+    },
+    "rawlen": {
+        "body": "rawlen(${0:...})",
+        "description": "5.2,5.3\n\nrawlen (v)",
+        "prefix": "rawlen",
+        "scope": "source.lua"
+    },
+    "rawset": {
+        "body": "rawset(${0:...})",
+        "description": "5.1,5.2,5.3\n\nrawset (table, index, value)",
+        "prefix": "rawset",
+        "scope": "source.lua"
+    },
+    "req": {
+        "body": "require(\"${1:module}\")",
+        "description": "require()",
+        "prefix": "req",
+        "scope": "source.lua"
+    },
+    "require": {
+        "body": "require(\"${1:module}\")",
+        "description": "5.1,5.2,5.3\n\nrequire()",
+        "prefix": "require",
+        "scope": "source.lua"
+    },
+    "ret": {
+        "body": "return ${1:...}",
+        "description": "return ...",
+        "prefix": "ret",
+        "scope": "source.lua"
+    },
+    "select": {
+        "body": "select(${1:index}, ${2:...})",
+        "description": "5.1,5.2,5.3\n\nselect (index, \u00b7\u00b7\u00b7)",
+        "prefix": "select",
+        "scope": "source.lua"
+    },
+    "setfenv": {
+        "body": "setfenv(${0:...})",
+        "description": "5.1\n\nsetfenv (f, table)",
+        "prefix": "setfenv",
+        "scope": "source.lua"
+    },
+    "setmetatable": {
+        "body": "setmetatable(${1:table}, ${2:metatable})",
+        "description": "5.1,5.2,5.3\n\nsetmetatable (table, metatable)",
+        "prefix": "setmetatable",
+        "scope": "source.lua"
+    },
+    "string.byte": {
+        "body": "string.byte( ${1:s}${2:[, i]}${3:[, j]} )",
+        "description": "5.1,5.2,5.3\n\nstring.byte",
+        "prefix": "string.byte",
+        "scope": "source.lua"
+    },
+    "string.char": {
+        "body": "string.char( ${1:...} )",
+        "description": "5.1,5.2,5.3\n\nstring.char",
+        "prefix": "string.char",
+        "scope": "source.lua"
+    },
+    "string.dump": {
+        "body": "string.dump(${0:...})",
+        "description": "5.1,5.2,5.3\n\nstring.dump (function)",
+        "prefix": "string.dump",
+        "scope": "source.lua"
+    },
+    "string.find": {
+        "body": "string.find( ${1:s},${2:pattern}${3:[, init]}${4:[, plain]} )",
+        "description": "5.1,5.2,5.3\n\nstring.find",
+        "prefix": "string.find",
+        "scope": "source.lua"
+    },
+    "string.format": {
+        "body": "string.format( \"${1:formatstring}\",${2:...} )",
+        "description": "5.1,5.2,5.3\n\nstring.format",
+        "prefix": "string.format",
+        "scope": "source.lua"
+    },
+    "string.gmatch": {
+        "body": "string.gmatch( ${1:s},${2:pattern} )",
+        "description": "5.1,5.2,5.3\n\nstring.gmatch",
+        "prefix": "string.gmatch",
+        "scope": "source.lua"
+    },
+    "string.gsub": {
+        "body": "string.gsub( ${1:s},${2:pattern},${3:repl}${4:[, n]} )",
+        "description": "5.1,5.2,5.3\n\nstring.gsub",
+        "prefix": "string.gsub",
+        "scope": "source.lua"
+    },
+    "string.len": {
+        "body": "string.len( ${1:s} )",
+        "description": "5.1,5.2,5.3\n\nstring.len",
+        "prefix": "string.len",
+        "scope": "source.lua"
+    },
+    "string.lower": {
+        "body": "string.lower( ${1:s} )",
+        "description": "5.1,5.2,5.3\n\nstring.lower",
+        "prefix": "string.lower",
+        "scope": "source.lua"
+    },
+    "string.match": {
+        "body": "string.match( ${1:s},${2:pattern}${3:[, init]} )",
+        "description": "5.1,5.2,5.3\n\nstring.match",
+        "prefix": "string.match",
+        "scope": "source.lua"
+    },
+    "string.pack": {
+        "body": "string.pack(${0:...})",
+        "description": "5.3\n\nstring.pack (fmt, v1, v2, ...)",
+        "prefix": "string.pack",
+        "scope": "source.lua"
+    },
+    "string.packsize": {
+        "body": "string.packsize(${0:...})",
+        "description": "5.3\n\nstring.packsize (fmt)",
+        "prefix": "string.packsize",
+        "scope": "source.lua"
+    },
+    "string.rep": {
+        "body": "string.rep( ${1:s}, ${2:n}${3:[, rep]} )",
+        "description": "5.1,5.2,5.3\n\nstring.rep",
+        "prefix": "string.rep",
+        "scope": "source.lua"
+    },
+    "string.reverse": {
+        "body": "string.reverse( ${1:s} )",
+        "description": "5.1,5.2,5.3\n\nstring.reverse",
+        "prefix": "string.reverse",
+        "scope": "source.lua"
+    },
+    "string.sub": {
+        "body": "string.sub( ${1:s}, ${2:i}${3:[, j]} )",
+        "description": "5.1,5.2,5.3\n\nstring.sub",
+        "prefix": "string.sub",
+        "scope": "source.lua"
+    },
+    "string.unpack": {
+        "body": "string.unpack(${0:...})",
+        "description": "5.3\n\nstring.unpack (fmt, s [, pos])",
+        "prefix": "string.unpack",
+        "scope": "source.lua"
+    },
+    "string.upper": {
+        "body": "string.upper( ${1:s} )",
+        "description": "5.1,5.2,5.3\n\nstring.upper",
+        "prefix": "string.upper",
+        "scope": "source.lua"
+    },
+    "table.concat": {
+        "body": "table.concat( ${1:tablename}${2:, \", \"}${3:, start_index}${4:, end_index} )",
+        "description": "5.1,5.2,5.3\n\ntable.concat",
+        "prefix": "table.concat",
+        "scope": "source.lua"
+    },
+    "table.insert": {
+        "body": "table.insert( ${1:list},${2: [pos,]}${3: value} )",
+        "description": "5.1,5.2,5.3\n\ntable.insert",
+        "prefix": "table.insert",
+        "scope": "source.lua"
+    },
+    "table.maxn": {
+        "body": "table.maxn(${0:...})",
+        "description": "5.1\n\ntable.maxn (table)",
+        "prefix": "table.maxn",
+        "scope": "source.lua"
+    },
+    "table.move": {
+        "body": "table.move(${0:...})",
+        "description": "5.3\n\ntable.move (a1, f, e, t [,a2])",
+        "prefix": "table.move",
+        "scope": "source.lua"
+    },
+    "table.pack": {
+        "body": "table.pack(${0:...})",
+        "description": "5.2,5.3\n\ntable.pack (...)",
+        "prefix": "table.pack",
+        "scope": "source.lua"
+    },
+    "table.remove": {
+        "body": "table.remove( ${1:list},${2: [pos,]} )",
+        "description": "5.1,5.2,5.3\n\ntable.remove",
+        "prefix": "table.remove",
+        "scope": "source.lua"
+    },
+    "table.sort": {
+        "body": "table.sort( ${1:tablename}${2:, sortfunction} )",
+        "description": "5.1,5.2,5.3\n\ntable.sort",
+        "prefix": "table.sort",
+        "scope": "source.lua"
+    },
+    "table.unpack": {
+        "body": "table.unpack(${0:...})",
+        "description": "5.2,5.3\n\ntable.unpack (list [, i [, j]])",
+        "prefix": "table.unpack",
+        "scope": "source.lua"
+    },
+    "tonumber": {
+        "body": "tonumber(${1:e}${2:[, base]})",
+        "description": "5.1,5.2,5.3\n\ntonumber (e [, base])",
+        "prefix": "tonumber",
+        "scope": "source.lua"
+    },
+    "tostring": {
+        "body": "tostring(${1:v})",
+        "description": "5.1,5.2,5.3\n\ntostring (v)",
+        "prefix": "tostring",
+        "scope": "source.lua"
+    },
+    "type": {
+        "body": "type(${1:v})",
+        "description": "5.1,5.2,5.3\n\ntype (v)",
+        "prefix": "type",
+        "scope": "source.lua"
+    },
+    "unpack": {
+        "body": "unpack(${0:...})",
+        "description": "5.1\n\nunpack (list [, i [, j]])",
+        "prefix": "unpack",
+        "scope": "source.lua"
+    },
+    "utf8.char": {
+        "body": "utf8.char(${0:...})",
+        "description": "5.3\n\nutf8.char (...)",
+        "prefix": "utf8.char",
+        "scope": "source.lua"
+    },
+    "utf8.charpattern": {
+        "body": "utf8.charpattern(${0:...})",
+        "description": "5.3\n\nutf8.charpattern",
+        "prefix": "utf8.charpattern",
+        "scope": "source.lua"
+    },
+    "utf8.codepoint": {
+        "body": "utf8.codepoint(${0:...})",
+        "description": "5.3\n\nutf8.codepoint (s [, i [, j]])",
+        "prefix": "utf8.codepoint",
+        "scope": "source.lua"
+    },
+    "utf8.codes": {
+        "body": "utf8.codes(${0:...})",
+        "description": "5.3\n\nutf8.codes (s)",
+        "prefix": "utf8.codes",
+        "scope": "source.lua"
+    },
+    "utf8.len": {
+        "body": "utf8.len(${0:...})",
+        "description": "5.3\n\nutf8.len (s [, i [, j]])",
+        "prefix": "utf8.len",
+        "scope": "source.lua"
+    },
+    "utf8.offset": {
+        "body": "utf8.offset(${0:...})",
+        "description": "5.3\n\nutf8.offset (s, n [, i])",
+        "prefix": "utf8.offset",
+        "scope": "source.lua"
+    },
+    "ver": {
+        "body": "_VERSION",
+        "description": "_VERSION",
+        "prefix": "ver",
+        "scope": "source.lua"
+    },
+    "version": {
+        "body": "_VERSION",
+        "description": "_VERSION",
+        "prefix": "version",
+        "scope": "source.lua"
+    },
+    "xpcall": {
+        "body": "xpcall(${0:...})",
+        "description": "5.1,5.2,5.3\n\nxpcall (f, err)",
+        "prefix": "xpcall",
+        "scope": "source.lua"
+    }
+}
