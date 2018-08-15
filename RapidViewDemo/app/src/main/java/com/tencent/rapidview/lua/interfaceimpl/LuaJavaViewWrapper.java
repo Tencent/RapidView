@@ -67,7 +67,7 @@ public class LuaJavaViewWrapper extends RapidLuaJavaObject{
         }
 
         if( map == null ){
-            return null;
+            map = new ConcurrentHashMap<String, Var>();
         }
 
 
@@ -118,7 +118,7 @@ public class LuaJavaViewWrapper extends RapidLuaJavaObject{
         }
 
         if( map == null ){
-            return null;
+            map = new ConcurrentHashMap<String, Var>();
         }
 
         try{
