@@ -18,6 +18,7 @@ import android.view.View;
 
 import com.tencent.rapidview.animation.RapidAnimationCenter;
 import com.tencent.rapidview.data.RapidDataBinder;
+import com.tencent.rapidview.framework.RapidObjectImpl;
 import com.tencent.rapidview.lua.RapidLuaEnvironment;
 import com.tencent.rapidview.param.ParamsObject;
 import com.tencent.rapidview.parser.RapidParserObject;
@@ -46,6 +47,8 @@ public interface IRapidView {
 
     RapidParserObject getParser();
 
+    boolean preload(Context context);
+
     boolean load(Context context,
                  ParamsObject param,
                  IRapidActionListener listener);
@@ -59,5 +62,6 @@ public interface IRapidView {
                        Map<String, IRapidView> brotherMap,
                        RapidTaskCenter taskCenter,
                        RapidAnimationCenter animationCenterCenter,
-                       RapidDataBinder binder);
+                       RapidDataBinder binder,
+                       RapidObjectImpl.CONCURRENT_LOAD_STATE concState);
 }

@@ -13,28 +13,24 @@
  ***************************************************************************************************/
 package com.tencent.rapidview.task;
 
+import android.os.Looper;
+
 import com.tencent.rapidview.action.ActionChooser;
 import com.tencent.rapidview.action.ActionObject;
-import com.tencent.rapidview.data.DataExpressionsParser;
-import com.tencent.rapidview.data.Var;
-import com.tencent.rapidview.deobfuscated.IRapidTask;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.filter.FilterChooser;
 import com.tencent.rapidview.filter.FilterObject;
 import com.tencent.rapidview.framework.RapidConfig;
-import com.tencent.rapidview.utils.RapidControlNameCreator;
-import com.tencent.rapidview.utils.RapidStringUtils;
+import com.tencent.rapidview.framework.RapidNodeImpl;
 import com.tencent.rapidview.utils.XLog;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Class RapidTaskNode
@@ -43,25 +39,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author arlozhang
  * @date 2016.03.16
  */
-public class RapidTaskNode {
-
-    private Map<String, String> mMapAttribute = new ConcurrentHashMap<String, String>();
+public class RapidTaskNode extends RapidNodeImpl {
 
     private List<FilterObject> mListFilters = new ArrayList<FilterObject>();
 
     private List<ActionObject> mListActions = new ArrayList<ActionObject>();
 
-    private IRapidView mRapidView;
-
-    Map<String, String> mMapEnvironment;
-
-    private Map<IRapidTask.HOOK_TYPE, Boolean> mMapHookType = new ConcurrentHashMap<IRapidTask.HOOK_TYPE, Boolean>();
+    private boolean mInitialize = false;
 
     private TASK_TYPE mTaskType = TASK_TYPE.enum_continue;
-
-    private String mID = null;
-
-    private String mValue;
 
     private final boolean mLimitLevel;
 
@@ -70,12 +56,20 @@ public class RapidTaskNode {
         enum_interrupt,  //成功执行后打断执行
     }
 
-    public RapidTaskNode(IRapidView rapidView, Element element, Map<String, String> mapEnv, boolean limitLevel){
-        mRapidView = rapidView;
+    public RapidTaskNode(IRapidView photonView, Element element, Map<String, String> mapEnv, boolean limitLevel){
+        mRapidView = photonView;
         mMapEnvironment = mapEnv;
         mLimitLevel = limitLevel;
-        initialize(element);
-        analyzeAttribute();
+        mElement = element;
+
+        analyzeTaskType();
+        analyzeID();
+        analyzeValue();
+        analzyeHookType();
+
+        if( Looper.myLooper() != Looper.getMainLooper() ){
+            initialize(element);
+        }
     }
 
     public void setRapidView(IRapidView rapidView){
@@ -100,7 +94,7 @@ public class RapidTaskNode {
         }
     }
 
-    public void notify(IRapidTask.HOOK_TYPE type, String value){
+    public void notify(HOOK_TYPE type, String value){
         if( mMapHookType.get(type) == null ){
             return;
         }
@@ -122,6 +116,11 @@ public class RapidTaskNode {
 
     public boolean run(){
         boolean bRet = false;
+
+        if( mInitialize == false ){
+            initialize(mElement);
+            setRapidView(mRapidView);
+        }
 
         try{
             XLog.d(RapidConfig.RAPID_TASK_TAG, "开始执行任务：" + getID());
@@ -145,15 +144,6 @@ public class RapidTaskNode {
 
     public TASK_TYPE getTaskType(){
         return mTaskType;
-    }
-
-    public String getID(){
-        if( RapidStringUtils.isEmpty(mID) ){
-            mID = RapidControlNameCreator.get();
-            mID = mID.toLowerCase();
-        }
-
-        return mID;
     }
 
     private boolean isPass(){
@@ -197,31 +187,13 @@ public class RapidTaskNode {
     }
 
     private void initialize(Element element){
-        NamedNodeMap mapAttrs;
         NodeList listChilds;
-
-        DataExpressionsParser parser = new DataExpressionsParser();
 
         if( element == null ){
             return;
         }
 
-        mapAttrs = element.getAttributes();
         listChilds = element.getChildNodes();
-
-        mMapAttribute.clear();
-        for( int i = 0; i < mapAttrs.getLength(); i++ ){
-            String value = mapAttrs.item(i).getNodeValue();
-
-            if( parser.isDataExpression(value) ){
-                Var var = parser.get(null, mMapEnvironment, null, null, value);
-                if( var != null ){
-                    value = var.getString();
-                }
-            }
-
-            mMapAttribute.put(mapAttrs.item(i).getNodeName().toLowerCase(), value);
-        }
 
         mListFilters.clear();
         mListActions.clear();
@@ -247,87 +219,24 @@ public class RapidTaskNode {
                 mListActions.add(action);
             }
         }
-    }
 
-    private void analyzeAttribute(){
-        analyzeTaskType();
-        analzyeHookType();
-        analyzeID();
-        analyzeValue();
-    }
-
-    private void analyzeValue(){
-        mValue = mMapAttribute.get("value");
-        if( mValue == null ){
-            mValue = "";
-        }
-    }
-
-    private void analyzeID(){
-        mID = mMapAttribute.get("id");
-        if( mID == null ){
-            mID = "";
-        }
-
-        mID = mID.toLowerCase();
+        mInitialize = true;
     }
 
     private void analyzeTaskType(){
-        String taskType = mMapAttribute.get("type");
+        String taskType;
+        Node node = mElement.getAttributes().getNamedItem("type");
 
-        if( taskType == null ){
-            taskType = "";
+        if( node == null ){
+            return;
         }
+
+        taskType = node.getNodeValue();
+        taskType = getTransValue(taskType);
 
         mTaskType = TASK_TYPE.enum_continue;
         if( taskType.compareToIgnoreCase("interrupt") == 0 ){
             mTaskType = TASK_TYPE.enum_interrupt;
         }
     }
-
-    private void analzyeHookType(){
-        String hookType = mMapAttribute.get("hook");
-        List<String> listType = null;
-
-        if( hookType == null ){
-            hookType = "";
-        }
-
-        listType = RapidStringUtils.stringToList(hookType);
-
-        for( int i = 0; i < listType.size(); i++ ){
-            String type = listType.get(i);
-
-            if( type.compareToIgnoreCase("datachange") == 0 ||
-                type.compareToIgnoreCase("data_change") == 0 ){
-                mMapHookType.put(IRapidTask.HOOK_TYPE.enum_datachange, true);
-            }
-            else if( hookType.compareToIgnoreCase("loadfinish") == 0 ||
-                    hookType.compareToIgnoreCase("load_finish") == 0 ){
-                mMapHookType.put(IRapidTask.HOOK_TYPE.enum_load_finish, true);
-            }
-            else if( hookType.compareToIgnoreCase("datainitialize") == 0 ||
-                     hookType.compareToIgnoreCase("data_initialize") == 0){
-                mMapHookType.put(IRapidTask.HOOK_TYPE.enum_data_initialize, true);
-            }
-            else if( hookType.compareToIgnoreCase("viewshow") == 0 ||
-                     hookType.compareToIgnoreCase("view_show") == 0 ){
-                mMapHookType.put(IRapidTask.HOOK_TYPE.enum_view_show, true);
-            }
-            else if( hookType.compareToIgnoreCase("viewscrollexposure") == 0 ||
-                    hookType.compareToIgnoreCase("view_scroll_exposure") == 0 ){
-                mMapHookType.put(IRapidTask.HOOK_TYPE.enum_view_scroll_exposure, true);
-            }
-            else if( hookType.compareToIgnoreCase("data_start") == 0 ||
-                    hookType.compareToIgnoreCase("datastart") == 0 ){
-                mMapHookType.put(IRapidTask.HOOK_TYPE.enum_data_start, true);
-            }
-            else if( hookType.compareToIgnoreCase("data_end") == 0 ||
-                    hookType.compareToIgnoreCase("dataend") == 0 ){
-                mMapHookType.put(IRapidTask.HOOK_TYPE.enum_data_end, true);
-            }
-        }
-
-    }
-
 }

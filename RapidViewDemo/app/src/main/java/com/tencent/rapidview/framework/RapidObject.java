@@ -15,12 +15,13 @@ package com.tencent.rapidview.framework;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Process;
 
 import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.animation.RapidAnimationCenter;
 import com.tencent.rapidview.data.RapidDataBinder;
 import com.tencent.rapidview.data.Var;
-import com.tencent.rapidview.deobfuscated.IRapidTask;
+import com.tencent.rapidview.deobfuscated.IRapidNode;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.lua.RapidLuaEnvironment;
 import com.tencent.rapidview.lua.RapidLuaJavaBridge;
@@ -47,15 +48,7 @@ public class RapidObject extends RapidObjectImpl {
 
     private IRapidView mRapidView = null;
 
-    private volatile boolean mCalledLoad = false;
-
-    private volatile boolean mCalledInitialize = false;
-
-    private volatile boolean mInitialized = false;
-
-    private volatile boolean mWaited = false;
-
-    private Object mInitializeLock = new Object();
+    protected CONCURRENT_LOAD_STATE mConcState = new CONCURRENT_LOAD_STATE();
 
     public interface IInitializeListener{
         void onFinish();
@@ -76,14 +69,15 @@ public class RapidObject extends RapidObjectImpl {
      * 界面加载的耗时操作都放到了该方法中，因此提前调用可以用于预加载。
      * 在listener中返回的view需在load后才可以使用。
      *
-     * @param context     用于读取数据的上下文。
-     * @param rapidID     当使用沙箱的方式加载时，需要传入rapidID
-     * @param globals     是否使用外部的globals，如果为null，则重新创建一个
-     * @param limitLevel  是否是受限级运行
-     * @param xmlName     视图主XML的全名
-     * @param initDataMap 初始化本身需要的数据池。目前除了无上限的include视图的情况，需要在初始化阶段确定需要
-     *                    include哪些文件外，暂时没有其它用处，大部分情况可以传null。
-     * @param listener    用于通知初始化完成。
+     * @param context      用于读取数据的上下文。
+     * @param rapidID      当使用沙箱的方式加载时，需要传入rapidID
+     * @param globals      是否使用外部的globals，如果为null，则重新创建一个
+     * @param limitLevel   是否是受限级运行
+     * @param xmlName      视图主XML的全名
+     * @param initDataMap  初始化本身需要的数据池。目前除了无上限的include视图的情况，需要在初始化阶段确定需要
+     *                     include哪些文件外，暂时没有其它用处，大部分情况可以传null。
+     * @param listener     用于通知初始化完成。
+     * @praam initDirectly 是否初始化完成
      */
     public void initialize(final Context context,
                            final String  rapidID,
@@ -91,9 +85,11 @@ public class RapidObject extends RapidObjectImpl {
                            final boolean limitLevel,
                            final String  xmlName,
                            final Map<String, Var> initDataMap,
-                           final IInitializeListener listener) {
-        initialize(new RapidDataBinder(initDataMap), context, rapidID, globals, limitLevel, xmlName, listener);
+                           final IInitializeListener listener,
+                           final boolean initDirectly) {
+        _initialize(new RapidDataBinder(initDataMap), context, rapidID, globals, limitLevel, xmlName, listener, initDirectly);
     }
+
 
     public void initialize(final RapidDataBinder binder,
                            final Context context,
@@ -102,73 +98,11 @@ public class RapidObject extends RapidObjectImpl {
                            final boolean limitLevel,
                            final String  xmlName,
                            final IInitializeListener listener){
+        _initialize(binder, context, rapidID, globals, limitLevel, xmlName, listener, false);
+    }
 
-        synchronized (mInitializeLock){
-
-            if( mCalledInitialize ){
-                return;
-            }
-
-            mCalledInitialize = true;
-        }
-
-        XLog.d(RapidConfig.RAPID_NORMAL_TAG, "开始初始化：" + (xmlName == null ? "" : xmlName));
-
-        if( context == null ){
-            XLog.d(RapidConfig.RAPID_ERROR_TAG, "context为空：" + (xmlName == null ? "" : xmlName));
-        }
-
-        RapidThreadPool.get().execute(new Runnable() {
-
-        @Override
-        public void run() {
-            try{
-                XLog.d(RapidConfig.RAPID_NORMAL_TAG, "获得初始化线程：" + xmlName);
-
-                IRapidView rapidView;
-                RapidDataBinder innerBinder = binder == null ? new RapidDataBinder(new ConcurrentHashMap<String, Var>()) : binder;
-                RapidTaskCenter taskCenter = new RapidTaskCenter(null, limitLevel);
-                RapidLuaEnvironment luaEnv = new RapidLuaEnvironment(globals, rapidID, limitLevel);
-
-                rapidView = initXml(context,
-                                     rapidID,
-                                     limitLevel,
-                                     xmlName,
-                                     new ConcurrentHashMap<String, String>(),
-                                     luaEnv,
-                                     taskCenter,
-                                     new RapidAnimationCenter(context, taskCenter),
-                                     innerBinder);
-
-                if( rapidView == null ){
-                    return;
-                }
-
-                innerBinder.addView(rapidView);
-
-                mRapidView = rapidView;
-
-                if( listener != null ){
-                    listener.onFinish();
-                }
-            }
-            finally {
-                XLog.d(RapidConfig.RAPID_NORMAL_TAG, "初始化完毕：" + xmlName);
-
-                synchronized (mInitializeLock){
-                    mInitialized = true;
-
-                    if (mWaited) {
-                        XLog.d(RapidConfig.RAPID_NORMAL_TAG, "通知等待初始化完毕");
-
-                        mWaited = false;
-
-                        mInitializeLock.notifyAll();
-                    }
-                }
-            }
-
-        }});
+    public boolean isInitialized(){
+        return mConcState.mInitialized;
     }
 
     /**
@@ -189,32 +123,42 @@ public class RapidObject extends RapidObjectImpl {
                            Map<String, Var> dataMap,
                            IRapidActionListener actionListener){
 
-        synchronized (mInitializeLock){
+        synchronized (mConcState){
+            if( !mConcState.mCalledInitialize ){
+                return null;
+            }
 
-                if( !mCalledInitialize ){
-                    return null;
+            if( mConcState.mCalledLoad ){
+                return mRapidView;
+            }
+
+            mConcState.mCalledLoad = true;
+        }
+
+        while( true ){
+            synchronized (mConcState){
+
+                for( int i = 0; i < mConcState.mPreloadList.size(); i++ ){
+
+                    mConcState.mPreloadList.get(i).preload(parent);
                 }
 
-                if( mCalledLoad ){
-                    return mRapidView;
+                mConcState.mPreloadList.clear();
+
+                if( mConcState.mInitialized ){
+                    XLog.d(RapidConfig.RAPID_NORMAL_TAG, "完成初始化，准备加载");
+                    break;
                 }
 
-                mCalledLoad = true;
+                mConcState.mWaited = true;
 
-                if( !mInitialized ){
-
-                    mWaited = true;
-
-                    XLog.d(RapidConfig.RAPID_NORMAL_TAG, "开始等待初始化");
-                    try{
-                        mInitializeLock.wait();
-                    }
-                    catch ( InterruptedException e){
-                        e.printStackTrace();
-                    }
-                    XLog.d(RapidConfig.RAPID_NORMAL_TAG, "等待初始化完毕");
-
+                try{
+                    mConcState.wait();
                 }
+                catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
         }
 
         if( uiHandler == null ){
@@ -228,11 +172,110 @@ public class RapidObject extends RapidObjectImpl {
         return _load(uiHandler, parent, objClazz, dataMap, actionListener);
     }
 
+    private void _initialize(final RapidDataBinder binder,
+                             final Context context,
+                             final String  rapidID,
+                             final Globals globals,
+                             final boolean limitLevel,
+                             final String  xmlName,
+                             final IInitializeListener listener,
+                             final boolean initDirectly){
+
+        synchronized (mConcState){
+
+            if( mConcState.mCalledInitialize ){
+                return;
+            }
+
+            mConcState.mCalledInitialize = true;
+        }
+
+        XLog.d(RapidConfig.RAPID_NORMAL_TAG, "开始初始化：" + (xmlName == null ? "" : xmlName));
+
+        if( context == null ){
+            XLog.d(RapidConfig.RAPID_ERROR_TAG, "context为空：" + (xmlName == null ? "" : xmlName));
+        }
+
+        RapidThreadPool.get().execute(new Runnable() {
+
+            @Override
+            public void run() {
+
+                if( !RapidPool.getInstance().isInitialize() ){
+                    Process.setThreadPriority(Process.THREAD_PRIORITY_LOWEST);
+                }
+                else if( initDirectly ) {
+                    Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_DISPLAY);
+                }
+                else{
+                    Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
+                }
+
+                _initialize(binder, context, rapidID, globals, limitLevel, xmlName, listener);
+            }
+        });
+    }
+
+    private void _initialize(RapidDataBinder binder,
+                             Context context,
+                             String  rapidID,
+                             Globals globals,
+                             boolean limitLevel,
+                             String  xmlName,
+                             IInitializeListener listener){
+        try{
+            XLog.d(RapidConfig.RAPID_NORMAL_TAG, "获得初始化线程：" + xmlName);
+
+            IRapidView rapidView;
+            RapidDataBinder innerBinder = binder == null ? new RapidDataBinder(new ConcurrentHashMap<String, Var>()) : binder;
+            RapidTaskCenter taskCenter = new RapidTaskCenter(null, limitLevel);
+            RapidLuaEnvironment luaEnv = new RapidLuaEnvironment(globals, rapidID, limitLevel);
+
+            rapidView = initXml(context,
+                                rapidID,
+                                limitLevel,
+                                xmlName,
+                                new ConcurrentHashMap<String, String>(),
+                                luaEnv,
+                                taskCenter,
+                                new RapidAnimationCenter(context, taskCenter),
+                                innerBinder,
+                                mConcState);
+
+            if( rapidView == null ){
+                return;
+            }
+
+            innerBinder.addView(rapidView);
+
+            mRapidView = rapidView;
+
+            if( listener != null ){
+                listener.onFinish();
+            }
+        }
+        finally {
+            XLog.d(RapidConfig.RAPID_NORMAL_TAG, "初始化完毕：" + xmlName);
+
+            synchronized (mConcState){
+                mConcState.mInitialized = true;
+
+                if (mConcState.mWaited) {
+                    XLog.d(RapidConfig.RAPID_NORMAL_TAG, "通知等待初始化完毕");
+
+                    mConcState.mWaited = false;
+
+                    mConcState.notifyAll();
+                }
+            }
+        }
+    }
+
+
     private IRapidView _load(Handler uiHandler, Context parent, Class objClazz,
                              Map<String, Var> dataMap, IRapidActionListener listener){
-        RapidTaskCenter taskCenter;
-        RapidDataBinder binder;
-        RapidLuaJavaBridge javaInterface;
+        RapidDataBinder      binder;
+        RapidLuaJavaBridge   javaInterface;
         ParamsObject         paramObject = null;
         Class[]              clzParams = new Class[]{Context.class};
         Object[]             objParams = new Object[]{parent};
@@ -272,7 +315,6 @@ public class RapidObject extends RapidObjectImpl {
             return null;
         }
 
-        taskCenter = mRapidView.getParser().getTaskCenter();
         binder = mRapidView.getParser().getBinder();
         javaInterface = mRapidView.getParser().getJavaInterface();
 
@@ -285,16 +327,13 @@ public class RapidObject extends RapidObjectImpl {
 
             binder.setUiHandler(uiHandler);
 
-            if( taskCenter != null ){
-                taskCenter.notify(IRapidTask.HOOK_TYPE.enum_data_initialize, "");
-            }
+            mRapidView.getParser().notify(IRapidNode.HOOK_TYPE.enum_data_initialize, "");
 
             binder.setLoaded();
         }
 
-        if( taskCenter != null ){
-            taskCenter.notify(IRapidTask.HOOK_TYPE.enum_load_finish, "");
-        }
+
+        mRapidView.getParser().notify(IRapidNode.HOOK_TYPE.enum_load_finish, "");
 
 
         mRapidView.getParser().onLoadFinish();

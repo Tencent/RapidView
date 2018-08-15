@@ -24,6 +24,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.utils.RapidStringUtils;
 
 import java.util.List;
@@ -98,8 +99,13 @@ public abstract class RapidAnimation extends AnimationObject{
                 list = RapidStringUtils.stringToList(mAnimationStartTask);
 
                 for( int i = 0; i < list.size(); i++ ){
+                    IRapidView rapidView = null;
 
-                    getAnimationCenter().getTaskCenter().run(list.get(i));
+                    rapidView = getAnimationCenter().getTaskCenter().getRapidView();
+
+                    if( rapidView != null ){
+                        rapidView.getParser().run(list.get(i));
+                    }
                 }
             }
 
@@ -114,8 +120,13 @@ public abstract class RapidAnimation extends AnimationObject{
                 list = RapidStringUtils.stringToList(mAnimationEndTask);
 
                 for( int i = 0; i < list.size(); i++ ){
+                    IRapidView rapidView = null;
 
-                    getAnimationCenter().getTaskCenter().run(list.get(i));
+                    rapidView = getAnimationCenter().getTaskCenter().getRapidView();
+
+                    if( rapidView != null ){
+                        rapidView.getParser().run(list.get(i));
+                    }
                 }
             }
 
@@ -130,8 +141,13 @@ public abstract class RapidAnimation extends AnimationObject{
                 list = RapidStringUtils.stringToList(mAnimationRepeatTask);
 
                 for( int i = 0; i < list.size(); i++ ){
+                    IRapidView rapidView = null;
 
-                    getAnimationCenter().getTaskCenter().run(list.get(i));
+                    rapidView = getAnimationCenter().getTaskCenter().getRapidView();
+
+                    if( rapidView != null ){
+                        rapidView.getParser().run(list.get(i));
+                    }
                 }
             }
         });

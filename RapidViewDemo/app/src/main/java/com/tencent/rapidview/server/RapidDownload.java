@@ -38,4 +38,5 @@ public class RapidDownload implements RapidDownloadWrapper.IDownload {
     public boolean download(String ticket, String url, ICallback callback) {
         return false;
     }
+
 }

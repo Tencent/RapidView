@@ -18,12 +18,11 @@ import android.view.ViewGroup;
 import com.tencent.rapidview.RapidLoader;
 import com.tencent.rapidview.data.RapidDataBinder;
 import com.tencent.rapidview.data.Var;
-import com.tencent.rapidview.deobfuscated.IRapidTask;
+import com.tencent.rapidview.deobfuscated.IRapidNode;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.deobfuscated.IRapidViewGroup;
 import com.tencent.rapidview.framework.RapidConfig;
 import com.tencent.rapidview.parser.RapidParserObject;
-import com.tencent.rapidview.utils.RapidControlNameCreator;
 import com.tencent.rapidview.utils.RapidStringUtils;
 import com.tencent.rapidview.utils.XLog;
 
@@ -116,11 +115,11 @@ public class AddViewAction extends ActionObject{
             return false;
         }
 
-        addView.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_data_start, "");
+        addView.getParser().getTaskCenter().notify(IRapidNode.HOOK_TYPE.enum_data_start, "");
 
         addView.getParser().getBinder().update(mapData);
 
-        addView.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_data_end, "");
+        addView.getParser().getTaskCenter().notify(IRapidNode.HOOK_TYPE.enum_data_end, "");
 
         if( RapidStringUtils.isEmpty(mParent) &&
             RapidStringUtils.isEmpty(mAbove)  ){
@@ -257,7 +256,7 @@ public class AddViewAction extends ActionObject{
 
         if( mapData == null ){
             if (binder != null) {
-                mapData = binder.getAllData();
+                mapData = binder.getDataMap();
             }
         }
 

@@ -16,11 +16,9 @@ package com.tencent.rapidview.data;
 import android.os.Handler;
 
 import com.tencent.rapidview.deobfuscated.IDataBinder;
-import com.tencent.rapidview.deobfuscated.IRapidTask;
+import com.tencent.rapidview.deobfuscated.IRapidNode;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.parser.RapidParserObject;
-import com.tencent.rapidview.task.RapidTaskCenter;
-import com.tencent.rapidview.utils.RapidStringUtils;
 
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
@@ -339,12 +337,6 @@ public class RapidDataBinder implements IDataBinder{
                 continue;
             }
 
-            final RapidTaskCenter taskCenter = view.getParser().getTaskCenter();
-
-            if( taskCenter == null ){
-                continue;
-            }
-
             mDestroyLock.lock();
 
             try{
@@ -352,7 +344,7 @@ public class RapidDataBinder implements IDataBinder{
                     return;
                 }
 
-                taskCenter.notify(IRapidTask.HOOK_TYPE.enum_datachange, key);
+                view.getParser().notify(IRapidNode.HOOK_TYPE.enum_datachange, key);
             }
             finally{
                 mDestroyLock.unlock();
@@ -463,7 +455,7 @@ public class RapidDataBinder implements IDataBinder{
         mMapData.remove(key);
     }
 
-    public Map<String, Var> getAllData(){
+    public Map<String, Var> getDataMap(){
         return mMapData;
     }
 }

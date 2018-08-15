@@ -13,8 +13,11 @@
  ***************************************************************************************************/
 package com.tencent.rapidview.lua;
 
+import android.os.Looper;
+
 import com.tencent.rapidview.framework.RapidConfig;
 import com.tencent.rapidview.utils.RapidStringUtils;
+import com.tencent.rapidview.utils.RapidThreadPool;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaClosure;
@@ -35,14 +38,36 @@ public class RapidLuaEnvironment {
 
     private Globals mGlobals = null;
 
+    private String mRapidID;
+
+    private boolean mLimitLevel = false;
+
     private RapidLuaJavaBridge mJavaBridge = null;
+
+    private RapidXmlLuaCenter mXmlLuaCenter = new RapidXmlLuaCenter(this);
 
     private Map<String, LuaClosure> mClosureCacheMap = new ConcurrentHashMap<String, LuaClosure>();
 
     public RapidLuaEnvironment(Globals globals, String rapidID, boolean limitLevel){
         mJavaBridge = new RapidLuaJavaBridge(rapidID);
+        mRapidID = rapidID;
+        mLimitLevel = limitLevel;
 
-        mGlobals = globals == null ? RapidLuaLoader.getInstance().createGlobals(rapidID, limitLevel) : globals;
+        if( globals != null ){
+            mGlobals = globals;
+        }
+        else{
+            RapidThreadPool.get().execute(new Runnable() {
+                @Override
+                public void run() {
+                    initGlobals();
+                }
+            });
+        }
+    }
+
+    public RapidXmlLuaCenter getXmlLuaCenter(){
+        return mXmlLuaCenter;
     }
 
 
@@ -51,7 +76,30 @@ public class RapidLuaEnvironment {
     }
 
     public Globals getGlobals(){
+        if( mGlobals == null ){
+            initGlobals();
+        }
+
         return mGlobals;
+    }
+
+    public Globals createGlobals(){
+        return RapidLuaLoader.getInstance().createGlobals(mRapidID, mLimitLevel);
+    }
+
+    public void initClosure(final String name){
+
+        if( Looper.myLooper() != Looper.getMainLooper() ){
+            getClosure(name);
+        }
+        else{
+            RapidThreadPool.get().execute(new Runnable() {
+                @Override
+                public void run() {
+                    getClosure(name);
+                }
+            });
+        }
     }
 
     public LuaClosure getClosure(String name){
@@ -61,6 +109,10 @@ public class RapidLuaEnvironment {
 
         if( name == null ){
             return null;
+        }
+
+        if( mGlobals == null ){
+            initGlobals();
         }
 
         if( !RapidConfig.DEBUG_MODE ){
@@ -95,7 +147,7 @@ public class RapidLuaEnvironment {
         return closure;
     }
 
-    private boolean isCompiled(String name){
+    public static boolean isCompiled(String name){
         if( RapidStringUtils.isEmpty(name) ){
             return false;
         }
@@ -104,10 +156,19 @@ public class RapidLuaEnvironment {
             return false;
         }
 
-        if( name.substring(name.length() - 4, name.length() - 1).compareTo(".out") != 0 ){
+        if( name.substring(name.length() - 4, name.length()).compareTo(".out") != 0 ){
             return false;
         }
 
         return true;
+    }
+
+    private synchronized void initGlobals(){
+        if( mGlobals != null ){
+            return;
+        }
+
+        Globals globals = createGlobals();
+        mGlobals = globals;
     }
 }

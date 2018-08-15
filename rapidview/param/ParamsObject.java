@@ -69,25 +69,27 @@ public abstract class ParamsObject implements IRapidParams {
         return (ViewGroup.LayoutParams)mParam;
     }
 
-    public void fillLayoutParams(Map<String, Var> attrMap, Map<String, IRapidView> brotherMap){
-        if( attrMap == null ){
+    public void fillLayoutParams(String key, Var value, Map<String, IRapidView> brotherMap){
+        IFunction function = null;
+
+        if( key == null || value == null ){
             return;
         }
 
-        for( Map.Entry<String, Var> entry : attrMap.entrySet() ){
-            IFunction function = getAttributeFunction(entry.getKey().toLowerCase());
 
-            if( function == null ){
-                continue;
-            }
+        function = getAttributeFunction(key);
 
-            try{
-                function.run(this, getLayoutParams(), brotherMap, entry.getValue());
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+        if( function == null ){
+            return;
         }
+
+        try{
+            function.run(this, getLayoutParams(), brotherMap, value);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     protected abstract Object getObject();

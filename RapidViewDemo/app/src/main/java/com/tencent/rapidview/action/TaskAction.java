@@ -42,7 +42,7 @@ public class TaskAction extends ActionObject{
             return false;
         }
 
-        parser.getTaskCenter().run(task.getString());
+        parser.run(task.getString());
 
         return true;
     }

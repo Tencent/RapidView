@@ -48,7 +48,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author arlozhang
  * @date 2016.04.12
  */
-public class RapidObjectImpl {
+public abstract class RapidObjectImpl {
+
+    public class CONCURRENT_LOAD_STATE {
+
+        public volatile boolean mCalledLoad = false;
+
+        public volatile boolean mCalledInitialize = false;
+
+        public volatile boolean mInitialized = false;
+
+        public volatile boolean mWaited = false;
+
+        public List<IRapidView> mPreloadList = new ArrayList<IRapidView>();
+    }
 
     protected IRapidView loadView(Context parent, IRapidView rapidView, ParamsObject paramsObject, IRapidActionListener listener){
 
@@ -70,8 +83,9 @@ public class RapidObjectImpl {
                                  RapidLuaEnvironment luaEnv,
                                  RapidTaskCenter taskCenter,
                                  RapidAnimationCenter animationCenter,
-                                 RapidDataBinder binder){
-        Document doc    = null;
+                                 RapidDataBinder binder,
+                                 CONCURRENT_LOAD_STATE concState){
+        Document doc = null;
         IRapidView[] arrayView = null;
 
         if( context == null || RapidStringUtils.isEmpty(xmlName) ){
@@ -105,7 +119,7 @@ public class RapidObjectImpl {
                 return null;
             }
 
-            arrayView = initElement(context, rapidID, limitLevel, root, envMap, luaEnv, null, taskCenter, animationCenter, binder);
+            arrayView = initElement(context, rapidID, limitLevel, root, envMap, luaEnv, null, taskCenter, animationCenter, binder, concState);
             if( arrayView[0] == null ){
                 XLog.d(RapidConfig.RAPID_ERROR_TAG, "初始化的对象为空：" + xmlName);
                 return null;
@@ -113,6 +127,7 @@ public class RapidObjectImpl {
 
 
             arrayView[0].getParser().getTaskCenter().setRapidView(arrayView[0]);
+            arrayView[0].getParser().getXmlLuaCenter().setRapidView(arrayView[0]);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -120,6 +135,7 @@ public class RapidObjectImpl {
 
         return arrayView[0];
     }
+
 
     protected boolean isSpecialTag(Element element){
         String tagName;
@@ -164,18 +180,19 @@ public class RapidObjectImpl {
                                        Map<String, IRapidView> brotherMap,
                                        RapidTaskCenter taskCenter,
                                        RapidAnimationCenter animationCenter,
-                                       RapidDataBinder binder ){
+                                       RapidDataBinder binder,
+                                       CONCURRENT_LOAD_STATE concState){
         IRapidView[] arrayObj;
 
         if( isSpecialTag(element) ){
-            arrayObj = initSpecialTag(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+            arrayObj = initSpecialTag(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
 
             return arrayObj;
         }
 
         arrayObj = new IRapidView[1];
 
-        arrayObj[0] = initNormalTag(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+        arrayObj[0] = initNormalTag(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
 
         return arrayObj;
     }
@@ -189,20 +206,21 @@ public class RapidObjectImpl {
                                           Map<String, IRapidView> brotherMap,
                                           RapidTaskCenter taskCenter,
                                           RapidAnimationCenter animationCenter,
-                                          RapidDataBinder binder){
+                                          RapidDataBinder binder,
+                                          CONCURRENT_LOAD_STATE concState){
 
         String tagName = element.getTagName();
 
         if( tagName.compareToIgnoreCase("merge") == 0 ){
-            return initMerge(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+            return initMerge(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
         }
 
         if( tagName.compareToIgnoreCase("include") == 0 ){
-            return initInclude(context, rapidID, limitLevel, element, envMap, luaEnv, taskCenter, animationCenter, binder);
+            return initInclude(context, rapidID, limitLevel, element, envMap, luaEnv, taskCenter, animationCenter, binder, concState);
         }
 
         if( tagName.compareToIgnoreCase("viewstub") == 0 ){
-            return initViewStub(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+            return initViewStub(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
         }
 
         return null;
@@ -217,7 +235,8 @@ public class RapidObjectImpl {
                                        Map<String, IRapidView> brotherMap,
                                        RapidTaskCenter taskCenter,
                                        RapidAnimationCenter animationCenter,
-                                       RapidDataBinder binder){
+                                       RapidDataBinder binder,
+                                       CONCURRENT_LOAD_STATE concState){
         Object obj;
         Class  clazz;
 
@@ -225,6 +244,15 @@ public class RapidObjectImpl {
             if( taskCenter != null && addTask(element, taskCenter, envMap) ) {
                 return null;
             }
+
+            if( addScript(element, luaEnv, envMap) ){
+                return null;
+            }
+
+            if( addPreCompile(element, luaEnv) ){
+                return null;
+            }
+
 
             if( addAnimation(element, animationCenter) ){
                 return null;
@@ -241,7 +269,7 @@ public class RapidObjectImpl {
                 return null;
             }
 
-            initControl(context, rapidID, limitLevel, (IRapidView)obj, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+            initControl(context, rapidID, limitLevel, (IRapidView)obj, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
         }catch (Exception e){
             e.printStackTrace();
             obj = null;
@@ -260,13 +288,14 @@ public class RapidObjectImpl {
                                    Map<String, IRapidView> brotherMap,
                                    RapidTaskCenter taskCenter,
                                    RapidAnimationCenter animationCenter,
-                                   RapidDataBinder binder ){
+                                   RapidDataBinder binder,
+                                   CONCURRENT_LOAD_STATE concState){
 
         if( view == null || element == null || envMap == null || taskCenter == null ){
             return false;
         }
 
-        return view.initialize(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+        return view.initialize(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
     }
 
     protected IRapidView[] initMerge(Context context,
@@ -278,7 +307,8 @@ public class RapidObjectImpl {
                                      Map<String, IRapidView> brotherMap,
                                      RapidTaskCenter taskCenter,
                                      RapidAnimationCenter animationCenter,
-                                     RapidDataBinder binder ){
+                                     RapidDataBinder binder,
+                                     CONCURRENT_LOAD_STATE concState){
         IRapidView[] arrayView;
         NodeList listChild;
         List<IRapidView> listView = new ArrayList<IRapidView>();
@@ -303,7 +333,7 @@ public class RapidObjectImpl {
             childElement = (Element)node;
 
             if( isSpecialTag(childElement) ){
-                IRapidView[] arrayChildView = initSpecialTag(context, rapidID, limitLevel, childElement, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+                IRapidView[] arrayChildView = initSpecialTag(context, rapidID, limitLevel, childElement, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
 
                 for( int j = 0 ; j < arrayChildView.length; j++ ){
                     listView.add(arrayChildView[j]);
@@ -312,7 +342,7 @@ public class RapidObjectImpl {
                 continue;
             }
 
-            rapidView = initNormalTag(context, rapidID, limitLevel, childElement, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+            rapidView = initNormalTag(context, rapidID, limitLevel, childElement, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
 
             if( rapidView != null ){
                 listView.add(rapidView);
@@ -329,25 +359,28 @@ public class RapidObjectImpl {
     }
 
     protected IRapidView[] initInclude(Context context,
-                                       String  rapidID,
-                                       boolean limitLevel,
-                                       Element element,
-                                       Map<String, String> envMap,
-                                       RapidLuaEnvironment luaEnv,
-                                       RapidTaskCenter taskCenter,
-                                       RapidAnimationCenter animationCenter,
-                                       RapidDataBinder binder ){
+                                        String  rapidID,
+                                        boolean limitLevel,
+                                        Element element,
+                                        Map<String, String> envMap,
+                                        RapidLuaEnvironment luaEnv,
+                                        RapidTaskCenter taskCenter,
+                                        RapidAnimationCenter animationCenter,
+                                        RapidDataBinder binder,
+                                        CONCURRENT_LOAD_STATE concState){
 
         IRapidView[] arrayView;
         List<IRapidView> listView = new ArrayList<IRapidView>();
         String strXmlList;
         String strEnvList;
         String strBinder;
+        String strLuaEnv;
         NamedNodeMap mapAttrs;
         List<String> listXml;
         List<Map<String, String>> listMapEnv;
         Map<String, String> mapAttributes = new ConcurrentHashMap<String, String>();
         DataExpressionsParser parser = new DataExpressionsParser();
+        RapidLuaEnvironment luaEnvironment = luaEnv;
 
         if( context == null ||element == null ){
             return null;
@@ -390,6 +423,10 @@ public class RapidObjectImpl {
             binder = new RapidDataBinder(new ConcurrentHashMap<String, Var>());
         }
 
+        strLuaEnv = mapAttributes.get("luaenvironment");
+        if( strLuaEnv != null && strLuaEnv.compareToIgnoreCase("new") == 0 ){
+            luaEnvironment = new RapidLuaEnvironment(null, rapidID, limitLevel);
+        }
 
         listXml = RapidStringUtils.stringToList(strXmlList);
         listMapEnv = RapidStringUtils.stringToListMap(strEnvList);
@@ -397,14 +434,15 @@ public class RapidObjectImpl {
         for( int i = 0; i < listXml.size(); i++ ){
 
             IRapidView xmlView = initXml( context,
-                                           rapidID,
-                                           limitLevel,
-                                           listXml.get(i),
-                listMapEnv.size() > i ? listMapEnv.get(i) : new ConcurrentHashMap<String, String>(),
-                                           luaEnv,
-                                           taskCenter,
-                                           animationCenter,
-                                           binder );
+                                          rapidID,
+                                          limitLevel,
+                                          listXml.get(i),
+                    listMapEnv.size() > i ? listMapEnv.get(i) : new ConcurrentHashMap<String, String>(),
+                                          luaEnvironment,
+                                          taskCenter,
+                                          animationCenter,
+                                          binder,
+                                          concState);
 
             if( xmlView == null ){
                 continue;
@@ -431,7 +469,8 @@ public class RapidObjectImpl {
                                         Map<String, IRapidView> brotherMap,
                                         RapidTaskCenter taskCenter,
                                         RapidAnimationCenter animationCenter,
-                                        RapidDataBinder binder ){
+                                        RapidDataBinder binder,
+                                        CONCURRENT_LOAD_STATE concState){
         IRapidView[]  arrayView = new IRapidView[1];
         String         strLayout;
         NamedNodeMap   mapAttrs;
@@ -461,16 +500,17 @@ public class RapidObjectImpl {
         }
 
         xmlView = initXml( context,
-                                rapidID,
-                                limitLevel,
-                                strLayout,
-                                new ConcurrentHashMap<String, String>(),
-                                luaEnv,
-                                taskCenter,
-                                animationCenter,
-                                binder );
+                           rapidID,
+                           limitLevel,
+                           strLayout,
+                           new ConcurrentHashMap<String, String>(),
+                           luaEnv,
+                           taskCenter,
+                           animationCenter,
+                           binder,
+                           concState);
 
-        stubView = initNormalTag(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+        stubView = initNormalTag(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
         if( stubView == null ){
             return null;
         }
@@ -499,6 +539,17 @@ public class RapidObjectImpl {
         return true;
     }
 
+    protected boolean addScript(Element element, RapidLuaEnvironment luaEnv, Map<String, String> envMap){
+        if( element.getTagName().compareToIgnoreCase("script") != 0 ){
+            return false;
+        }
+
+        luaEnv.getXmlLuaCenter().add(element, envMap);
+
+        return true;
+    }
+
+
     protected boolean addAnimation(Element element, RapidAnimationCenter animationCenter){
 
         if( animationCenter == null || !animationCenter.isAnimation(element) ){
@@ -510,4 +561,20 @@ public class RapidObjectImpl {
         return true;
     }
 
+    protected boolean addPreCompile(Element element, RapidLuaEnvironment luaEnv){
+        String file = null;
+
+        if( element.getTagName().compareToIgnoreCase("precompile") != 0 ){
+            return false;
+        }
+
+        file = element.getAttribute("file");
+
+
+        if( file != null ){
+            luaEnv.initClosure(file);
+        }
+
+        return true;
+    }
 }

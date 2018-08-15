@@ -15,8 +15,12 @@ package com.tencent.rapidview.deobfuscated;
 
 import android.os.Handler;
 
+import com.tencent.rapidview.data.Var;
+
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
+
+import java.util.Map;
 
 
 /**
@@ -47,4 +51,6 @@ public interface IDataBinder {
     LuaValue get(String key);
 
     void removeData(String key);
+
+    Map<String, Var> getDataMap();
 }

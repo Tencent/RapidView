@@ -19,11 +19,14 @@ import android.os.Handler;
 import com.tencent.rapidview.animation.RapidAnimationCenter;
 import com.tencent.rapidview.data.RapidDataBinder;
 import com.tencent.rapidview.lua.RapidLuaJavaBridge;
+import com.tencent.rapidview.lua.RapidXmlLuaCenter;
 import com.tencent.rapidview.param.ParamsObject;
 import com.tencent.rapidview.task.RapidTaskCenter;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaTable;
+
+import java.util.List;
 
 /**
  * @Class IRapidParser
@@ -46,6 +49,8 @@ public interface IRapidParser {
     }
 
     void notify(EVENT event, StringBuilder ret, Object... args);
+
+    void notify(IRapidNode.HOOK_TYPE type, String value);
 
     void setParentView(IRapidViewGroup parentView);
 
@@ -70,6 +75,13 @@ public interface IRapidParser {
     IRapidActionListener getActionListener();
 
     RapidTaskCenter getTaskCenter();
+
+    RapidXmlLuaCenter getXmlLuaCenter();
+
+    void run(List<String> listKey);
+
+    void run(String key);
+
 
     RapidAnimationCenter getAnimationCenter();
 

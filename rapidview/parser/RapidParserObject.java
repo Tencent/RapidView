@@ -27,15 +27,16 @@ import com.tencent.rapidview.animation.RapidAnimationCenter;
 import com.tencent.rapidview.data.DataExpressionsParser;
 import com.tencent.rapidview.data.RapidDataBinder;
 import com.tencent.rapidview.data.Var;
+import com.tencent.rapidview.deobfuscated.IRapidNode;
 import com.tencent.rapidview.deobfuscated.IRapidNotifyListener;
 import com.tencent.rapidview.deobfuscated.IRapidParser;
-import com.tencent.rapidview.deobfuscated.IRapidTask;
 import com.tencent.rapidview.deobfuscated.IRapidViewGroup;
 import com.tencent.rapidview.framework.RapidConfig;
 import com.tencent.rapidview.framework.RapidObjectImpl;
 import com.tencent.rapidview.lua.RapidLuaCaller;
 import com.tencent.rapidview.lua.RapidLuaEnvironment;
 import com.tencent.rapidview.lua.RapidLuaJavaBridge;
+import com.tencent.rapidview.lua.RapidXmlLuaCenter;
 import com.tencent.rapidview.param.ParamsObject;
 import com.tencent.rapidview.task.RapidTaskCenter;
 import com.tencent.rapidview.utils.DeviceUtils;
@@ -70,17 +71,19 @@ public abstract class RapidParserObject implements IRapidParser {
 
     Handler mHandler = null;
 
+    protected RapidObjectImpl.CONCURRENT_LOAD_STATE mConcState = null;
+
     protected String mRapidID = null;
 
     protected boolean mLimitLevel = false;
+
+    protected boolean mIsPreload = false;
 
     public Map<String, IRapidView> mBrotherMap;
 
     public Map<String, IRapidView> mMapChild;
 
     public Map<String, Var> mMapOriginAttribute;
-
-    public Map<String, Var> mMapAttribute;
 
     public Map<String, String> mMapEnvironment;
 
@@ -108,6 +111,8 @@ public abstract class RapidParserObject implements IRapidParser {
 
     public RapidLuaEnvironment mLuaEnvironment = null;
 
+    public String mID = null;
+
     protected static int mScreenWidth = 0;
 
     protected static int mScreenHeight = 0;
@@ -116,16 +121,37 @@ public abstract class RapidParserObject implements IRapidParser {
 
     protected List<ATTRIBUTE_FUN_NODE> mInitFunNodeList = null;
 
+    protected List<ATTRIBUTE_PARAMS_NODE> mInitParamsNodeList = null;
+
+    private class ATTRIBUTE_PARAMS_NODE{
+        public ATTRIBUTE_PARAMS_NODE(String key, Var value, boolean isExpression){
+            this.key = key;
+            this.value = value;
+            this.isExpression = isExpression;
+        }
+
+        public String key;
+        public Var value;
+        public boolean isExpression;
+    }
+
     private class ATTRIBUTE_FUN_NODE{
+        public ATTRIBUTE_FUN_NODE(IFunction function, Var value, boolean isExpression){
+            this.function = function;
+            this.value = value;
+            this.isExpression = isExpression;
+        }
+
         public IFunction function = null;
         public Var value;
+        public boolean isExpression;
     }
 
     RapidParserObject(){
         mMapChild = new ConcurrentHashMap<String, IRapidView>();
         mMapOriginAttribute = new ConcurrentHashMap<String, Var>();
-        mMapAttribute = new ConcurrentHashMap<String, Var>();
         mInitFunNodeList = new ArrayList<ATTRIBUTE_FUN_NODE>();
+        mInitParamsNodeList = new ArrayList<ATTRIBUTE_PARAMS_NODE>();
     }
 
     protected interface IFunction {
@@ -157,27 +183,24 @@ public abstract class RapidParserObject implements IRapidParser {
         }
     }
 
-    protected void initAttributeNode(Map<String, Var> attrMap, IRapidView view){
-        if( attrMap == null || view == null ){
-            return;
-        }
+    protected void preloadAttributeNode(IRapidView view){
 
-        mInitFunNodeList.clear();
-
-        for( Map.Entry<String, Var> entry : attrMap.entrySet() ){
-            ATTRIBUTE_FUN_NODE node = null;
-            IFunction function = null;
-
-            function = getAttributeFunction(entry.getKey().toLowerCase(), view);
-            if( function == null ){
+        for( int i = 0; i < mInitFunNodeList.size(); i++ ){
+            ATTRIBUTE_FUN_NODE node = mInitFunNodeList.get(i);
+            if( node == null || node.function == null || node.value == null || view.getView() == null ){
                 continue;
             }
 
-            node = new ATTRIBUTE_FUN_NODE();
-            node.function = function;
-            node.value = entry.getValue();
+            try{
+                if( node.value.isNull() || node.isExpression ){
+                    continue;
+                }
 
-            mInitFunNodeList.add(node);
+                node.function.run(this, view.getView(), node.value);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -190,6 +213,10 @@ public abstract class RapidParserObject implements IRapidParser {
             }
 
             try{
+                if( node.value.isNull() || (mIsPreload && !node.isExpression) ){
+                    continue;
+                }
+
                 node.function.run(this, view.getView(), node.value);
             }
             catch (Exception e){
@@ -294,6 +321,12 @@ public abstract class RapidParserObject implements IRapidParser {
         return mNotifyListener;
     }
 
+    @Override
+    public void notify(IRapidNode.HOOK_TYPE type, String value){
+
+        getTaskCenter().notify(type, value);
+        getXmlLuaCenter().notify(type, value);
+    }
 
     private void onNotify(EVENT event, StringBuilder ret, Object... args){
         switch (event){
@@ -431,7 +464,7 @@ public abstract class RapidParserObject implements IRapidParser {
         map.put(attrKey, attrValue);
 
         loadAttribute(map, mRapidView);
-        fillLayoutParams(map, mBrotherMap);
+        fillLayoutParams(attrKey.toLowerCase(), attrValue, mBrotherMap);
     }
 
     @Override
@@ -441,26 +474,11 @@ public abstract class RapidParserObject implements IRapidParser {
 
     @Override
     public String getID(){
-        Var strID;
-
-        if( mMapAttribute == null ){
-            return "";
+        if( mID == null ){
+            mID = RapidControlNameCreator.get();
         }
 
-        strID = mMapAttribute.get("id");
-        if( strID == null ){
-            strID = new Var();
-        }
-
-        if( RapidStringUtils.isEmpty(strID) ){
-
-            strID.set(RapidControlNameCreator.get());
-
-            mMapAttribute.put("id", strID);
-            mMapOriginAttribute.put("id", strID);
-        }
-
-        return strID.getString();
+        return mID;
     }
 
     public boolean initialize( Context context,
@@ -473,7 +491,8 @@ public abstract class RapidParserObject implements IRapidParser {
                                Map<String, IRapidView> brotherMap,
                                RapidTaskCenter taskCenter,
                                RapidAnimationCenter animationCenter,
-                               RapidDataBinder binder){
+                               RapidDataBinder binder,
+                               RapidObjectImpl.CONCURRENT_LOAD_STATE concState){
 
         if( view == null || element == null ){
             return false;
@@ -489,14 +508,32 @@ public abstract class RapidParserObject implements IRapidParser {
         mBinder = binder;
         mAnimationCenter = animationCenter;
         mLuaEnvironment = luaEnv;
+        mConcState = concState;
 
         initAttribute(element);
-        initAttributeNode(mMapAttribute, view);
         initScreenParams(context);
+
+        synchronized (mConcState){
+            mConcState.mPreloadList.add(mRapidView);
+            mConcState.notifyAll();
+        }
+
 
         if( view instanceof IRapidViewGroup){
             initChild((IRapidViewGroup)view, element);
         }
+
+        return true;
+    }
+
+    public boolean preloadView(IRapidView view){
+        if( view == null ){
+            return false;
+        }
+
+        preloadAttributeNode(view);
+
+        mIsPreload = true;
 
         return true;
     }
@@ -512,13 +549,22 @@ public abstract class RapidParserObject implements IRapidParser {
         mParams = param;
 
         loadAttributeNode(view);
-        fillLayoutParams(mMapAttribute, mBrotherMap);
+        loadLayoutParams();
 
         if( view instanceof IRapidViewGroup){
             loadChild((IRapidViewGroup) view);
         }
 
         return true;
+    }
+
+    private void loadLayoutParams(){
+
+        for( int i = 0; i < mInitParamsNodeList.size(); i++ ){
+            ATTRIBUTE_PARAMS_NODE node = mInitParamsNodeList.get(i);
+
+            fillLayoutParams(node.key, node.value, mBrotherMap);
+        }
     }
 
     @Override
@@ -584,6 +630,23 @@ public abstract class RapidParserObject implements IRapidParser {
     }
 
     @Override
+    public RapidXmlLuaCenter getXmlLuaCenter(){
+        return mLuaEnvironment.getXmlLuaCenter();
+    }
+
+    @Override
+    public void run(List<String> listKey){
+        getTaskCenter().run(listKey);
+        getXmlLuaCenter().run(listKey);
+    }
+
+    @Override
+    public void run(String key){
+        getTaskCenter().run(key);
+        getXmlLuaCenter().run(key);
+    }
+
+    @Override
     public RapidAnimationCenter getAnimationCenter(){
         return mAnimationCenter;
     }
@@ -618,13 +681,13 @@ public abstract class RapidParserObject implements IRapidParser {
         return mScreenWidth;
     }
 
-    protected void fillLayoutParams(Map<String, Var> mapAttribute, Map<String, IRapidView> brotherMap){
+    protected void fillLayoutParams(String key, Var value, Map<String, IRapidView> brotherMap){
         if( mParams == null ){
             return;
         }
 
         try{
-            mParams.fillLayoutParams(mapAttribute, brotherMap);
+            mParams.fillLayoutParams(key, value, brotherMap);
         }
         catch ( Exception e){
             e.printStackTrace();
@@ -641,37 +704,39 @@ public abstract class RapidParserObject implements IRapidParser {
         NamedNodeMap mapAttrs = element.getAttributes();
 
         mMapOriginAttribute.clear();
-        mMapAttribute.clear();
+        mInitFunNodeList.clear();
+        mInitParamsNodeList.clear();
+
+        Node nodeID = mapAttrs.getNamedItem("id");
+        if( nodeID != null ){
+            mID = nodeID.getNodeValue();
+            mID = parser.get(mBinder, mMapEnvironment, null, null, mID).getString();
+        }
 
         for( int i = 0; i < mapAttrs.getLength(); i++){
             String key = mapAttrs.item(i).getNodeName().toLowerCase();
             String value = mapAttrs.item(i).getNodeValue();
+            IFunction function = null;
+            boolean isExpression = false;
 
             mMapOriginAttribute.put(key, new Var(value));
-        }
 
-        //先处理id，后面的注册需要依赖id
-        Var originID = mMapOriginAttribute.get("id");
-        if( originID != null ){
-            Var value = parser.get(mBinder, mMapEnvironment, null, null, originID.getString());
-            mMapAttribute.put("id", value);
-        }
+            if( parser.isDataExpression(value) ){
+                value = parser.get(mBinder, mMapEnvironment, getID(), key, value).getString();
+                if( RapidStringUtils.isEmpty(value) ){
+                    value = null;
+                }
 
-        mMapOriginAttribute.remove("id");
-
-        for( Map.Entry<String, Var> entry : mMapOriginAttribute.entrySet() ){
-            String key = entry.getKey();
-            Var value = entry.getValue();
-
-            if( parser.isDataExpression(value.getString()) ){
-                value = parser.get(mBinder, mMapEnvironment, getID(), key, value.getString());
+                isExpression = true;
             }
 
-            mMapAttribute.put(key, value);
-        }
+            function = getAttributeFunction(key, mRapidView);
+            if( function == null ){
+                mInitParamsNodeList.add(new ATTRIBUTE_PARAMS_NODE(key, value == null ? new Var() : new Var(value), isExpression));
+                continue;
+            }
 
-        if( originID != null ){
-            mMapOriginAttribute.put("id", originID);
+            mInitFunNodeList.add(new ATTRIBUTE_FUN_NODE(function, value == null ? new Var() : new Var(value), isExpression));
         }
     }
 
@@ -709,7 +774,8 @@ public abstract class RapidParserObject implements IRapidParser {
                                                    mMapChild,
                                                    mTaskCenter,
                                                    mAnimationCenter,
-                                                   mBinder);
+                                                   mBinder,
+                                                   mConcState);
 
                 if( arrayChildView == null || arrayChildView.length == 0 ){
                     continue;
@@ -868,7 +934,7 @@ public abstract class RapidParserObject implements IRapidParser {
             locationVideo[1]  < locationScroll[1] + view.getHeight() ){
 
             mIsNotifyExposure = false;
-            getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_view_scroll_exposure, getID());
+            notify(IRapidNode.HOOK_TYPE.enum_view_scroll_exposure, getID());
         }
     }
 
@@ -912,9 +978,10 @@ public abstract class RapidParserObject implements IRapidParser {
                                        Map<String, IRapidView> brotherMap,
                                        RapidTaskCenter taskCenter,
                                        RapidAnimationCenter animationCenter,
-                                       RapidDataBinder binder){
+                                       RapidDataBinder binder,
+                                       CONCURRENT_LOAD_STATE concState){
 
-            return initElement(context, mRapidID, mLimitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+            return initElement(context, mRapidID, mLimitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
         }
     }
 }

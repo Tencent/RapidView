@@ -17,13 +17,14 @@ import com.tencent.rapidview.framework.RapidConfig;
 import com.tencent.rapidview.framework.RapidEnv;
 import com.tencent.rapidview.framework.RapidPool;
 import com.tencent.rapidview.utils.FileUtil;
+import com.tencent.rapidview.utils.MD5;
 import com.tencent.rapidview.utils.RapidSkinFile;
+import com.tencent.rapidview.utils.RapidSmallFileBatchDownloader;
 import com.tencent.rapidview.utils.XLog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Class RapidUpdate
@@ -42,10 +43,11 @@ public class RapidUpdate {
 
     private volatile boolean mIsUpdating = false;
 
-    private RapidDownloadWrapper mWrapper = null;
-
     private interface ILoadCallback{
         void onFinish(boolean bSucc);
+    }
+
+    private RapidUpdate(){
     }
 
     public static RapidUpdate getInstance(){
@@ -102,10 +104,10 @@ public class RapidUpdate {
 
     }
 
-    private void loadUpdateFile(List<RapidSkinFile> fileList, final ILoadCallback callback){
-        Map<String, String> mapNameUrl = new ConcurrentHashMap<String, String>();
-        Map<String, String> mapNameMD5 = new ConcurrentHashMap<String, String>();
-        Map<String, RapidSkinFile> mapNameRapidFile = new ConcurrentHashMap<String, RapidSkinFile>();
+    private void loadUpdateFile(final List<RapidSkinFile> fileList, final ILoadCallback callback){
+        List<String> ticketList = new ArrayList<String>();
+        List<String> urlList = new ArrayList<String>();
+        List<String> md5List = new ArrayList<String>();
 
         if( fileList == null ){
             XLog.d(RapidConfig.RAPID_NORMAL_TAG, "没有更新的文件");
@@ -113,77 +115,57 @@ public class RapidUpdate {
         }
 
         for( int i = 0; i < fileList.size(); i++ ){
-            RapidSkinFile file = fileList.get(i);
+            RapidSkinFile node = fileList.get(i);
 
-            if( file.fileName == null ||
-                file.fileVer == null ||
-                file.fileMd5 == null ||
-                file.fileUrl == null ){
-                continue;
-            }
-
-            mapNameUrl.put(file.fileName, file.fileUrl);
-            mapNameMD5.put(file.fileName, file.fileMd5);
-            mapNameRapidFile.put(file.fileName, file);
+            ticketList.add(node.fileMd5);
+            urlList.add(node.fileUrl);
+            md5List.add(node.fileMd5);
         }
 
-        final Map<String, RapidSkinFile> fmapNameRapidFile  = mapNameRapidFile;
-
-        mWrapper = new RapidDownloadWrapper(new RapidDownload(), mapNameUrl, mapNameMD5);
-        mWrapper.download(new RapidDownloadWrapper.ICallback() {
-
+        RapidSmallFileBatchDownloader.getInstance().download(ticketList, urlList, md5List, new RapidSmallFileBatchDownloader.IListener() {
             @Override
-            public void onFinish(boolean isSucceed, Map<String, String> mapFilePath) {
-                List<RapidPool.RapidFile> list = new ArrayList<RapidPool.RapidFile>();
-                boolean bRet = false;
+            public void onFinish(boolean bSuccess, List<String> ticketList, List<String> filePathList) {
+                List<RapidPool.RapidFile> list = null;
 
-                try{
-                    XLog.d(RapidConfig.RAPID_NORMAL_TAG, "下载文件完毕：结果：" + Boolean.toString(isSucceed));
+                if( !bSuccess || fileList.size() != filePathList.size() ){
+                    XLog.d(RapidConfig.RAPID_ERROR_TAG, "下载失败或文件长度不匹配，下载结果：" + Boolean.toString(bSuccess) +
+                            "|文件目录长度/下载列表长度" + Integer.toString(fileList.size())
+                            + "/" + Integer.toString(filePathList.size()));
+                    callback.onFinish(false);
+                    return;
+                }
 
-                    if( !isSucceed ){
-                        return;
+                list = new ArrayList<RapidPool.RapidFile>();
+
+                for( int i = 0; i < fileList.size(); i++ ){
+                    RapidPool.RapidFile file = new RapidPool.RapidFile();
+                    RapidSkinFile node = fileList.get(i);
+
+                    try{
+                        if( node.fileMd5.compareToIgnoreCase(MD5.getFileMD5(new File(filePathList.get(i)))) != 0 ){
+                            XLog.d(RapidConfig.RAPID_ERROR_TAG, "文件再次校验时发现MD5不匹配：" + node.fileName);
+                            callback.onFinish(false);
+                            return;
+                        }
+                    }
+                    catch (Exception e){
+                        XLog.d(RapidConfig.RAPID_ERROR_TAG, "文件校验是抛出异常：" + node.fileName);
+                        e.printStackTrace();
                     }
 
-                    for( Map.Entry<String, String> entry : mapFilePath.entrySet() ){
+                    file.name = node.fileName;
+                    file.content = FileUtil.readFromFile(filePathList.get(i));
+                    file.version = node.fileVer;
+                    file.md5 = node.fileMd5;
+                    file.isView = node.fileType == 2;
 
-                        RapidPool.RapidFile file = new RapidPool.RapidFile();
-
-                        if( entry.getKey() == null || entry.getValue() == null ){
-                            continue;
-                        }
-
-                        XLog.d(RapidConfig.RAPID_NORMAL_TAG, "已下载文件：" + entry.getKey() + ":" + entry.getValue());
-
-                        file.name = entry.getKey();
-                        file.content = FileUtil.readFromFile(entry.getValue());
-                        file.version = fmapNameRapidFile.get(entry.getKey()).fileVer;
-                        file.md5 = fmapNameRapidFile.get(entry.getKey()).fileMd5;
-                        file.isView = fmapNameRapidFile.get(entry.getKey()).fileType == 2;
-
-                        if( file.name == null ||
-                            file.content == null ||
-                            file.version == null ||
-                            file.md5 == null ){
-                            continue;
-                        }
-
-                        list.add(file);
-                    }
-
-                    mUpdateFileList = list;
-
-                    bRet = true;
+                    list.add(file);
                 }
-                catch (Exception e){
-                    e.printStackTrace();
-                    bRet = false;
-                }
-                finally {
-                    callback.onFinish(bRet);
-                    mWrapper = null;
-                }
+
+                mUpdateFileList = list;
+
+                callback.onFinish(true);
             }
-
         });
     }
 

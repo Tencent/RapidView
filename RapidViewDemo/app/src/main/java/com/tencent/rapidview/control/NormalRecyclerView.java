@@ -26,14 +26,13 @@ import com.tencent.rapidview.deobfuscated.control.IRapidRecyclerView;
 import com.tencent.rapidview.utils.DeviceQualityUtils;
 
 import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
 
 import java.util.List;
 import java.util.Map;
 
 /**
  * @Class NormalRecyclerView
- * @Desc 对CP开放的下载按钮，下载信息自拉取
+ * @Desc 通用RecyclerView
  *
  * @author arlozhang
  * @date 2017.09.14
@@ -101,6 +100,11 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
     }
 
     @Override
+    public void updateData(String view, Map<String, Var> data){
+        mAdapter.updateData(view, data);
+    }
+
+    @Override
     public void updateData(List<Map<String, Var>> dataList, List<String> viewList){
         mAdapter.updateData(dataList, viewList, false);
     }
@@ -121,7 +125,7 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
     }
 
     @Override
-    public void updateItemData(int index, String key, LuaValue value){
+    public void updateItemData(int index, String key, Object value){
         mAdapter.updateItemData(index, key, value);
     }
 
@@ -303,6 +307,11 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
             }
 
         });
+    }
+
+    @Override
+    public void setMaxRecycledViews(String viewName, int max){
+        getRecycledViewPool().setMaxRecycledViews(mAdapter.getViewType(viewName), max);
     }
 
     public void setLinearLayoutManager(int orientation, boolean reverselayout){

@@ -40,12 +40,11 @@ public class DataExpressionsParser {
         String dftValue = "";
         Var   ret;
 
-        if( !value.contains("data@") ){
+        if (value.length() <= 5 || value.substring(0, 5).compareToIgnoreCase("data@") != 0) {
             return new Var(value);
         }
 
-        if (value.length() <= 5 ||
-            value.substring(0, 5).compareToIgnoreCase("data@") != 0) {
+        if( !value.contains("data@") ){
             return new Var(value);
         }
 
@@ -84,17 +83,12 @@ public class DataExpressionsParser {
     private String getEnvVarReplace( Map<String, String> mapEnv, String value ){
         String ret = value;
 
-        if( mapEnv == null ||
-            !value.contains("[") ||
-            !value.contains("]") ||
-            value.lastIndexOf("]") <= value.lastIndexOf("[") ){
+        if( mapEnv == null || !value.contains("[") ){
 
             return value;
         }
 
-        while ( ret.contains("[") &&
-                ret.contains("]") &&
-                ret.lastIndexOf("]") > ret.lastIndexOf("[") ){
+        while ( ret.contains("[") ){
             int posLeft = ret.lastIndexOf("[");
             int posRight =  ret.lastIndexOf("]");
 
@@ -118,36 +112,6 @@ public class DataExpressionsParser {
     }
 
     public boolean isDataExpression(String str){
-        if( isBinderData(str) ){
-            return true;
-        }
-
-        if( isObjectData(str) ){
-            return true;
-        }
-
-        if( str.contains("[") &&
-            str.contains("]") &&
-            str.lastIndexOf("]") > str.lastIndexOf("[") ){
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean isBinderData(String key){
-        if( key.length() > 5 && key.substring(0,5).compareToIgnoreCase("data@") == 0 ){
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean isObjectData(String key){
-        if( key.length() > 7 && key.substring(0,7).compareToIgnoreCase("object@") == 0 ){
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }

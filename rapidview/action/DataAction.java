@@ -16,7 +16,6 @@ package com.tencent.rapidview.action;
 import com.tencent.rapidview.data.DataExpressionsParser;
 import com.tencent.rapidview.data.RapidDataBinder;
 import com.tencent.rapidview.data.Var;
-import com.tencent.rapidview.utils.RapidStringUtils;
 
 import org.w3c.dom.Element;
 

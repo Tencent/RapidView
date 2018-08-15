@@ -44,6 +44,7 @@ import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Class RapidLuaJavaBridge
@@ -179,23 +180,50 @@ public class RapidLuaJavaBridge implements ILuaJavaInterface {
     }
 
     @Override
-    public LuaValue addView(String viewName, String parentID, String above, RapidDataBinder binder, LuaTable data, IRapidActionListener listener){
+    public LuaValue addView(String xml, String parentID, String above, RapidDataBinder binder, Object data){
 
         LuaJavaViewWrapper viewWrapper = new LuaJavaViewWrapper(mRapidID, mRapidView);
 
 
-        return viewWrapper.addView(viewName, parentID, above, binder, data, listener);
+        return viewWrapper.addView(xml, parentID, above, binder, data, null);
     }
 
     @Override
-    public LuaValue loadView(String name, String params, LuaTable data, IRapidActionListener listener){
+    public LuaValue addView(String xml, String parentID, String above, RapidDataBinder binder, Object data, IRapidActionListener listener){
+
         LuaJavaViewWrapper viewWrapper = new LuaJavaViewWrapper(mRapidID, mRapidView);
 
-        if( name == null || ( !name.contains(".xml") && mRapidView.getParser().isLimitLevel() ) ){
+
+        return viewWrapper.addView(xml, parentID, above, binder, data, listener);
+    }
+
+    @Override
+    public LuaValue loadView(String name, String params, Object data){
+        LuaJavaViewWrapper viewWrapper = new LuaJavaViewWrapper(mRapidID, mRapidView);
+
+        if( name == null || ( !name.contains(".") && mRapidView.getParser().isLimitLevel() ) ){
+            return null;
+        }
+
+        return viewWrapper.loadView(name, params, data, null);
+    }
+
+    @Override
+    public LuaValue loadView(String name, String params, Object data, IRapidActionListener listener){
+        LuaJavaViewWrapper viewWrapper = new LuaJavaViewWrapper(mRapidID, mRapidView);
+
+        if( name == null || ( !name.contains(".") && mRapidView.getParser().isLimitLevel() ) ){
             return null;
         }
 
         return viewWrapper.loadView(name, params, data, listener);
+    }
+
+    @Override
+    public LuaValue removeView(String id){
+        LuaJavaViewWrapper viewWrapper = new LuaJavaViewWrapper(mRapidID, mRapidView);
+
+        return viewWrapper.removeView(id);
     }
 
     @Override

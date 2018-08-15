@@ -48,6 +48,10 @@ public class RapidRuntimeViewParser extends ViewGroupParser{
 
     private IRapidView mView = null;
 
+    private String mSucceedTaskID = "";
+
+    private String mFailedTaskID = "";
+
     static{
         try{
             mRuntimeViewClassMap.put("rapidid", initrapidid.class.newInstance());
@@ -55,6 +59,8 @@ public class RapidRuntimeViewParser extends ViewGroupParser{
             mRuntimeViewClassMap.put("url", initurl.class.newInstance());
             mRuntimeViewClassMap.put("md5", initmd5.class.newInstance());
             mRuntimeViewClassMap.put("params", initparams.class.newInstance());
+            mRuntimeViewClassMap.put("succeed", initsucceed.class.newInstance());
+            mRuntimeViewClassMap.put("failed", initfailed.class.newInstance());
         }
         catch (Exception e){
             e.printStackTrace();
@@ -101,12 +107,20 @@ public class RapidRuntimeViewParser extends ViewGroupParser{
             view.loadDirect(mRapidID.getString(), "main.xml", mLimitLevel.getInt(), null, new RuntimeView.IListener() {
                 @Override
                 public void onFailed() {
+                    if( RapidStringUtils.isEmpty(mFailedTaskID) ){
+                        return;
+                    }
 
+                    run(mFailedTaskID);
                 }
 
                 @Override
-                public void onSucceed(IRapidView photonView) {
-                    mView = photonView;
+                public void onSucceed(IRapidView rapidView) {
+                    mView = rapidView;
+
+                    if( !RapidStringUtils.isEmpty(mSucceedTaskID) ){
+                        run(mSucceedTaskID);
+                    }
                 }
             });
 
@@ -159,6 +173,22 @@ public class RapidRuntimeViewParser extends ViewGroupParser{
         public void run(RapidParserObject object, Object view, Var value) {
             ((RapidRuntimeViewParser)object).mMd5 = value;
             ((RapidRuntimeViewParser)object).finish();
+        }
+    }
+
+    private static class initsucceed implements IFunction {
+        public initsucceed(){}
+
+        public void run(RapidParserObject object, Object view, Var value) {
+            ((RapidRuntimeViewParser)object).mSucceedTaskID = value.getString();
+        }
+    }
+
+    private static class initfailed implements IFunction {
+        public initfailed(){}
+
+        public void run(RapidParserObject object, Object view, Var value) {
+            ((RapidRuntimeViewParser)object).mFailedTaskID = value.getString();
         }
     }
 

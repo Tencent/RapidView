@@ -36,7 +36,6 @@ import com.tencent.rapidview.task.RapidTaskCenter;
 import com.tencent.rapidview.utils.RapidImageLoader;
 import com.tencent.rapidview.utils.RapidStringUtils;
 import com.tencent.rapidview.deobfuscated.IRapidView;
-import com.tencent.rapidview.utils.RapidThreadPool;
 import com.tencent.rapidview.utils.ViewUtils;
 
 import java.util.List;
@@ -61,20 +60,20 @@ public class ViewParser extends RapidParserObject {
                 case MotionEvent.ACTION_DOWN:
                     if( mTouchActionDown != null ){
                         List<String> list = RapidStringUtils.stringToList(mTouchActionDown);
-                        getTaskCenter().run(list);
+                        run(list);
                     }
 
                     break;
                 case MotionEvent.ACTION_UP:
                     if( mTouchActionUp != null ){
                         List<String> list = RapidStringUtils.stringToList(mTouchActionUp);
-                        getTaskCenter().run(list);
+                        run(list);
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if( mTouchActionMove != null ){
                         List<String> list = RapidStringUtils.stringToList(mTouchActionMove);
-                        getTaskCenter().run(list);
+                        run(list);
                     }
                     break;
             }
@@ -563,15 +562,10 @@ public class ViewParser extends RapidParserObject {
     private static class initclick implements IFunction {
         public initclick(){}
 
-        public void run(RapidParserObject object, Object view, Var value) {
+        public void run(final RapidParserObject object, Object view, Var value) {
             final String fValue = value.getString();
 
             if( object.mRapidView == null ){
-                return;
-            }
-
-            final RapidTaskCenter taskCenter = object.mRapidView.getParser().getTaskCenter();
-            if (taskCenter == null) {
                 return;
             }
 
@@ -580,7 +574,7 @@ public class ViewParser extends RapidParserObject {
                 public void onClick(View v) {
                     List<String> list = RapidStringUtils.stringToList(fValue);
 
-                    taskCenter.run(list);
+                    object.run(list);
                 }
             });
         }
@@ -616,15 +610,10 @@ public class ViewParser extends RapidParserObject {
     private static class initlongclick implements IFunction {
         public initlongclick(){}
 
-        public void run(RapidParserObject object, Object view, Var value) {
+        public void run(final RapidParserObject object, Object view, Var value) {
             final String fValue = value.getString();
 
             if( object.mRapidView == null ){
-                return;
-            }
-
-            final RapidTaskCenter taskCenter = object.mRapidView.getParser().getTaskCenter();
-            if (taskCenter == null) {
                 return;
             }
 
@@ -633,7 +622,7 @@ public class ViewParser extends RapidParserObject {
                 public boolean onLongClick(View v) {
                     List<String> list = RapidStringUtils.stringToList(fValue);
 
-                    taskCenter.run(list);
+                    object.run(list);
 
                     return true;
                 }
@@ -644,15 +633,10 @@ public class ViewParser extends RapidParserObject {
     private static class initkeyevent implements IFunction {
         public initkeyevent(){}
 
-        public void run(RapidParserObject object, Object view, Var value) {
+        public void run(final RapidParserObject object, Object view, Var value) {
             final String fValue = value.getString();
 
             if( object.mRapidView == null ){
-                return;
-            }
-
-            final RapidTaskCenter taskCenter = object.mRapidView.getParser().getTaskCenter();
-            if (taskCenter == null) {
                 return;
             }
 
@@ -673,7 +657,7 @@ public class ViewParser extends RapidParserObject {
 
                     list = RapidStringUtils.stringToList(strID);
 
-                    taskCenter.run(list);
+                    object.run(list);
 
                     return true;
                 }
@@ -703,16 +687,11 @@ public class ViewParser extends RapidParserObject {
     private static class initcreatecontextmenu implements IFunction {
         public initcreatecontextmenu(){}
 
-        public void run(RapidParserObject object, Object view, Var value) {
+        public void run(final RapidParserObject object, Object view, Var value) {
             final String fValue = value.getString();
 
 
             if( object.mRapidView == null ){
-                return;
-            }
-
-            final RapidTaskCenter taskCenter = object.mRapidView.getParser().getTaskCenter();
-            if (taskCenter == null) {
                 return;
             }
 
@@ -721,7 +700,7 @@ public class ViewParser extends RapidParserObject {
                 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                     List<String> list = RapidStringUtils.stringToList(fValue);
 
-                    taskCenter.run(list);
+                    object.run(list);
                 }
             });
         }
@@ -730,15 +709,10 @@ public class ViewParser extends RapidParserObject {
     private static class initfocuschange implements IFunction {
         public initfocuschange(){}
 
-        public void run(RapidParserObject object, Object view, Var value) {
+        public void run(final RapidParserObject object, Object view, Var value) {
             final String fValue = value.getString();
 
             if( object.mRapidView == null ){
-                return;
-            }
-
-            final RapidTaskCenter taskCenter = object.mRapidView.getParser().getTaskCenter();
-            if (taskCenter == null) {
                 return;
             }
 
@@ -759,7 +733,7 @@ public class ViewParser extends RapidParserObject {
 
                     list = RapidStringUtils.stringToList(strID);
 
-                    taskCenter.run(list);
+                    object.run(list);
                 }
 
                 private boolean isFocusPass(String strFocus, boolean hasFocus) {
@@ -787,7 +761,7 @@ public class ViewParser extends RapidParserObject {
     private static class inittouch implements IFunction {
         public inittouch(){}
 
-        public void run(RapidParserObject object, Object view, Var value) {
+        public void run(final RapidParserObject object, Object view, Var value) {
             final String fValue = value.getString();
 
             if( object.mRapidView == null ){
@@ -804,7 +778,7 @@ public class ViewParser extends RapidParserObject {
                 public boolean onTouch(View v, MotionEvent event) {
                     List<String> list = RapidStringUtils.stringToList(fValue);
 
-                    taskCenter.run(list);
+                    object.run(list);
 
                     return true;
                 }

@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import com.tencent.rapidview.RapidLoader;
 import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.data.Var;
-import com.tencent.rapidview.deobfuscated.IRapidTask;
+import com.tencent.rapidview.deobfuscated.IRapidNode;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.framework.RapidObject;
 import com.tencent.rapidview.framework.RapidRuntimeCachePool;
@@ -97,6 +97,13 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
         notifyDataSetChanged();
     }
 
+    public void updateData(String view, Map<String, Var> data){
+        mListViewName.add(view);
+        mListData.add(data);
+
+        notifyDataSetChanged();
+    }
+
     public void updateData(List<Map<String, Var>> dataList, List<String> viewList, boolean clear){
         if( clear ){
             mListData.clear();
@@ -159,17 +166,34 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
             viewValue = argsView.arg(2);
             dataValue = argsData.arg(2);
 
-            if( !viewValue.isstring() || !dataValue.istable() ){
+            if( !viewValue.isstring() ){
                 continue;
             }
 
-            addData(viewValue.toString(), dataValue.checktable());
+            if( dataValue.istable() ){
+                addData(viewValue.toString(), dataValue.checktable());
+            }
+
+            if( dataValue.isuserdata() ){
+                Object obj = dataValue.checkuserdata();
+                mListViewName.add(viewValue.toString());
+
+                if( obj instanceof Var ){
+                    Map<String, Var> map = (Map<String, Var>)((Var) obj).getObject();
+                    mListData.add(map);
+                }
+                else{
+                    mListData.add((Map<String, Var>) obj);
+                }
+
+            }
         }
+
 
         notifyDataSetChanged();
     }
 
-    public void updateItemData(int index, String key, LuaValue value){
+    public void updateItemData(int index, String key, Object value){
         Map<String, Var> map = mListData.get(index);
 
         if( map == null || key == null || value == null ){
@@ -330,7 +354,7 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
             map = mListData.get(position);
         }
 
-        view.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_data_start, "");
+        view.getParser().getTaskCenter().notify(IRapidNode.HOOK_TYPE.enum_data_start, "");
 
         updateCommonData(view, position);
 
@@ -339,10 +363,10 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<NormalRecycl
         }
 
         view.getParser().onUpdateFinish();
-        view.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_data_end, "");
+        view.getParser().getTaskCenter().notify(IRapidNode.HOOK_TYPE.enum_data_end, "");
 
         if( mViewBindMap.get(position) == null ){
-            view.getParser().getTaskCenter().notify(IRapidTask.HOOK_TYPE.enum_view_show, "");
+            view.getParser().getTaskCenter().notify(IRapidNode.HOOK_TYPE.enum_view_show, "");
             mViewBindMap.put(position, true);
         }
     }

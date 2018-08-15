@@ -51,7 +51,7 @@ public class RapidXmlLoader {
         return mSelf;
     }
 
-    private synchronized Document stringToDocument(String strXml) {
+    private synchronized Document bytesToDocument(byte[] bytesXml) {
         Document document = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -59,25 +59,25 @@ public class RapidXmlLoader {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse(new ByteArrayInputStream(strXml.getBytes()));
+            document = builder.parse(new ByteArrayInputStream(bytesXml));
         } catch (Exception e) {
             e.printStackTrace();
-            XLog.d(RapidConfig.RAPID_ERROR_TAG, "解析XML异常，XML名：" + strXml);
+            XLog.d(RapidConfig.RAPID_ERROR_TAG, "解析XML异常，XML：" + new String(bytesXml));
         }
 
         return document;
     }
 
-    public Document getDocument(Context context, String name, String rapidID, boolean limitLevel) {
+    public Document getDocument(Context context, String name, String photonID, boolean limitLevel) {
         Document doc = null;
         byte[] bytesXml = null;
 
         if( RapidConfig.DEBUG_MODE &&
-            FileUtil.isFileExists(FileUtil.getRapidDebugDir() + name) ){
+                FileUtil.isFileExists(FileUtil.getRapidDebugDir() + name) ){
             bytesXml = RapidFileLoader.getInstance().getBytes(name, RapidFileLoader.PATH.enum_debug_path);
 
             try {
-                doc = stringToDocument(new String(bytesXml, "UTF-8"));
+                doc = bytesToDocument(bytesXml);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -87,15 +87,15 @@ public class RapidXmlLoader {
             return doc;
         }
 
-        if( !RapidStringUtils.isEmpty(rapidID) && !name.contains("../") ){
+        if( !RapidStringUtils.isEmpty(photonID) ){
 
-            bytesXml = RapidFileLoader.getInstance().getBytes(rapidID + "/" + name, RapidFileLoader.PATH.enum_sandbox_path);
+            bytesXml = RapidFileLoader.getInstance().getBytes(photonID + "/" + name, RapidFileLoader.PATH.enum_sandbox_path);
             if( bytesXml == null && limitLevel ) {
                 return doc;
             }
 
             try{
-                doc = stringToDocument(new String(bytesXml, "UTF-8"));
+                doc = bytesToDocument(bytesXml);
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -127,7 +127,7 @@ public class RapidXmlLoader {
         }
 
         try {
-            doc = stringToDocument(new String(bytesXml, "UTF-8"));
+            doc = bytesToDocument(bytesXml);
         } catch (Exception e) {
             e.printStackTrace();
             doc = null;
@@ -139,7 +139,6 @@ public class RapidXmlLoader {
 
         return doc;
     }
-
     public void deleteDocument(String name){
         mDocumentCacheMap.remove(name);
     }

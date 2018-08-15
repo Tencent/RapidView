@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.animation.Animation;
 
+import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.utils.RapidImageLoader;
 import com.tencent.rapidview.utils.RapidStringUtils;
 
@@ -86,8 +87,13 @@ public class RapidFrameAnimation extends AnimationObject{
                 list = RapidStringUtils.stringToList(mStartTask);
 
                 for( int i = 0; i < list.size(); i++ ){
+                    IRapidView rapidView = null;
 
-                    getAnimationCenter().getTaskCenter().run(list.get(i));
+                    rapidView = getAnimationCenter().getTaskCenter().getRapidView();
+
+                    if( rapidView != null ){
+                        rapidView.getParser().run(list.get(i));
+                    }
                 }
             }
 
@@ -102,8 +108,13 @@ public class RapidFrameAnimation extends AnimationObject{
                 list = RapidStringUtils.stringToList(mEndTask);
 
                 for( int i = 0; i < list.size(); i++ ){
+                    IRapidView rapidView = null;
 
-                    getAnimationCenter().getTaskCenter().run(list.get(i));
+                    rapidView = getAnimationCenter().getTaskCenter().getRapidView();
+
+                    if( rapidView != null ){
+                        rapidView.getParser().run(list.get(i));
+                    }
                 }
             }
         });

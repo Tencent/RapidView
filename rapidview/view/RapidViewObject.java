@@ -20,6 +20,7 @@ import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.animation.RapidAnimationCenter;
 import com.tencent.rapidview.data.RapidDataBinder;
 import com.tencent.rapidview.deobfuscated.IRapidView;
+import com.tencent.rapidview.framework.RapidObjectImpl;
 import com.tencent.rapidview.lua.RapidLuaEnvironment;
 import com.tencent.rapidview.param.ParamsObject;
 import com.tencent.rapidview.parser.RapidParserObject;
@@ -78,15 +79,28 @@ public abstract class RapidViewObject implements IRapidView {
         return mControlID;
     }
 
+
     @Override
     public View getView(){
         return mView;
     }
 
     @Override
-    public boolean load(Context context,
-                        ParamsObject param,
-                        IRapidActionListener listener){
+    public boolean preload(Context context){
+        mView = createView(context);
+
+        getParser().setContext(context);
+
+        return getParser().preloadView(this);
+    }
+
+    @Override
+    public boolean load(Context context, ParamsObject param, IRapidActionListener listener){
+
+        if( mView == null ){
+            mView = createView(context);
+        }
+
 
         mView = createView(context);
 
@@ -114,8 +128,9 @@ public abstract class RapidViewObject implements IRapidView {
                                Map<String, IRapidView> brotherMap,
                                RapidTaskCenter taskCenter,
                                RapidAnimationCenter animationCenter,
-                               RapidDataBinder binder ){
-        return getParser().initialize(context, rapidID, limitLevel, this, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+                               RapidDataBinder binder,
+                               RapidObjectImpl.CONCURRENT_LOAD_STATE concState){
+        return getParser().initialize(context, rapidID, limitLevel, this, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
     }
 
     protected abstract RapidParserObject createParser();

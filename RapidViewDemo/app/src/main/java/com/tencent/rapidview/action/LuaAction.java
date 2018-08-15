@@ -14,7 +14,6 @@
 package com.tencent.rapidview.action;
 
 import com.tencent.rapidview.data.Var;
-import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.lua.RapidLuaCaller;
 import com.tencent.rapidview.lua.RapidLuaEnvironment;
 import com.tencent.rapidview.lua.RapidLuaLoader;
@@ -22,9 +21,6 @@ import com.tencent.rapidview.parser.RapidParserObject;
 import com.tencent.rapidview.utils.RapidStringUtils;
 
 import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaInteger;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.w3c.dom.Element;
 
 import java.util.Map;
@@ -49,10 +45,28 @@ public class LuaAction extends ActionObject{
         Var param    = mMapAttribute.get("param1");
         Var param2   = mMapAttribute.get("param2");
         Var param3   = mMapAttribute.get("param3");
+        Var type     = mMapAttribute.get("type");
+
+        boolean isTemporary = false;
+
+        if( type != null &&
+            (type.getString().compareToIgnoreCase("temp") == 0 ||
+             type.getString().compareToIgnoreCase("temporary") == 0) ) {
+
+            isTemporary = true;
+        }
 
         RapidLuaEnvironment luaEnv = getLuaEnvironment();
-        Globals globals = getGlobals();
         RapidParserObject parser = getParser();
+        Globals globals;
+
+        if( isTemporary ){
+            globals = createGlobals();
+        }
+        else {
+            globals = getGlobals();
+        }
+
 
         if( luaEnv == null || globals == null ){
             return false;
@@ -62,7 +76,14 @@ public class LuaAction extends ActionObject{
             return false;
         }
 
-        if( !RapidStringUtils.isEmpty(file) ){
+        if( isTemporary && RapidStringUtils.isEmpty(file) ){
+            return false;
+        }
+
+        if( isTemporary ){
+            RapidLuaLoader.getInstance().load(globals, file.getString(), mRapidView, parser.getJavaInterface());
+        }
+        else if( !RapidStringUtils.isEmpty(file) ){
             RapidLuaLoader.getInstance().load(luaEnv, file.getString(), mRapidView, parser.getJavaInterface());
         }
 
@@ -84,13 +105,12 @@ public class LuaAction extends ActionObject{
         return true;
     }
 
-    private LuaTable arrayToTable(IRapidView[] arrayView){
-        LuaTable table = new LuaTable();
-
-        for( int i = 0; i < arrayView.length; i++ ){
-            table.set( LuaInteger.valueOf( i + 1), CoerceJavaToLua.coerce(arrayView[i]));
+    protected Globals createGlobals(){
+        RapidParserObject parser = getParser();
+        if( parser == null ){
+            return null;
         }
 
-        return table;
+        return getParser().getLuaEnvironment().createGlobals();
     }
 }

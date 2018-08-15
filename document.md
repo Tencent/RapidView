@@ -544,6 +544,9 @@ px转dip
 >
 >每一个IRapidView保存一份task池，task重名将会后者覆盖前者，task可以声明于XML中的任何位置。
 
+### 脚本(script)标签
+>RapidView的XML具有执行一定脚本的能力，有时候我们希望XML能执行一些简单的逻辑操作，但使用task又无法满足对逻辑运算的需求，而增加一个Lua文件，又显得很鸡肋。此时可以选择通过script标签来解决。script标签和task标签的用法基本一样，可以定义id，可以在控件的click中显示调用。也可以通过hook、value标签被动触发标签执行。该标签有一个备选的type="full"属性，如果使用这个属性，那么将按照一个独立的Lua文件方式执行，默认执行main()方法。如果不使用这个参数，那么只需要在标签内写一个函数体即可。
+
 ### 控件说明
 >RapidView默认提供了17个控件，他们是：
 userview/relativelayout/linearlayout/absolutelayout/textview/imageview/progressbar/imagebutton/button/framelayout/scrollview/horizontalscrollview/shaderview/viewstub/runtimeview/viewpager/recyclerview

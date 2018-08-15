@@ -22,18 +22,14 @@ import android.widget.RelativeLayout;
 
 import com.tencent.rapidview.RapidLoader;
 import com.tencent.rapidview.data.Var;
-import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.deobfuscated.IRapidParser;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.framework.RapidObject;
-import com.tencent.rapidview.param.ParamsChooser;
 import com.tencent.rapidview.param.RelativeLayoutParams;
 import com.tencent.rapidview.parser.RapidParserObject;
 import com.tencent.rapidview.runtime.RuntimeView;
 import com.tencent.rapidview.utils.HandlerUtils;
 import com.tencent.rapidview.utils.RapidStringUtils;
-
-import org.luaj.vm2.LuaTable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

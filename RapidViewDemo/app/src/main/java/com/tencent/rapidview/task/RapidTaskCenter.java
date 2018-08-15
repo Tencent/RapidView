@@ -16,6 +16,7 @@ package com.tencent.rapidview.task;
 import com.tencent.rapidview.action.ActionRunner;
 import com.tencent.rapidview.deobfuscated.IActionRunner;
 import com.tencent.rapidview.deobfuscated.IFilterRunner;
+import com.tencent.rapidview.deobfuscated.IRapidNode;
 import com.tencent.rapidview.deobfuscated.IRapidTask;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.filter.FilterRunner;
@@ -68,6 +69,12 @@ public class RapidTaskCenter implements IRapidTask {
             node.setRapidView(mRapidView);
         }
     }
+
+    @Override
+    public IRapidView getRapidView(){
+        return mRapidView;
+    }
+
 
     @Override
     public void setEnvironment(Map<String, String> mapEnv){
@@ -155,7 +162,7 @@ public class RapidTaskCenter implements IRapidTask {
         return mFilterRunner;
     }
 
-    public void notify(HOOK_TYPE type, String value) {
+    public void notify(IRapidNode.HOOK_TYPE type, String value) {
 
         for( Map.Entry<String, RapidTaskNode> entry : mMapDataTask.entrySet() ){
 

@@ -15,6 +15,7 @@
 				<include layout="flexible_container.xml" environment="name:filter,title:filter的使用示例,container:filter_container,layout:filter_stub.xml" />
 				<include layout="flexible_container.xml" environment="name:special_tag,title:include/merge/viewstub的使用示例,container:special_tag_container,layout:special_tag_stub.xml" />
 				<include layout="flexible_container.xml" environment="name:tab_page_jmp,title:新闻资讯类软件分TAB页面示例,container:tab_page_jmp_container,layout:tab_page_jmp_stub.xml" />
+				<include layout="flexible_container.xml" environment="name:script_tag,title:XML内置脚本script标签示例,container:script_tag_container,layout:script_tag_stub.xml" />
 			</linearlayout>
 		</scrollview>
 	</relativelayout>

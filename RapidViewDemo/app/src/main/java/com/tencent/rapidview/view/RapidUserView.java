@@ -20,6 +20,7 @@ import com.tencent.rapidview.animation.RapidAnimationCenter;
 import com.tencent.rapidview.data.RapidDataBinder;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.framework.RapidConfig;
+import com.tencent.rapidview.framework.RapidObjectImpl;
 import com.tencent.rapidview.framework.UserViewConfig;
 import com.tencent.rapidview.lua.RapidLuaEnvironment;
 import com.tencent.rapidview.parser.RapidParserObject;
@@ -59,12 +60,13 @@ public class RapidUserView extends RapidViewObject {
                                Map<String, IRapidView> brotherMap,
                                RapidTaskCenter taskCenter,
                                RapidAnimationCenter animationCenter,
-                               RapidDataBinder binder){
+                               RapidDataBinder binder,
+                               RapidObjectImpl.CONCURRENT_LOAD_STATE concState){
         if( element != null ){
             mClass = element.getAttribute("class");
         }
 
-        return super.initialize(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder);
+        return super.initialize(context, rapidID, limitLevel, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
     }
 
     @Override

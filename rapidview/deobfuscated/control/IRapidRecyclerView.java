@@ -20,7 +20,6 @@ import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.data.Var;
 
 import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
 
 import java.util.List;
 import java.util.Map;
@@ -73,6 +72,8 @@ public interface IRapidRecyclerView {
 
     void setMaxRecycledViews(String viewName, int max);
 
+    void updateData(String view, Map<String, Var> data);
+
     void updateData(List<Map<String, Var>> dataList, List<String> viewList);
 
     void updateData(List<Map<String, Var>> dataList, List<String> viewList, Boolean clear);
@@ -81,7 +82,7 @@ public interface IRapidRecyclerView {
 
     void updateData(LuaTable viewList, LuaTable dataList);
 
-    void updateItemData(int index, String key, LuaValue value);
+    void updateItemData(int index, String key, Object value);
 
     void setFooter(String viewName, Map<String, Var> mapData);
 

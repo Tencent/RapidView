@@ -157,7 +157,9 @@ public class ViewStubParser extends ViewParser{
                            viewChild.getParser().getParams().getLayoutParams());
 
             if( isRootNode(object) ){
-                object.mTaskCenter.setRapidView(viewChild);
+                object.getTaskCenter().setRapidView(viewChild);
+                object.getXmlLuaCenter().setRapidView(viewChild);
+
                 object.mBinder.addView(viewChild);
 
                 try {

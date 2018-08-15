@@ -21,7 +21,7 @@ import com.tencent.rapidview.deobfuscated.IRapidActionListener;
 import com.tencent.rapidview.animation.RapidAnimationCenter;
 import com.tencent.rapidview.data.RapidDataBinder;
 import com.tencent.rapidview.data.Var;
-import com.tencent.rapidview.deobfuscated.IRapidTask;
+import com.tencent.rapidview.deobfuscated.IRapidNode;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.lua.RapidLuaEnvironment;
 import com.tencent.rapidview.lua.RapidLuaJavaBridge;
@@ -48,15 +48,7 @@ public class RapidObject extends RapidObjectImpl {
 
     private IRapidView mRapidView = null;
 
-    private volatile boolean mCalledLoad = false;
-
-    private volatile boolean mCalledInitialize = false;
-
-    private volatile boolean mInitialized = false;
-
-    private volatile boolean mWaited = false;
-
-    private Object mInitializeLock = new Object();
+    protected CONCURRENT_LOAD_STATE mConcState = new CONCURRENT_LOAD_STATE();
 
     public interface IInitializeListener{
         void onFinish();
@@ -110,7 +102,7 @@ public class RapidObject extends RapidObjectImpl {
     }
 
     public boolean isInitialized(){
-        return mInitialized;
+        return mConcState.mInitialized;
     }
 
     /**
@@ -126,36 +118,46 @@ public class RapidObject extends RapidObjectImpl {
      *                       由各自功能解释意义。
      */
     public IRapidView load(Handler uiHandler,
-                            Context parent,
-                            Class objClazz,
-                            Map<String, Var> dataMap,
-                            IRapidActionListener actionListener){
+                           Context parent,
+                           Class objClazz,
+                           Map<String, Var> dataMap,
+                           IRapidActionListener actionListener){
 
-        synchronized (mInitializeLock){
-
-            if( !mCalledInitialize ){
+        synchronized (mConcState){
+            if( !mConcState.mCalledInitialize ){
                 return null;
             }
 
-            if( mCalledLoad ){
+            if( mConcState.mCalledLoad ){
                 return mRapidView;
             }
 
-            mCalledLoad = true;
+            mConcState.mCalledLoad = true;
+        }
 
-            if( !mInitialized ){
+        while( true ){
+            synchronized (mConcState){
 
-                mWaited = true;
+                for( int i = 0; i < mConcState.mPreloadList.size(); i++ ){
 
-                XLog.d(RapidConfig.RAPID_NORMAL_TAG, "开始等待初始化");
-                try{
-                    mInitializeLock.wait();
+                    mConcState.mPreloadList.get(i).preload(parent);
                 }
-                catch ( InterruptedException e){
+
+                mConcState.mPreloadList.clear();
+
+                if( mConcState.mInitialized ){
+                    XLog.d(RapidConfig.RAPID_NORMAL_TAG, "完成初始化，准备加载");
+                    break;
+                }
+
+                mConcState.mWaited = true;
+
+                try{
+                    mConcState.wait();
+                }
+                catch (InterruptedException e){
                     e.printStackTrace();
                 }
-                XLog.d(RapidConfig.RAPID_NORMAL_TAG, "等待初始化完毕");
-
             }
         }
 
@@ -179,13 +181,13 @@ public class RapidObject extends RapidObjectImpl {
                              final IInitializeListener listener,
                              final boolean initDirectly){
 
-        synchronized (mInitializeLock){
+        synchronized (mConcState){
 
-            if( mCalledInitialize ){
+            if( mConcState.mCalledInitialize ){
                 return;
             }
 
-            mCalledInitialize = true;
+            mConcState.mCalledInitialize = true;
         }
 
         XLog.d(RapidConfig.RAPID_NORMAL_TAG, "开始初始化：" + (xmlName == null ? "" : xmlName));
@@ -194,25 +196,24 @@ public class RapidObject extends RapidObjectImpl {
             XLog.d(RapidConfig.RAPID_ERROR_TAG, "context为空：" + (xmlName == null ? "" : xmlName));
         }
 
-        if( initDirectly ){
-            _initialize(binder, context, rapidID, globals, limitLevel, xmlName, listener);
-        }
-        else{
-            RapidThreadPool.get().execute(new Runnable() {
+        RapidThreadPool.get().execute(new Runnable() {
 
-                @Override
-                public void run() {
-                    if( !RapidPool.getInstance().isInitialize() ){
-                        Process.setThreadPriority(Process.THREAD_PRIORITY_LOWEST);
-                    }
-                    else{
-                        Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
-                    }
+            @Override
+            public void run() {
 
-                    _initialize(binder, context, rapidID, globals, limitLevel, xmlName, listener);
+                if( !RapidPool.getInstance().isInitialize() ){
+                    Process.setThreadPriority(Process.THREAD_PRIORITY_LOWEST);
                 }
-            });
-        }
+                else if( initDirectly ) {
+                    Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_DISPLAY);
+                }
+                else{
+                    Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
+                }
+
+                _initialize(binder, context, rapidID, globals, limitLevel, xmlName, listener);
+            }
+        });
     }
 
     private void _initialize(RapidDataBinder binder,
@@ -238,7 +239,8 @@ public class RapidObject extends RapidObjectImpl {
                                 luaEnv,
                                 taskCenter,
                                 new RapidAnimationCenter(context, taskCenter),
-                                innerBinder);
+                                innerBinder,
+                                mConcState);
 
             if( rapidView == null ){
                 return;
@@ -255,15 +257,15 @@ public class RapidObject extends RapidObjectImpl {
         finally {
             XLog.d(RapidConfig.RAPID_NORMAL_TAG, "初始化完毕：" + xmlName);
 
-            synchronized (mInitializeLock){
-                mInitialized = true;
+            synchronized (mConcState){
+                mConcState.mInitialized = true;
 
-                if (mWaited) {
+                if (mConcState.mWaited) {
                     XLog.d(RapidConfig.RAPID_NORMAL_TAG, "通知等待初始化完毕");
 
-                    mWaited = false;
+                    mConcState.mWaited = false;
 
-                    mInitializeLock.notifyAll();
+                    mConcState.notifyAll();
                 }
             }
         }
@@ -272,7 +274,6 @@ public class RapidObject extends RapidObjectImpl {
 
     private IRapidView _load(Handler uiHandler, Context parent, Class objClazz,
                              Map<String, Var> dataMap, IRapidActionListener listener){
-        RapidTaskCenter      taskCenter;
         RapidDataBinder      binder;
         RapidLuaJavaBridge   javaInterface;
         ParamsObject         paramObject = null;
@@ -314,7 +315,6 @@ public class RapidObject extends RapidObjectImpl {
             return null;
         }
 
-        taskCenter = mRapidView.getParser().getTaskCenter();
         binder = mRapidView.getParser().getBinder();
         javaInterface = mRapidView.getParser().getJavaInterface();
 
@@ -327,16 +327,13 @@ public class RapidObject extends RapidObjectImpl {
 
             binder.setUiHandler(uiHandler);
 
-            if( taskCenter != null ){
-                taskCenter.notify(IRapidTask.HOOK_TYPE.enum_data_initialize, "");
-            }
+            mRapidView.getParser().notify(IRapidNode.HOOK_TYPE.enum_data_initialize, "");
 
             binder.setLoaded();
         }
 
-        if( taskCenter != null ){
-            taskCenter.notify(IRapidTask.HOOK_TYPE.enum_load_finish, "");
-        }
+
+        mRapidView.getParser().notify(IRapidNode.HOOK_TYPE.enum_load_finish, "");
 
 
         mRapidView.getParser().onLoadFinish();

@@ -29,17 +29,6 @@ import java.util.Map;
  */
 public interface IRapidTask {
 
-    enum HOOK_TYPE{
-        enum_none,
-        enum_datachange,
-        enum_data_initialize,
-        enum_load_finish,
-        enum_view_show,
-        enum_view_scroll_exposure,
-        enum_data_start,
-        enum_data_end
-    }
-
     void setRapidView(IRapidView arrayView);
 
     void setEnvironment(Map<String, String> mapEnv);
@@ -52,7 +41,9 @@ public interface IRapidTask {
 
     void run(String key);
 
-    void notify(HOOK_TYPE type, String value);
+    void notify(IRapidNode.HOOK_TYPE type, String value);
+
+    IRapidView getRapidView();
 
     IActionRunner getActionRunner();
 

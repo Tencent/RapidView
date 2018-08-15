@@ -15,6 +15,7 @@ package com.tencent.rapidviewdemo;
 
 import android.app.Application;
 
+import com.tencent.rapidview.framework.RapidInitializer;
 import com.tencent.rapidview.framework.RapidPool;
 
 
@@ -27,7 +28,7 @@ public class DemoApplication extends Application {
         super.onCreate();
         mInstance = this;
 
-        RapidPool.getInstance().initialize(this, null);
+        RapidInitializer.initialize(this);
     }
 
     public static Application getInstance() {

@@ -1,0 +1,14 @@
+<relativelayout id="script_tag_container" width="match_parent" height="100" backgroundcolor="ffabcdef">
+	<textview id="script_tag_content" width="wrap_content" height="wrap_content" centervertical="true" marginleft="12" text="原始内容"/>
+	<button width="62" height="24" marginright="30" text="一个按钮" click="script_btn_click" centervertical="true" alignparentright="true"  padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+
+	<!-- script的写法和task基本相同，script有一个独特的type标签，当使用type="full"的时候可以在XML中写一个完整的Lua，默认执行main方法。不填写type参数默认直接写一个函数体，如本例。
+         rapidView和javaBridge通过rapid.getRapidView() rapid.getJavaBridge() 取得。如果是在一个include文件内，环境变量可以通过rapid.getEnvironment(string key)取得。
+         script标签也可以使用hook、value等参数 -->
+	<script id="script_btn_click">
+		local rapidView = rapid.getRapidView()
+		local text = rapidView:getParser():getChildView("script_tag_content")
+		text:getParser():update("text", "点击了这个按钮")
+	</script>
+
+</relativelayout>
