@@ -24,32 +24,32 @@
         "description": "Insert a rapid task. [RapidView]"
     },
     "RelativeLayout": {
-        "prefix": "ralativelayout",
+        "prefix": "relativelayout",
         "body": [
-            "<RelativeLayout width=\"match_parent\" height=\"wrap_content\">",
-            "</RelativeLayout>"
+            "<relativelayout width=\"match_parent\" height=\"wrap_content\">",
+            "</relativelayout>"
         ],
         "description": "Create a RelativeLayout tag. [RapidView]"
     },
     "LinearLayout": {
         "prefix": "linearlayout",
         "body": [
-            "<LinearLayout width=\"match_parent\" height=\"wrap_content\" orientation=\"vertical\">",
-            "</LinearLayout>"
+            "<linearlayout width=\"match_parent\" height=\"wrap_content\" orientation=\"vertical\">",
+            "</linearlayout>"
         ],
         "description": "Create a LinearLayout tag. [RapidView]"
     },
     "TextView": {
         "prefix": "textview",
         "body": [
-            "<TextView width=\"wrap_content\" height=\"wrap_content\"  text=\"ChickenDinner\" textsize=\"11\" textcolor=\"ffffffff\"/>"
+            "<textview width=\"wrap_content\" height=\"wrap_content\"  text=\"ChickenDinner\" textsize=\"11\" textcolor=\"ff000000\"/>"
         ],
         "description": "Create a TextView tag. [RapidView]"
     },
     "ImageView": {
         "prefix": "imageview",
         "body": [
-            "<ImageView width=\"wrap_content\" height=\"wrap_content\"/>"
+            "<imageview width=\"wrap_content\" height=\"wrap_content\"/>"
         ],
         "description": "Create a ImageView tag. [RapidView]"
     },
@@ -70,7 +70,7 @@
     "Button": {
         "prefix": "button",
         "body": [
-            "<Button text=\"Button\" width=\"wrap_content\" height=\"wrap_content\" textsize=\"12\" textcolor=\"ffbebebe\"",
+            "<button text=\"Button\" width=\"wrap_content\" height=\"wrap_content\" textsize=\"12\" textcolor=\"ffbebebe\"",
             "gradientdrawable=\"cornerradius:1.5,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ffbebebe\"/>"
         ],
         "description": "Create a Button tag. [RapidView]"
