@@ -96,15 +96,17 @@ RapidConfig.java
 
 ### Rapid Studio
 
-Visual Studio Code插件:
+####Visual Studio Code插件
+
+如果打算使用Visual Studio Code，可在插件商店中搜索Rapid Studio，相关介绍链接：
 
 [English Document](https://github.com/Tencent/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/README.md)
 
 [中文文档](https://github.com/YongdongHe/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/resource/README_CHINESE.md)
 
-Windows工具:
+####Windows工具
 
-点击[下载链接](http://cms.gtimg.com/android_cms/gzopen/8302bfa6dff45c03d0f5ba57ffdde469.zip)下载Rapid Studio工具包，如果打算使用Visual Studio Code，可在插件商店中搜索Rapid Studio。
+点击[下载链接](http://cms.gtimg.com/android_cms/gzopen/8302bfa6dff45c03d0f5ba57ffdde469.zip)下载Rapid Studio工具包。
 
 ## 许可协议（License）
 
