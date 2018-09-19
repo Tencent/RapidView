@@ -21,11 +21,6 @@
 
 >我们为开发者提供了一个简单的DEMO，以及一个简易调试工具Rapid Studio。Rapid Studio除了支持简单的XML语法校验，Lua语法高亮以及自动补全外，还可以实现实时调试，这将极大缩短开发者的调试成本。除了这个exe工具外，我们还提供了具有类似功能的Visual Studio Code插件。在VS Code商店中搜索：Rapid Studio可以找到这个插件。
 
-RapidStudio详细介绍:
-
-[English Document](https://github.com/Tencent/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/README.md)
-
-[中文文档](https://github.com/YongdongHe/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/resource/README_CHINESE.md)
 
 
 ### 工程引入RapidView
@@ -100,6 +95,15 @@ RapidConfig.java
 修改XML中的任意可见参数，如backgroundcolor，按ctrl+s保存，观察到log中提示“[100%]xxx”，表明文件被push到手机当中，重新加载当前activity（返回重新进入），查看效果。
 
 ### Rapid Studio
+
+Visual Studio Code插件:
+
+[English Document](https://github.com/Tencent/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/README.md)
+
+[中文文档](https://github.com/YongdongHe/RapidView/blob/master/rapidstudio_vscode_extension/rapidstudio/resource/README_CHINESE.md)
+
+Windows工具:
+
 点击[下载链接](http://cms.gtimg.com/android_cms/gzopen/8302bfa6dff45c03d0f5ba57ffdde469.zip)下载Rapid Studio工具包，如果打算使用Visual Studio Code，可在插件商店中搜索Rapid Studio。
 
 ## 许可协议（License）
