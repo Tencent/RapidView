@@ -51,4 +51,30 @@ public class RapidDataUtils {
 
         return map;
     }
+
+    public static Map<String, Var> table2Map(LuaTable table){
+        LuaValue key = LuaValue.NIL;
+        LuaValue value = LuaValue.NIL;
+        Map<String, Var> map = new ConcurrentHashMap<String, Var>();
+        if( table == null || !table.istable() ){
+            return null;
+        }
+
+        while(true){
+            Varargs argsItem = table.next(key);
+            key = argsItem.arg1();
+
+            if( key.isnil() ){
+                break;
+            }
+
+            value = argsItem.arg(2);
+
+            if( key.isstring() ){
+                map.put(key.toString(), new Var(value));
+            }
+        }
+
+        return map;
+    }
 }

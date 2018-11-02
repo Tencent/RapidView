@@ -270,6 +270,9 @@ public abstract class RapidObjectImpl {
             }
 
             initControl(context, rapidID, limitLevel, (IRapidView)obj, element, envMap, luaEnv, brotherMap, taskCenter, animationCenter, binder, concState);
+
+            ((IRapidView) obj).getParser().mControlName = element.getTagName().toLowerCase();
+
         }catch (Exception e){
             e.printStackTrace();
             obj = null;

@@ -1,4 +1,4 @@
-<relativelayout width="match_parent" height="match_parent" backgroundcolor="ffabcdef">
+<relativelayout width="match_parent" height="match_parent" backgroundcolor="ffaaabbb">
 
 	<!-- 控件功能展示区域，这里给放到一个relativelayout里面，并留出底部tab的位置-->
 	<relativelayout id="xml_container" width="match_parent" height="match_parent" marginbottom="50" backgroundcolor="ffaabbcc">

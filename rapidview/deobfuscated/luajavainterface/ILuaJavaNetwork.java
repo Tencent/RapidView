@@ -14,6 +14,7 @@
 package com.tencent.rapidview.deobfuscated.luajavainterface;
 
 import com.tencent.rapidview.deobfuscated.IBytes;
+import com.tencent.rapidview.deobfuscated.utils.IRapidFeedsCacheQueue;
 
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaTable;
@@ -48,10 +49,11 @@ public interface ILuaJavaNetwork {
      *
      * @param cmdID    请求id
      * @param data     请求数据
+     * @param params   请求用到的参数：ui_thr
      * @param listener 回调函数(boolean succeed, List<String> viewList, List<Map<String, Var>>, dataList)
      * @return
      */
-    boolean request(int cmdID, LuaTable data, LuaFunction listener);
+    boolean request(int cmdID, LuaTable data, LuaTable params, LuaFunction listener);
 
     boolean isNetworkActive();
     boolean isWap();
@@ -62,4 +64,14 @@ public interface ILuaJavaNetwork {
 
     String urlDecode(String url);
     String urlEncode(String url);
+
+
+    /**
+     * 创建一个无感滑动队列
+     *
+     * @param cacheCount 缓存数量
+     * @param reqStub    上次请求存根
+     * @return
+     */
+    IRapidFeedsCacheQueue createFeedsCacheQueue(int cacheCount, Object reqStub);
 }

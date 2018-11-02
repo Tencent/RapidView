@@ -22,6 +22,8 @@ import com.tencent.rapidview.parser.RelativeLayoutParser;
 import com.tencent.rapidview.parser.TextViewParser;
 import com.tencent.rapidview.parser.ViewParser;
 import com.tencent.rapidview.utils.RapidThreadPool;
+import com.tencent.rapidview.utils.RapidXmlViewer;
+import com.tencent.rapidviewdemo.DemoApplication;
 
 /**
  * @Class RapidInitializer
@@ -52,6 +54,8 @@ public class RapidInitializer {
             public void run() {
                 RapidLuaLoader.getInstance();
                 RapidChooser.getInstance();
+                RapidXmlViewer.getInstance().initialize(DemoApplication.getInstance());
+
                 new ViewParser();
                 new RelativeLayoutParser();
                 new LinearLayoutParser();

@@ -18,6 +18,7 @@ import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.lua.RapidLuaCaller;
 import com.tencent.rapidview.server.TestServer;
 import com.tencent.rapidview.utils.HandlerUtils;
+import com.tencent.rapidview.utils.RapidDataUtils;
 
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaTable;
@@ -36,15 +37,24 @@ public class LuaJavaTestEngine extends RapidLuaJavaObject {
 
     private LuaFunction mListener = null;
 
+    private Map<String, Var> mParams = null;
+
     private TestServer mEngine = new TestServer();
 
     public LuaJavaTestEngine(String photonID, IRapidView photonView) {
         super(photonID, photonView);
     }
 
-    public boolean request(int cmdID, LuaTable data, LuaFunction listener){
+    public void setParams(Map<String, Var> params){
+        mParams = params;
+    }
+
+
+    public boolean request(int cmdID, LuaTable data, LuaTable params, LuaFunction listener){
 
         mListener = listener;
+
+        mParams = RapidDataUtils.table2Map(params);
 
         mEngine.request(cmdID, data, new TestServer.IListener() {
 

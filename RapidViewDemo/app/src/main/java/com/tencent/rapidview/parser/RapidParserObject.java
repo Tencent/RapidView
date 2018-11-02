@@ -113,6 +113,8 @@ public abstract class RapidParserObject implements IRapidParser {
 
     public String mID = null;
 
+    public String mControlName = "";
+
     protected static int mScreenWidth = 0;
 
     protected static int mScreenHeight = 0;
@@ -411,6 +413,11 @@ public abstract class RapidParserObject implements IRapidParser {
     @Override
     public Context getContext(){
         return mContext;
+    }
+
+    @Override
+    public String getControlName(){
+        return mControlName;
     }
 
     @Override

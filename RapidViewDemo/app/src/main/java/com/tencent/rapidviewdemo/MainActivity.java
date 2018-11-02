@@ -36,9 +36,17 @@ public class MainActivity extends Activity {
 
     private IRapidView mRapidView = null;
 
+    private static MainActivity msInstance;
+
+    public static MainActivity getInstance(){
+        return msInstance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        msInstance = this;
 
         Map<String, Var> map = new ConcurrentHashMap<String, Var>();
 

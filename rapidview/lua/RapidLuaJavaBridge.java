@@ -21,6 +21,7 @@ import com.tencent.rapidview.deobfuscated.IBytes;
 import com.tencent.rapidview.deobfuscated.ILuaJavaInterface;
 import com.tencent.rapidview.deobfuscated.IRapidParser;
 import com.tencent.rapidview.deobfuscated.IRapidView;
+import com.tencent.rapidview.deobfuscated.utils.IRapidFeedsCacheQueue;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaNetwork;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaNetworkState;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaSystem;
@@ -34,6 +35,7 @@ import com.tencent.rapidview.lua.interfaceimpl.LuaJavaRequest;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaShare;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaViewWrapper;
 import com.tencent.rapidview.lua.interfaceimpl.RapidLuaJavaObject;
+import com.tencent.rapidview.utils.RapidFeedsCacheQueue;
 import com.tencent.rapidview.utils.XLog;
 
 import org.luaj.vm2.LuaFunction;
@@ -166,13 +168,17 @@ public class RapidLuaJavaBridge implements ILuaJavaInterface {
     }
 
     @Override
-    public boolean request(int cmdID, LuaTable data, LuaFunction listener){
+    public boolean request(int cmdID, LuaTable data, LuaTable params, LuaFunction listener){
         LuaJavaTestEngine engine = new LuaJavaTestEngine(mRapidID, mRapidView);
 
-        engine.request(cmdID, data, listener);
-
-        return true;
+        return engine.request(cmdID, data, params, listener);
     }
+
+    @Override
+    public IRapidFeedsCacheQueue createFeedsCacheQueue(int cacheCount, Object reqStub){
+        return new RapidFeedsCacheQueue(cacheCount, reqStub);
+    }
+
 
     @Override
     public void Log(String tag, String value){

@@ -101,6 +101,8 @@ public interface IRapidParser {
 
     int getScreenWidth();
 
+    String getControlName();
+
     void setNotifyListener(IRapidNotifyListener listener);
 
     IRapidNotifyListener getNotifyListener();

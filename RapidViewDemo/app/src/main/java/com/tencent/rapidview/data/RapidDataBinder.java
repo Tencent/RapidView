@@ -19,6 +19,7 @@ import com.tencent.rapidview.deobfuscated.IDataBinder;
 import com.tencent.rapidview.deobfuscated.IRapidNode;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.parser.RapidParserObject;
+import com.tencent.rapidview.utils.RapidDataUtils;
 
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
@@ -149,26 +150,10 @@ public class RapidDataBinder implements IDataBinder{
 
     @Override
     public void update(LuaTable table){
-        LuaValue key = LuaValue.NIL;
-        LuaValue value = LuaValue.NIL;
-        Map<String, Var> map = new ConcurrentHashMap<String, Var>();
-        if( table == null || !table.istable() ){
+        Map<String, Var> map = RapidDataUtils.table2Map(table);
+
+        if( table == null ){
             return;
-        }
-
-        while(true){
-            Varargs argsItem = table.next(key);
-            key = argsItem.arg1();
-
-            if( key.isnil() ){
-                break;
-            }
-
-            value = argsItem.arg(2);
-
-            if( key.isstring() ){
-                map.put(key.toString(), new Var(value));
-            }
         }
 
         update(map);

@@ -47,6 +47,8 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
 
     private IScrollBottomListener mBottomListener = null;
 
+    protected IScrollNearBottomListener mNearBottomListener = null;
+
     private IScrollTopListener mTopListener = null;
 
     private IInterruptTouchListener mInterruptListener = null;
@@ -54,6 +56,8 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
     private MANAGER_TYPE mManagerType = MANAGER_TYPE.LINEAR;
 
     private int mFlingCount = 15000;
+
+    protected int mNearBottomPxCount = 0;
 
     private boolean mScrollEnable = true;
 
@@ -93,6 +97,13 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
     public void setScrollBottomListener(IScrollBottomListener listener){
         mBottomListener = listener;
     }
+
+    @Override
+    public void setScrollNearBottomListener(int px, IScrollNearBottomListener listener){
+        mNearBottomPxCount = px;
+        mNearBottomListener = listener;
+    }
+
 
     @Override
     public void setScrollTopListener(IScrollTopListener listener){
@@ -269,15 +280,26 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
 
         setOnScrollListener(new RecyclerView.OnScrollListener(){
 
+            private int mRandomCount = 0;
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
+                mRandomCount++;
+                if( mRandomCount > 60000 ){
+                    mRandomCount = 0;
+                }
+
+                if (mScrollStateChangedListener != null){
+                    mScrollStateChangedListener.onScrollStateChanged(recyclerView, newState);
+                }
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE ) {
 
                     if( mManagerType == MANAGER_TYPE.LINEAR && mLinearOrientation == HORIZONTAL ){
-                        if (mBottomListener != null && computeHorizontalScrollExtent() + computeHorizontalScrollOffset() >= computeHorizontalScrollRange()) {
+                        int count = computeHorizontalScrollRange() - computeHorizontalScrollExtent() - computeHorizontalScrollOffset();
+
+                        if (mBottomListener != null && count <= 0) {
                             mBottomListener.onScrollToBottom();
                         }
 
@@ -286,13 +308,34 @@ public class NormalRecyclerView extends RecyclerView implements IRapidRecyclerVi
                         }
                     }
                     else{
-                        if (mBottomListener != null && computeVerticalScrollExtent() + computeVerticalScrollOffset() >= computeVerticalScrollRange()) {
+                        int count = computeVerticalScrollRange() - computeVerticalScrollExtent() - computeVerticalScrollOffset();
+
+                        if (mBottomListener != null && count <= 0 ) {
                             mBottomListener.onScrollToBottom();
                         }
 
                         if( mTopListener != null && computeVerticalScrollOffset() == 0 ){
                             mTopListener.onScrollToTop();
                         }
+                    }
+
+                }
+                else if( mRandomCount % 3 == 0 && mNearBottomListener != null ){
+
+                    if( mManagerType == MANAGER_TYPE.LINEAR && mLinearOrientation == HORIZONTAL ){
+                        int count = computeHorizontalScrollRange() - computeHorizontalScrollExtent() - computeHorizontalScrollOffset();
+
+                        if( mNearBottomListener != null && count <= mNearBottomPxCount ){
+                            mNearBottomListener.onScrollNearBottom();
+                        }
+                    }
+                    else{
+                        int count = computeVerticalScrollRange() - computeVerticalScrollExtent() - computeVerticalScrollOffset();
+
+                        if( mNearBottomListener != null && count <= mNearBottomPxCount ){
+                            mNearBottomListener.onScrollNearBottom();
+                        }
+
                     }
                 }
             }

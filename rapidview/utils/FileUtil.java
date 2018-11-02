@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -54,6 +55,9 @@ public class FileUtil
 	{
 	    boolean result = false;
 	    try{
+	    	String s1 = Environment.getExternalStorageState();
+			Boolean b1 = Environment.getExternalStorageDirectory().canWrite();
+
 	        result = Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && Environment.getExternalStorageDirectory().canWrite();
 	    }catch(Exception e){
 	        // do nothing
@@ -112,6 +116,21 @@ public class FileUtil
 			// TODO: handle exception
 		}
 		return "";
+	}
+
+	public static byte[] compressBitmap(Bitmap bitmap, Bitmap.CompressFormat format, int bitRate) {
+		ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
+		bitmap.compress(format, bitRate, localByteArrayOutputStream);
+		byte[] arrayOfByte = localByteArrayOutputStream.toByteArray();
+
+		try {
+			localByteArrayOutputStream.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return arrayOfByte;
 	}
 
 	public static byte [] readFromFile(String filePath) {

@@ -48,6 +48,12 @@ public interface IRapidRecyclerView {
         void onScrollToBottom();
     }
 
+    interface IScrollNearBottomListener{
+
+        void onScrollNearBottom();
+    }
+
+
     interface IScrollTopListener{
 
         void onScrollToTop();
@@ -67,6 +73,8 @@ public interface IRapidRecyclerView {
     void setScrolledListener(IScrolledListener listener);
 
     void setScrollBottomListener(IScrollBottomListener listener);
+
+    void setScrollNearBottomListener(int px, IScrollNearBottomListener listener);
 
     void setScrollTopListener(IScrollTopListener listener);
 
