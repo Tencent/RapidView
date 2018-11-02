@@ -90,7 +90,7 @@ RapidConfig.java
 **工具目录下有一个rapid_config.ini的配置，工程目录中utils目录下有一个FileUitl的文件，这两个地方配置的目录要对应起来，否则调试会失败。**
 
 
-![](http://cms.gtimg.com/android_cms/gzskin/6352e38da357e28ee27cdfc3aad4cdcb.png)
+![](http://cms.gtimg.com/android_cms/gzskin/0620bf5cd8124a83e393f07886c89f6a.png)
 
 修改XML中的任意可见参数，如backgroundcolor，按ctrl+s保存，观察到log中提示“[100%]xxx”，表明文件被push到手机当中，重新加载当前activity（返回重新进入），查看效果。
 
@@ -106,7 +106,7 @@ RapidConfig.java
 
 #### Windows工具
 
-点击[下载链接](http://cms.gtimg.com/android_cms/gzopen/8302bfa6dff45c03d0f5ba57ffdde469.zip)下载Rapid Studio工具包。
+点击[下载链接](http://cms.gtimg.com/android_cms/gzopen/000d422874e9a4e5680d34a905f85352.zip)下载Rapid Studio工具包。
 
 ## 许可协议（License）
 
