@@ -42,7 +42,7 @@
     "TextView": {
         "prefix": "textview",
         "body": [
-            "<textview width=\"wrap_content\" height=\"wrap_content\"  text=\"ChickenDinner\" textsize=\"11\" textcolor=\"ff000000\"/>"
+            "<textview width=\"wrap_content\" height=\"wrap_content\"  text=\"ChickenDinner\" textsize=\"11\" textcolor=\"ff000000\" maxlines=\"1\" ellipsize=\"end\">"
         ],
         "description": "Create a TextView tag. [RapidView]"
     },
@@ -102,6 +102,33 @@
             "<viewchangeaction value=\"${1:id},${2:attrName},${3:value}\"/>"
         ],
         "description": "Create a ViewchangeAction tag. [RapidView]"
+    },
+    "TaskViewShow": {
+        "prefix": "viewshow",
+        "body": [
+            "<task hook=\"view_show\">",
+            "\t",
+            "</task>"
+        ],
+        "description": "Create a viewshow task. [RapidView]"
+    },
+    "TaskAfterUpdateData": {
+        "prefix": "afterupdatedata",
+        "body": [
+            "<task hook=\"after_update_data\">",
+            "\t",
+            "</task>"
+        ],
+        "description": "Create a after_update_data task. [RapidView]"
+    },
+    "TaskLoadFinish": {
+        "prefix": "loadfinish",
+        "body": [
+            "<task hook=\"load_finish\">",
+            "\t",
+            "</task>"
+        ],
+        "description": "Create a load_finish task. [RapidView]"
     }
 }
 

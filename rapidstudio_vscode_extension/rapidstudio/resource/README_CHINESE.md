@@ -38,7 +38,7 @@ MacOS下，取决于安装方式，所在目录会有一定差异，通过homebr
 如何将ADB添加到Path？快捷链接：
 
 + [MacoS](https://stackoverflow.com/questions/17901692/set-up-adb-on-mac-os-x)
-+ [WIndows](https://stackoverflow.com/questions/23400030/windows-7-add-path)\
++ [WIndows](https://stackoverflow.com/questions/23400030/windows-7-add-path)
 
 ### 配置Rapid调试目录
 
@@ -108,6 +108,19 @@ MacOS下，取决于安装方式，所在目录会有一定差异，通过homebr
 使用New Rapid Project时，实际上是把rapid_workspace.json的模版文件拷贝了一份，所以你也可以直接修改模版文件，windows平台下，模版被放置在vscode的extension目录下：``C:\Users\username\.vscode\extensions\rapidstudio\tempalte``
 
 这样每次使用New Rapid Project时，会直接使用修改后的模版
+
+### 代码片段
+
+使用代码片段来提高开发效率，例如:
+
++ `include`: 创建一个include xml标签
++ `viewshow`: 创建一个hook了viewshow消息的task
++ `rsd`:创建一`Rapid:setData(key,val)` 的Lua代码片段，在lua里进行数据修改
++ `class`: 创建一个table来实现lua中的面向对象
++ `interface` : 创建一个table，用于在lua中实现Java Interface
+
+查看更多代码片段：
+[更多](https://github.com/Tencent/RapidView/tree/master/rapidstudio_vscode_extension/rapidstudio/snippets)
 
 
 ## 拓展设置

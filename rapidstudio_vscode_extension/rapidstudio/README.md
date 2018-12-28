@@ -114,6 +114,19 @@ Every time new rapid workspace is created, rapid studio will copy a file from te
 
 You can also modify the template of rapid_workspace.json under the ./vscode/extension/rapidstudio/template.
 
+### Code Snippets
+
+Use code snippets to improve your efficiency, for example:
+
++ `include`: create a include tag
++ `viewshow`: create a task hook viewshow
++ `rsd`: create a `Rapid:setData(key,val)` lua snippets
++ `class`: create a lua table to implement oop
++ `interface` : create a lua table to implement java interface programing
+
+See these files for more information of snippets:
+[More](https://github.com/Tencent/RapidView/tree/master/rapidstudio_vscode_extension/rapidstudio/snippets)
+
 ### Log Output Colorizer
 
 Reference to the realization of the previous project from IBM-Bluemix:

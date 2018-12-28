@@ -43,5 +43,83 @@
             "local exampleListener = luajava.createProxy('${2:com.example.package.example$IExampleListener}', ${1:IExampleListener})"
         ],
         "description": "Create a lua proxy for Java interface . [RapidView]"
+    },
+    "LuaRapidSetData": {
+        "prefix": [
+            "rsd",
+            "setdata"
+        ],
+        "body": [
+            "Rapid:setData('${1:key}','${2:val}')"
+        ],
+        "description": "Update or set datas in binder. [RapidView]"
+    },
+    "LuaRapidGetDataDefault": {
+        "prefix": [
+            "rgd",
+            "getdata"
+        ],
+        "body": [
+            "Rapid:getData('${1:key}','${2:defaultVal}')"
+        ],
+        "description": "Get data by key with a default value in binder. [RapidView]"
+    },
+    "LuaRapidGetData": {
+        "prefix": [
+            "rgd",
+            "getdata"
+        ],
+        "body": [
+            "Rapid:getData('${1:key}')"
+        ],
+        "description": "Get data by key with a default value in binder. [RapidView]"
+    },
+    "LuaRapidGetChild": {
+        "prefix": [
+            "rgc",
+            "getchild"
+        ],
+        "body": [
+            "Rapid:getChild('${1:id}')"
+        ],
+        "description": "Get child photonview by id. [RapidView]"
+    },
+    "LuaRapidSetAttr": {
+        "prefix": [
+            "rsa",
+            "setattr"
+        ],
+        "body": [
+            "Rapid:setAttr('${1:attr}','${2:value}')"
+        ],
+        "description": "Set attr in photonview. [RapidView]"
+    },
+    "LuaRapidLog": {
+        "prefix": "rlog",
+        "body": [
+            "Rapid:Log(\"${1:TagName}\",\"${2:TagContent}\")"
+        ],
+        "description": "Output log. [RapidView]"
+    },
+    "LuaRapidRunTask": {
+        "prefix": [
+            "rrt",
+            "runtask"
+        ],
+        "body": [
+            "Rapid:runTask(\"${1:taskName}\")"
+        ],
+        "description": "Run a task by name. [RapidView]"
+    },
+    "LuaRapidExecAction": {
+        "prefix": [
+            "rec",
+            "execaction",
+            "doaction"
+        ],
+        "body": [
+            "Rapid:execAction('${1:actionName}','${2:luaTableParams}','${3:nil}')"
+        ],
+        "description": "Exc actions. [RapidView]"
     }
 }
