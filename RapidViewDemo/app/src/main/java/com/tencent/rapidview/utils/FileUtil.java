@@ -28,6 +28,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.tencent.rapidview.framework.RapidEnv;
+import com.tencent.rapidviewdemo.DemoApplication;
 
 
 public class FileUtil
@@ -133,6 +134,33 @@ public class FileUtil
 		return arrayOfByte;
 	}
 
+	public static String getFilesPath(String path) {
+		final String rootDir = getFilesDir();
+		String fullPath = null;
+
+		if (!TextUtils.isEmpty(path))
+		{
+			fullPath = rootDir + path;
+		}
+		else
+		{
+			fullPath = rootDir;
+		}
+
+		try {
+			return getPath(fullPath, false);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return "";
+	}
+
+	private static String getFilesDir() {
+		String dirPath = DemoApplication.getInstance().getFilesDir().getAbsolutePath();
+		return dirPath;
+	}
+
 	public static byte [] readFromFile(String filePath) {
 		byte [] buffer = null;
 		FileInputStream fin = null;
@@ -179,12 +207,12 @@ public class FileUtil
 
     public static String getRapidDir()
     {
-        return getCommonPath(RAPID_DIR_PATH) + "/";
+        return getFilesPath(RAPID_DIR_PATH) + "/";
     }
 
     public static String getRapidConfigDir()
     {
-        return getCommonPath(RAPID_CONFIG_DIR_PATH) + "/";
+        return getFilesPath(RAPID_CONFIG_DIR_PATH) + "/";
     }
 
     public static String getRapidDebugDir()
@@ -198,11 +226,11 @@ public class FileUtil
     }
 
 	public static String getRapidSandBoxDir(){
-		return getCommonPath(RAPID_SANDBOX_PATH) + "/";
+		return getFilesPath(RAPID_SANDBOX_PATH) + "/";
 	}
 
 	public static String getRapidTemporaryDir(){
-		return getCommonPath(RAPID_UPDATE_TEMPORARY) + "/";
+		return getFilesPath(RAPID_UPDATE_TEMPORARY) + "/";
 	}
 
 
