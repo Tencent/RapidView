@@ -31,7 +31,7 @@
 		<task id="click_retry">
 			<attributeaction id="loading_container" key="visibility" value="visible"/>
 			<attributeaction id="error_container" key="visibility" value="gone"/>
-			<luaaction load="game_topic_loader.lua" function="load"/>
+			<luaaction load="tab_page_main_loader.lua" function="load"/>
 		</task>
 	</relativelayout>
 </relativelayout>
