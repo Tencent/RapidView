@@ -87,7 +87,7 @@ RapidConfig.java
     public final static boolean DEBUG_MODE = true;
 ```
 
-**工具目录下有一个rapid_config.ini的配置，工程目录中utils目录下有一个FileUitl的文件，这两个地方配置的目录要对应起来，否则调试会失败。**
+**工具目录下有一个rapid_config.ini的配置，工程目录中utils目录下有一个FileUtil的文件，这两个地方配置的目录要对应起来，否则调试会失败。**
 
 
 ![](http://cms.gtimg.com/android_cms/gzskin/0620bf5cd8124a83e393f07886c89f6a.png)
