@@ -1,12 +1,11 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
 }
 
 android {
     compileSdk 28
 
     defaultConfig {
-        applicationId "com.tencent.rapidview.demo"
         minSdk 26
         targetSdk 26
         versionCode 1
@@ -26,12 +25,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    useLibrary 'org.apache.http.legacy'
+
 }
 
 dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation project(":rapidview-core")
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.tencent.rapidview">
+        package="com.tencent.rapidview.demo">
 
     <application
             android:name="com.tencent.rapidviewdemo.DemoApplication"

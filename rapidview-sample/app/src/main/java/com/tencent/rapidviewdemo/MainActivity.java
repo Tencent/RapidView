@@ -25,6 +25,7 @@ import com.tencent.rapidview.param.RelativeLayoutParams;
 import com.tencent.rapidview.parser.RapidParserObject;
 import com.tencent.rapidview.utils.HandlerUtils;
 
+import com.tencent.rapidview.utils.RapidXmlViewer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +46,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        RapidXmlViewer.getInstance().initialize(this);
         msInstance = this;
 
         Map<String, Var> map = new ConcurrentHashMap<String, Var>();

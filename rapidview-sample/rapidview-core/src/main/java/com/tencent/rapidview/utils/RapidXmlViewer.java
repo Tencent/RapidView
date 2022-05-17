@@ -15,9 +15,9 @@ import android.view.View;
 
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.framework.RapidConfig;
+import com.tencent.rapidview.framework.RapidInitializer;
 import com.tencent.rapidview.framework.RapidObject;
 import com.tencent.rapidview.param.RelativeLayoutParams;
-import com.tencent.rapidviewdemo.MainActivity;
 
 import java.util.Random;
 
@@ -30,6 +30,7 @@ import java.util.Random;
  */
 public class RapidXmlViewer {
 
+    private static Activity activityContext;
     private static RapidXmlViewer msInstance = null;
 
     private final BroadcastReceiver mDebugImageReceiver = new BroadcastReceiver() {
@@ -42,7 +43,7 @@ public class RapidXmlViewer {
                 return;
             }
 
-            bitmap = get(MainActivity.getInstance(), xml);
+            bitmap = get(activityContext, xml);
 
             if( bitmap != null){
                 FileUtil.write2File(FileUtil.compressBitmap(bitmap, Bitmap.CompressFormat.PNG, 100), FileUtil.getRapidDebugDir() + "xml_snapshot" + ".png");
@@ -61,7 +62,8 @@ public class RapidXmlViewer {
         return msInstance;
     }
 
-    public void initialize(Context context){
+    public void initialize(Activity activity){
+        activityContext = activity;
         IntentFilter filter;
 
         if( !RapidConfig.DEBUG_MODE ){
@@ -72,7 +74,7 @@ public class RapidXmlViewer {
         filter.addAction("android.intent.action.BROADCAST_FORM_ADB");
         filter.addAction("com.tencent.android.rapidview");
 
-        context.registerReceiver(mDebugImageReceiver, filter);
+        activityContext.registerReceiver(mDebugImageReceiver, filter);
     }
 
     public Bitmap get(Activity context, String xml){

@@ -13,6 +13,7 @@
  ***************************************************************************************************/
 package com.tencent.rapidview.utils;
 
+import com.tencent.rapidview.framework.RapidInitializer;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +29,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.tencent.rapidview.framework.RapidEnv;
-import com.tencent.rapidviewdemo.DemoApplication;
 
 
 public class FileUtil
@@ -157,7 +157,7 @@ public class FileUtil
 	}
 
 	private static String getFilesDir() {
-		String dirPath = DemoApplication.getInstance().getFilesDir().getAbsolutePath();
+		String dirPath = RapidInitializer.getAppContext().getFilesDir().getAbsolutePath();
 		return dirPath;
 	}
 

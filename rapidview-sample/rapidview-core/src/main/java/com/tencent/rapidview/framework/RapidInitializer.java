@@ -23,7 +23,6 @@ import com.tencent.rapidview.parser.TextViewParser;
 import com.tencent.rapidview.parser.ViewParser;
 import com.tencent.rapidview.utils.RapidThreadPool;
 import com.tencent.rapidview.utils.RapidXmlViewer;
-import com.tencent.rapidviewdemo.DemoApplication;
 
 /**
  * @Class RapidInitializer
@@ -35,27 +34,30 @@ import com.tencent.rapidviewdemo.DemoApplication;
 public class RapidInitializer {
 
     private static boolean msIsInitialize = false;
+    private static Context appContext;
     public static void initialize(Context context){
 
         if( msIsInitialize ){
             return;
         }
-
+        appContext = context;
         msIsInitialize = true;
 
         RapidPool.getInstance().initialize(context, null);
-        staticInitialize();
+        staticInitialize(context);
         customerInitialize();
     }
 
-    private static void staticInitialize(){
+    public static Context getAppContext(){
+        return appContext;
+    }
+
+    private static void staticInitialize(Context context){
         RapidThreadPool.get().execute(new Runnable() {
             @Override
             public void run() {
                 RapidLuaLoader.getInstance();
                 RapidChooser.getInstance();
-                RapidXmlViewer.getInstance().initialize(DemoApplication.getInstance());
-
                 new ViewParser();
                 new RelativeLayoutParser();
                 new LinearLayoutParser();
