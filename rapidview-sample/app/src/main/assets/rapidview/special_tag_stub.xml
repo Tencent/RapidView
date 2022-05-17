@@ -1,0 +1,5 @@
+<relativelayout id="special_tag_container" width="match_parent" height="180" backgroundcolor="ffabcdef">
+	<merge>
+		<textview width="wrap_content" height="wrap_content" centervertical="true" margin="12,0,12,0" text="特殊标签主要包括include/merge/viewstub，include/viewstub这两个标签在当前DEMO中已经有使用和说明，参见DEMO源码。而merge标签在rapidview中并没有实际作用，仅仅把子节点简单的释放到了父节点中去。同时需要特别说明的是，因为光子的IPhotonView事实上对应着一个View，因此根节点不准许使用merge标签。在之前实践中曾设计过根节点为数组，准许使用merge标签，但发现使用场景较少，且有替代方案，而带来的逻辑复杂度增量却很大，因而移除了该特性。当前xml中简单的使用了一下merge标签，供参考。"/>
+	</merge>
+</relativelayout>

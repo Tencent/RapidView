@@ -1,0 +1,10 @@
+<linearlayout width="match_parent" height="wrap_content" orientation="vertical">
+
+	<!-- 通用item的XML-->
+	<include layout="flexible_control.xml" environment="name:[name],title:[title],container:[container]"/>
+
+	<!-- 一般来说，view里面的内容不确定有多少，可以先用viewstub，点击的时候再加载，viewstub的逻辑是当给visibility设置为visible的时候进行加载-->
+	<viewstub id="[container]" width="match_parent" height="wrap_content" layout="[layout]"/>
+
+	<imageview width="match_parent" height="1" backgroundcolor="ffcccccc"/>
+</linearlayout>

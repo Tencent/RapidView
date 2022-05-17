@@ -1,0 +1,20 @@
+<relativelayout id="filter_container" width="match_parent" height="100" backgroundcolor="ffabcdef">
+	<textview id="filter_content" width="wrap_content" height="wrap_content" centervertical="true" marginleft="12" text="原始内容"/>
+	<button width="62" height="24" marginright="30" text="一个按钮" click="filter_button_click" centervertical="true" alignparentright="true"  padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+
+	<task id="filter_button_click">
+		
+		<!-- 当数据池中的数据满足某种条件时，执行通过
+			 key:数据池中的数据key
+             value:要进行比较的值
+             type:比较的类型，以int的方式比较，还是以float的方式比较，还是以string的方式比较
+             reference:什么情况下通过，value（大于、小于、等于、不等于、大于等于、小于等于）被比较的数据池中的数据时通过-->
+		<!-- <datafilter key="xxx" value="xxx" type="int(integer)/float/string" reference="equal/unequal/greater/greaterequal/less/lessequal"/> -->
+
+		<!-- 当网络处于某种状态时执行通过
+             type (处于\不处于) style 的状态时通过-->
+		<!-- <networkfilter type="equal/unequal" style="active/wifi/2g/3g/4g/wap"/> -->
+
+		<attributeaction cid="filter_content" key="text" value="按过了按钮"/>
+	</task>
+</relativelayout>

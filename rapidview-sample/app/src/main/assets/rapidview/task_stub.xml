@@ -1,0 +1,30 @@
+<relativelayout id="task_container" width="match_parent" height="100" backgroundcolor="ffabcdef">
+	<textview id="task_content" width="wrap_content" height="wrap_content" centervertical="true" marginleft="12" text="原始内容"/>
+	<button id="task_btn_1" width="52" height="24" marginright="30" text="按钮三" click="click_task_3" centervertical="true" alignparentright="true"  padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+	<button id="task_btn_2" width="52" height="24" marginright="20" text="按钮二" click="click_task_2" leftof="task_btn_1" centervertical="true"  padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+	<button id="task_btn_3" width="52" height="24" marginright="20" text="按钮一" click="click_task_1" leftof="task_btn_2" centervertical="true"  padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+
+	<!-- 按钮1按下的时候触发这个task的执行，这个task做了2个事情，改变文字的内容，以及设置一个数据.数据的key是：clicked_btn_1，value内容是：true-->
+	<task id="click_task_1">
+		<attributeaction cid="task_content" key="text" value="按下了按钮1"/>
+		<dataaction key="clicked_btn_1" value="true"/>
+	</task>
+
+	<!-- task由filter和action组成，当filter全部满足条件时，执行action。当按下按钮1的时候，设置了clicked_btn_1的数据，按钮2的filter才能满足条件，执行action。
+         因此，只有按过按钮1，按钮2改变文字内容的操作才生效 -->
+	<task id="click_task_2">
+		<datafilter key="clicked_btn_1" value="true" reference="equal"/>
+		<attributeaction cid="task_content" key="text" value="按下了按钮2"/>
+	</task>
+
+	<!-- 按钮3按下的时候，改变了一个数据 -->
+	<task id="click_task_3">
+		<dataaction key="click_btn_3" value="true"/>
+	</task>
+	
+	<!-- task除了用户手动触发，还可以在某些条件下被动触发，这条表示在click_btn_3数据发生变化时执行，因此当按下按钮3时，恰好刷新了click_btn_3的内容，触发了这个task的执行，
+         因此按下按钮3的时候，文字也会得到改变 -->
+	<task hook="datachange" value="click_btn_3">
+		<attributeaction cid="task_content" key="text" value="按下了按钮3"/>
+	</task>
+</relativelayout>

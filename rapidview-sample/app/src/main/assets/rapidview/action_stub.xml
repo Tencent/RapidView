@@ -1,0 +1,34 @@
+<relativelayout id="action_container" width="match_parent" height="100" backgroundcolor="ffabcdef">
+	<textview id="action_content" width="wrap_content" height="wrap_content" centervertical="true" marginleft="12" text="原始内容"/>
+	<button width="62" height="24" marginright="30" text="一个按钮" click="action_button_click" centervertical="true" alignparentright="true"  padding="0,0,0,0" textsize="13" textcolor="ff1d82ff" gradientdrawable="cornerradius:4,color:00ffffff,alpha:255,strokewidth:2,strokecolor:ff1d82ff" />
+
+	<!-- 以下列举了8个使用频率最高、最重要的action，项目接入rapidview后，根据项目需要，可以添加一些项目常用的action。
+         推荐至少添加：弹窗action、页面跳转action、统计上报action -->
+	<task id="action_button_click">
+		
+		<!-- view:表示要添加的viewName, native:表示本地默认布局 parent：表示要添加到哪个父控件下面 data:保存在数据池中的map数据 above:添加到父容器中哪个控件的上面-->
+		<!-- <addviewaction view="xxx" native="xxx" parent="xxx" data="xxx" above="xxx"/> -->
+
+		<!-- 更新数据池中的数据-->
+		<!-- <dataaction key="xxx" value="xxx"/> -->
+
+		<!-- 没什么参数，模拟物理返回按键 -->
+		<!-- <backaction /> -->
+
+		<!-- 非常重要，调用一个lua文件，后面详细介绍-->
+		<!-- <luaaction load="xxx" function="xxx" param1="xxx" param2="xxx" param3="xxx" /> -->
+		
+		<!-- 相当于一个notify，这个action最终会调用java层的IRapidActionListener.notify方法。这个Listener在加载PhotonLoader加载view时传入，key和value都是参数，设计这个
+             回调的初衷是希望rapidview作为独立view，能够有途径和外部代码进行交互，外部信息进入内部通过更新数据，以及notify消息，内部回给外部就通过这个action -->
+		<!-- <outeraction key="xxx" value="xx"/> -->
+
+		<!-- 调用一个其它的task，tid表示taskid -->
+		<!-- <taskaction tid="xxx"/> -->
+
+		<!-- 弹出一个toast的action -->
+		<toastaction value="弹出一个toast"/>
+		
+		<!-- 【重要】改变某个控件的属性参数，cid表示controlid， key和value表示属性 -->
+		<attributeaction cid="action_content" key="text" value="按过了按钮"/>
+	</task>
+</relativelayout>
