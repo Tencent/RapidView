@@ -15,7 +15,6 @@ package com.tencent.rapidview.parser;
 
 import android.content.Context;
 import android.os.Handler;
-import android.provider.Settings;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,7 +38,6 @@ import com.tencent.rapidview.lua.RapidLuaJavaBridge;
 import com.tencent.rapidview.lua.RapidXmlLuaCenter;
 import com.tencent.rapidview.param.ParamsObject;
 import com.tencent.rapidview.task.RapidTaskCenter;
-import com.tencent.rapidview.utils.DeviceUtils;
 import com.tencent.rapidview.utils.RapidControlNameCreator;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.utils.RapidStringUtils;
@@ -54,7 +52,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -865,43 +862,7 @@ public abstract class RapidParserObject implements IRapidParser {
         Display display = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 
         mScreenWidth = display.getWidth();
-        mScreenHeight = display.getHeight() - getMeizuSmartBarHeight(context);
-    }
-
-    public static int getMeizuSmartBarHeight(Context context) {
-        final boolean autoHideSmartBar = Settings.System.getInt(context.getContentResolver(), "mz_smartbar_auto_hide", 0) == 1;
-        int height = 0;
-
-        if (DeviceUtils.hasSmartBar()) {
-            if (autoHideSmartBar) {
-                return 0;
-            }
-            else {
-                try {
-                    Class c = Class.forName("com.android.internal.R$dimen");
-                    Object obj = c.newInstance();
-
-                    Field field = c.getField("mz_action_button_min_height");
-                    height = Integer.parseInt(field.get(obj).toString());
-                    return context.getResources().getDimensionPixelSize(height);
-                } catch (Throwable e) {
-                    try{
-                        Class c = Class.forName("com.android.internal.R$dimen");
-                        Object obj = c.newInstance();
-
-                        Field field = c.getField("navigation_bar_height");
-                        height = Integer.parseInt(field.get(obj).toString());
-                        return context.getResources().getDimensionPixelSize(height);
-                    }
-                    catch (Throwable ex){
-                    }
-                }
-            }
-        } else {
-            return 0;
-        }
-
-        return 0;
+        mScreenHeight = display.getHeight();
     }
 
     protected void onResume(){}
