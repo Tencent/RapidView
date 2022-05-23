@@ -1,0 +1,4 @@
+<relativelayout id="task_container" width="match_parent" height="100" backgroundcolor="ffabcdef">
+	<textview id="t1" width="wrap_content" height="wrap_content" centerhorizontal="true" text="data@text_1" margintop="15"/>
+	<textview width="wrap_content" height="wrap_content" below="t1" centerhorizontal="true" text="data@text_2" margintop="5" />
+</relativelayout>

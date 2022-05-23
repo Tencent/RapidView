@@ -110,10 +110,16 @@ RapidConfig.java
 
 ## 许可协议（License）
 
->RapidView使用 MIT 许可协议， 详见[License](https://github.com/Tencent/RapidView/blob/master/License.txt)文件。
+RapidView使用 MIT 许可协议， 详见[License](https://github.com/Tencent/RapidView/blob/master/License.txt)文件。
+
+
+## 个人信息保护规则
+
+RapidView 在运行时只获取必要的信息UI加载流程能在不同操作系统版本的设备上正常执行，这些信息不涉及系统敏感权限和用户隐私相关的内容。同时 RapidView 不含上报逻辑，即不会上报获取到的信息。有关 RapidView 获取信息的类型及用途，请查看 [RapidView SDK 个人信息保护规则](https://github.com/Tencent/RapidView/blob/master/docs/PRIVACY.md) 了解详情。
 
 ## 其它
 
->详细开发指南请参阅[开发文档](https://github.com/Tencent/RapidView/blob/master/document.md)，如果有其它问题，可以扫描下方二维码，加入QQ群咨询
+详细开发指南请参阅[开发文档](https://github.com/Tencent/RapidView/blob/master/document.md)，如果有其它问题，可以扫描下方二维码，加入QQ群咨询
 
 ![](http://cms.gtimg.com/android_cms/gzskin/c89fb14e3ae91058b2098072dd32965f.png)
+

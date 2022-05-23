@@ -1,0 +1,16 @@
+<relativelayout width="match_parent" height="80" click="[name]_click_open,[name]_click_close">
+	<textview width="wrap_content" height="wrap_content" centervertical="true" text="[title]" marginleft="12" textsize="16"/>
+
+	<!-- 设置一个开关，点击一下展开，点击一下收起-->
+	<task id="[name]_click_open" type="interrupt">
+		<datafilter key="[name]_oc" value="open" reference="unequal"/>
+		<attributeaction cid="[container]" key="visibility" value="visible"/>
+		<dataaction key="[name]_oc" value="open"/>
+	</task>
+
+	<task id="[name]_click_close">
+		<datafilter key="[name]_oc" value="open" reference="equal"/>
+		<attributeaction cid="[container]" key="visibility" value="gone"/>
+		<dataaction key="[name]_oc" value="close"/>
+	</task>
+</relativelayout>
