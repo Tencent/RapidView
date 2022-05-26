@@ -34,7 +34,6 @@ public class FilterChooser {
     static{
         try{
             mAllClassMap.put("datafilter", DataFilterGeter.class.newInstance());
-            mAllClassMap.put("networkfilter", NetWorkGeter.class.newInstance());
         }
         catch (Exception e){
             e.printStackTrace();
@@ -42,7 +41,6 @@ public class FilterChooser {
 
         try{
             mLimitClassMap.put("datafilter", DataFilterGeter.class.newInstance());
-            mLimitClassMap.put("networkfilter", NetWorkGeter.class.newInstance());
         }
         catch (Exception e){
             e.printStackTrace();
@@ -82,11 +80,4 @@ public class FilterChooser {
         }
     }
 
-    private static class NetWorkGeter implements IFunction{
-        public NetWorkGeter(){}
-        @Override
-        public FilterObject get(Element element,  Map<String, String> mapEnv){
-            return new NetWorkFilter(element, mapEnv);
-        }
-    }
 }

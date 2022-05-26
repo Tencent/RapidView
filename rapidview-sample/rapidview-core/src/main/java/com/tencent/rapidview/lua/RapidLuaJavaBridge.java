@@ -23,7 +23,6 @@ import com.tencent.rapidview.deobfuscated.IRapidParser;
 import com.tencent.rapidview.deobfuscated.IRapidView;
 import com.tencent.rapidview.deobfuscated.utils.IRapidFeedsCacheQueue;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaNetwork;
-import com.tencent.rapidview.lua.interfaceimpl.LuaJavaNetworkState;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaSystem;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaTestEngine;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaUIImpl;
@@ -31,7 +30,6 @@ import com.tencent.rapidview.lua.interfaceimpl.LuaJavaBase64;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaCreate;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaMd5;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaPicture;
-import com.tencent.rapidview.lua.interfaceimpl.LuaJavaRequest;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaShare;
 import com.tencent.rapidview.lua.interfaceimpl.LuaJavaViewWrapper;
 import com.tencent.rapidview.lua.interfaceimpl.RapidLuaJavaObject;
@@ -46,7 +44,6 @@ import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Class RapidLuaJavaBridge
@@ -145,40 +142,6 @@ public class RapidLuaJavaBridge implements ILuaJavaInterface {
 
         return CoerceJavaToLua.coerce(obj.create(objName, args0, args1, args2, args3, args4, args5));
     }
-
-    @Override
-    public boolean request(String url, IBytes data, LuaTable header, String method, LuaFunction succeedListener, LuaFunction failedListener){
-        LuaJavaRequest request = new LuaJavaRequest(mRapidID, mRapidView, url, data.getArrayByte(), header, method, succeedListener, failedListener);
-
-        return request.request();
-    }
-
-    @Override
-    public boolean request(String url, String data, LuaTable header, String method, LuaFunction succeedListener, LuaFunction failedListener){
-        LuaJavaRequest request = new LuaJavaRequest(mRapidID, mRapidView, url, data, header, method, succeedListener, failedListener);
-
-        return request.request();
-    }
-
-    @Override
-    public boolean request(String url, LuaTable data, LuaTable header, String method, LuaFunction succeedListener, LuaFunction failedListener){
-        LuaJavaRequest request = new LuaJavaRequest(mRapidID, mRapidView, url, data, header, method, succeedListener, failedListener);
-
-        return request.request();
-    }
-
-    @Override
-    public boolean request(int cmdID, LuaTable data, LuaTable params, LuaFunction listener){
-        LuaJavaTestEngine engine = new LuaJavaTestEngine(mRapidID, mRapidView);
-
-        return engine.request(cmdID, data, params, listener);
-    }
-
-    @Override
-    public IRapidFeedsCacheQueue createFeedsCacheQueue(int cacheCount, Object reqStub){
-        return new RapidFeedsCacheQueue(cacheCount, reqStub);
-    }
-
 
     @Override
     public void Log(String tag, String value){
@@ -364,61 +327,10 @@ public class RapidLuaJavaBridge implements ILuaJavaInterface {
     }
 
     @Override
-    public boolean isNetworkActive(){
-        LuaJavaNetworkState state = new LuaJavaNetworkState(mRapidID, mRapidView);
-
-        return state.isNetworkActive();
-    }
-
-    @Override
-    public boolean isWap(){
-        LuaJavaNetworkState state = new LuaJavaNetworkState(mRapidID, mRapidView);
-
-        return state.isNetworkActive();
-    }
-
-    @Override
-    public boolean isWifi(){
-        LuaJavaNetworkState state = new LuaJavaNetworkState(mRapidID, mRapidView);
-
-        return state.isNetworkActive();
-    }
-
-    @Override
-    public boolean is2G(){
-        LuaJavaNetworkState state = new LuaJavaNetworkState(mRapidID, mRapidView);
-
-        return state.isNetworkActive();
-    }
-
-    @Override
-    public boolean is3G(){
-        LuaJavaNetworkState state = new LuaJavaNetworkState(mRapidID, mRapidView);
-
-        return state.isNetworkActive();
-    }
-
-    @Override
-    public boolean is4G(){
-        LuaJavaNetworkState state = new LuaJavaNetworkState(mRapidID, mRapidView);
-
-        return state.isNetworkActive();
-    }
-
-    @Override
     public String getServerTime(){
         LuaJavaSystem system = new LuaJavaSystem(mRapidID, mRapidView);
 
         return system.getServerTime();
     }
 
-    @Override
-    public String urlDecode(String url){
-        return LuaJavaNetwork.urlDecode(url);
-    }
-
-    @Override
-    public String urlEncode(String url){
-        return LuaJavaNetwork.urlEncode(url);
-    }
 }

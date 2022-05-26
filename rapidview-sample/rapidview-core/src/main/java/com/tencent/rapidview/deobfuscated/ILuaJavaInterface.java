@@ -19,7 +19,6 @@ import com.tencent.rapidview.deobfuscated.luajavainterface.ILuaJavaDebug;
 import com.tencent.rapidview.deobfuscated.luajavainterface.ILuaJavaInitialize;
 import com.tencent.rapidview.deobfuscated.luajavainterface.ILuaJavaMd5;
 import com.tencent.rapidview.deobfuscated.luajavainterface.ILuaJavaMedia;
-import com.tencent.rapidview.deobfuscated.luajavainterface.ILuaJavaNetwork;
 import com.tencent.rapidview.deobfuscated.luajavainterface.ILuaJavaShare;
 import com.tencent.rapidview.deobfuscated.luajavainterface.ILuaJavaSystem;
 import com.tencent.rapidview.deobfuscated.luajavainterface.ILuaJavaUI;
@@ -33,7 +32,6 @@ import com.tencent.rapidview.deobfuscated.luajavainterface.ILuaJavaUI;
  */
 public interface ILuaJavaInterface extends ILuaJavaInitialize,
                                            ILuaJavaCreate,
-                                           ILuaJavaNetwork,
                                            ILuaJavaDebug,
                                            ILuaJavaBase64,
                                            ILuaJavaUI,
